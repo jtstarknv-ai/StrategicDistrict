@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>District Progress Monitoring Dashboard</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0/dist/umd/supabase.js"></script>
+
+  <style>
+    :root {
+      /* PRIMARY COLOR PALETTE */
+      --color-primary-black: #0A0908;
+      --color-primary-navy: #22333B;
+      --color-primary-cream: #EAE0D5;
+      --color-primary-tan: #C6AC8F;
+      --color-primary-brown: #5E503F;
+      --color-primary-dark-blue: #14213D;
+
+      /* SECONDARY COLOR PALETTE */
+      --color-secondary-sage: #ABC4AB;
+      --color-secondary-gold: #A39171;
+      --color-secondary-light-tan: #DCC9B6;
+      --color-secondary-olive: #727D71;
+      --color-secondary-warm-brown: #6D4C3D;
+
+      /* POP COLOR PALETTE */
+      --color-pop-green: #6ECF6E;
+      --color-pop-teal: #00B4CC;
+      --color-pop-gold: #D4A537;
+      --color-pop-coral: #E07A5F;
+      --color-pop-purple: #6B4C9A;
+
+      /* REPORT/DATA VISUALIZATION PALETTE */
+      --color-report-dark: #001219;
+      --color-report-teal-dark: #005F73;
+      --color-report-teal: #0A9396;
+      --color-report-teal-light: #94D2BD;
+      --color-report-accent-yellow: #E9D8A6;
+      --color-report-orange-dark: #CA6702;
+      --color-report-orange: #BB3E03;
+      --color-report-red-dark: #AE2012;
+      --color-report-red: #9B2226;
+
+      /* SEMANTIC COLORS */
+      --color-text-primary: var(--color-primary-black);
+      --color-text-secondary: var(--color-primary-navy);
+      --color-text-muted: var(--color-primary-brown);
+      --color-text-light: var(--color-primary-navy);
+      --color-text-inverse: var(--color-primary-cream);
+
+      --color-background: #FFFFFF;
+      --color-background-alt: #F9F7F3;
+      --color-background-light: #FEFDFB;
+
+      --color-border-light: #E8E2D7;
+      --color-border-muted: #D4CCC1;
+      --color-border-dark: #C6AC8F;
+
+      --color-success: #0A9396;
+      --color-warning: #BB3E03;
+      --color-error: #9B2226;
+      --color-info: #005F73;
+
+      /* TYPOGRAPHY */
+      --font-serif: 'Source Serif Pro', serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+      /* Heading scales */
+      --font-size-h1: 3.5rem;
+      --font-size-h2: 2.75rem;
+      --font-size-h3: 2.125rem;
+      --font-size-h4: 1.75rem;
+      --font-size-h5: 1.5rem;
+      --font-size-h6: 1.25rem;
+
+      /* Body text scales */
+      --font-size-body-lg: 1.125rem;
+      --font-size-body-md: 1rem;
+      --font-size-body-sm: 0.875rem;
+      --font-size-body-xs: 0.75rem;
+
+      /* Line heights */
+      --line-height-tight: 1.2;
+      --line-height-normal: 1.5;
+      --line-height-relaxed: 1.75;
+      --line-height-loose: 2;
+
+      /* Font weights */
+      --font-weight-light: 300;
+      --font-weight-regular: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+
+      /* SPACING */
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      --spacing-2xl: 2.5rem;
+      --spacing-3xl: 3rem;
+      --spacing-4xl: 4rem;
+      --spacing-5xl: 5rem;
+
+      /* BORDER RADIUS */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
+
+      /* SHADOWS */
+      --shadow-xs: 0 1px 2px 0 rgba(10, 9, 8, 0.05);
+      --shadow-sm: 0 1px 3px 0 rgba(10, 9, 8, 0.1), 0 1px 2px 0 rgba(10, 9, 8, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(10, 9, 8, 0.1), 0 2px 4px -1px rgba(10, 9, 8, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(10, 9, 8, 0.1), 0 4px 6px -2px rgba(10, 9, 8, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(10, 9, 8, 0.1), 0 10px 10px -5px rgba(10, 9, 8, 0.04);
+      --shadow-2xl: 0 25px 50px -12px rgba(10, 9, 8, 0.25);
+
+      /* TRANSITIONS */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* Z-INDEX SCALE */
+      --z-dropdown: 1000;
+      --z-sticky: 1020;
+      --z-fixed: 1030;
+      --z-modal-backdrop: 1040;
+      --z-modal: 1050;
+      --z-tooltip: 1070;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text-primary);
+      background-color: var(--color-background-alt);
+      line-height: var(--line-height-normal);
+    }
+
+    a {
+      color: var(--color-primary-dark-blue);
+      text-decoration: none;
+      transition: color var(--transition-base);
+    }
+
+    a:hover {
+      color: var(--color-primary-navy);
+    }
+
+    /* HEADER */
+    .header {
+      background-color: var(--color-primary-navy);
+      color: var(--color-primary-cream);
+      padding: var(--spacing-lg) var(--spacing-4xl);
+      border-bottom: 3px solid var(--color-pop-gold);
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky);
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-container {
+      max-width: 1920px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h5);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: -0.5px;
+    }
+
+    .header-controls {
+      display: flex;
+      gap: var(--spacing-xl);
+      align-items: center;
+    }
+
+    /* MAIN CONTAINER */
+    .container {
+      max-width: 1920px;
+      margin: 0 auto;
+      padding: var(--spacing-5xl) var(--spacing-4xl);
+    }
+
+    /* DISTRICT SELECTOR */
+    .district-selector {
+      background-color: var(--color-background);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--spacing-3xl);
+      border-left: 4px solid var(--color-pop-gold);
+    }
+
+    .district-selector label {
+      display: block;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-size-body-sm);
+    }
+
+    .district-selector select {
+      width: 100%;
+      padding: var(--spacing-md) var(--spacing-lg);
+      border: 2px solid var(--color-border-muted);
+      border-radius: var(--radius-lg);
+      font-family: var(--font-sans);
+      font-size: var(--font-size-body-md);
+      color: var(--color-text-primary);
+      background-color: var(--color-background);
+      cursor: pointer;
+      transition: border-color var(--transition-base);
+    }
+
+    .district-selector select:hover,
+    .district-selector select:focus {
+      border-color: var(--color-pop-gold);
+      outline: none;
+    }
+
+    /* LOADING STATE */
+    .loading {
+      text-align: center;
+      padding: var(--spacing-5xl);
+      color: var(--color-text-muted);
+      font-size: var(--font-size-body-lg);
+    }
+
+    .spinner {
+      border: 4px solid var(--color-border-light);
+      border-top: 4px solid var(--color-pop-gold);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto var(--spacing-lg);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* SECTION STYLES */
+    .section {
+      margin-bottom: var(--spacing-5xl);
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h4);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-primary-navy);
+      margin-bottom: var(--spacing-xl);
+      padding-bottom: var(--spacing-lg);
+      border-bottom: 2px solid var(--color-border-light);
+    }
+
+    /* OVERVIEW CARDS */
+    .overview-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-xl);
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .stat-card {
+      background-color: var(--color-background);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      border-top: 4px solid var(--color-secondary-gold);
+      transition: box-shadow var(--transition-base);
+    }
+
+    .stat-card:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-card-label {
+      font-size: var(--font-size-body-sm);
+      color: var(--color-text-muted);
+      font-weight: var(--font-weight-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .stat-card-value {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-primary-navy);
+      line-height: 1;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .stat-card-subtext {
+      font-size: var(--font-size-body-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* STATUS INDICATOR CARDS */
+    .status-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .status-card {
+      background-color: var(--color-background);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .status-card.on-track {
+      border-left: 4px solid var(--color-report-teal);
+    }
+
+    .status-card.at-risk {
+      border-left: 4px solid var(--color-report-orange);
+    }
+
+    .status-card.off-track {
+      border-left: 4px solid var(--color-report-red);
+    }
+
+    .status-value {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h3);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .status-card.on-track .status-value {
+      color: var(--color-report-teal);
+    }
+
+    .status-card.at-risk .status-value {
+      color: var(--color-report-orange);
+    }
+
+    .status-card.off-track .status-value {
+      color: var(--color-report-red);
+    }
+
+    .status-label {
+      font-size: var(--font-size-body-sm);
+      color: var(--color-text-muted);
+      font-weight: var(--font-weight-medium);
+    }
+
+    /* GOAL MATRIX TABLE */
+    .goal-matrix-wrapper {
+      background-color: var(--color-background);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .goal-matrix {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--font-size-body-sm);
+    }
+
+    .goal-matrix thead {
+      background-color: var(--color-background-alt);
+      border-bottom: 2px solid var(--color-border-muted);
+    }
+
+    .goal-matrix th {
+      padding: var(--spacing-md);
+      text-align: left;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      background-color: var(--color-background-alt);
+      cursor: pointer;
+      transition: background-color var(--transition-base);
+    }
+
+    .goal-matrix th:hover {
+      background-color: var(--color-border-light);
+    }
+
+    .goal-matrix tbody tr {
+      border-bottom: 1px solid var(--color-border-light);
+      transition: background-color var(--transition-base);
+    }
+
+    .goal-matrix tbody tr:hover {
+      background-color: rgba(212, 165, 55, 0.05);
+    }
+
+    .goal-matrix td {
+      padding: var(--spacing-md);
+      color: var(--color-text-primary);
+    }
+
+    .school-name {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-primary-navy);
+      min-width: 150px;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin-right: var(--spacing-sm);
+      transition: transform var(--transition-base);
+    }
+
+    .status-dot:hover {
+      transform: scale(1.2);
+    }
+
+    .status-dot.on-track {
+      background-color: var(--color-report-teal);
+    }
+
+    .status-dot.at-risk {
+      background-color: var(--color-report-orange);
+    }
+
+    .status-dot.off-track {
+      background-color: var(--color-report-red);
+    }
+
+    /* CHART CONTAINER */
+    .chart-container {
+      background-color: var(--color-background);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--spacing-2xl);
+      position: relative;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .chart-title {
+      font-size: var(--font-size-h5);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+    }
+
+    .chart-controls {
+      display: flex;
+      gap: var(--spacing-md);
+    }
+
+    .category-toggle {
+      background-color: var(--color-background-alt);
+      border: 2px solid var(--color-border-muted);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--font-size-body-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      transition: all var(--transition-base);
+    }
+
+    .category-toggle:hover,
+    .category-toggle.active {
+      background-color: var(--color-pop-gold);
+      border-color: var(--color-pop-gold);
+      color: var(--color-background);
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 400px;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    /* FIDELITY TABLE */
+    .fidelity-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--color-background);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      font-size: var(--font-size-body-sm);
+    }
+
+    .fidelity-table thead {
+      background-color: var(--color-background-alt);
+      border-bottom: 2px solid var(--color-border-muted);
+    }
+
+    .fidelity-table th {
+      padding: var(--spacing-md);
+      text-align: left;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+    }
+
+    .fidelity-table tbody tr {
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .fidelity-table tbody tr:hover {
+      background-color: rgba(212, 165, 55, 0.05);
+    }
+
+    .fidelity-table td {
+      padding: var(--spacing-md);
+      color: var(--color-text-primary);
+    }
+
+    .stars {
+      color: var(--color-pop-gold);
+      font-size: var(--font-size-body-md);
+      letter-spacing: 2px;
+    }
+
+    .fidelity-insight {
+      background-color: rgba(34, 51, 59, 0.05);
+      border-left: 4px solid var(--color-pop-gold);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      margin-top: var(--spacing-xl);
+      font-size: var(--font-size-body-sm);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .fidelity-insight strong {
+      color: var(--color-primary-navy);
+      font-weight: var(--font-weight-bold);
+    }
+
+    /* ALIGNMENT MATRIX */
+    .alignment-matrix {
+      background-color: var(--color-background);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+    }
+
+    .alignment-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--font-size-body-sm);
+    }
+
+    .alignment-table th,
+    .alignment-table td {
+      border: 1px solid var(--color-border-light);
+      padding: var(--spacing-md);
+      text-align: center;
+    }
+
+    .alignment-table th {
+      background-color: var(--color-background-alt);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+    }
+
+    .alignment-table .category-col {
+      text-align: left;
+      font-weight: var(--font-weight-medium);
+      color: var(--color-primary-navy);
+    }
+
+    .alignment-table .coverage-full {
+      color: var(--color-report-teal);
+      background-color: rgba(10, 147, 150, 0.05);
+    }
+
+    .alignment-table .coverage-partial {
+      color: var(--color-report-orange);
+      background-color: rgba(187, 62, 3, 0.05);
+    }
+
+    .alignment-table .coverage-none {
+      color: var(--color-text-muted);
+      background-color: var(--color-background-alt);
+    }
+
+    .gap-alert {
+      background-color: rgba(155, 34, 38, 0.05);
+      border-left: 4px solid var(--color-report-red);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      margin-top: var(--spacing-xl);
+      font-size: var(--font-size-body-sm);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .gap-alert strong {
+      color: var(--color-report-red);
+      font-weight: var(--font-weight-bold);
+    }
+
+    /* FOOTER */
+    .footer {
+      background-color: var(--color-primary-navy);
+      color: var(--color-primary-cream);
+      padding: var(--spacing-3xl) var(--spacing-4xl);
+      text-align: center;
+      font-size: var(--font-size-body-sm);
+      margin-top: var(--spacing-5xl);
+      border-top: 2px solid var(--color-pop-gold);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--spacing-xl) var(--spacing-lg);
+      }
+
+      .header-container {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        text-align: center;
+      }
+
+      .header-controls {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .overview-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-wrapper {
+        height: 300px;
+      }
+
+      .goal-matrix {
+        font-size: var(--font-size-body-xs);
+      }
+
+      .goal-matrix td,
+      .goal-matrix th {
+        padding: var(--spacing-sm);
+      }
+
+      .chart-controls {
+        flex-wrap: wrap;
+      }
+    }
+
+    /* ERROR STATE */
+    .error-message {
+      background-color: rgba(155, 34, 38, 0.1);
+      border-left: 4px solid var(--color-report-red);
+      color: var(--color-report-red);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .error-message strong {
+      font-weight: var(--font-weight-bold);
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-3xl);
+      color: var(--color-text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-lg);
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-container">
+      <h1>District Progress Monitoring Dashboard</h1>
+      <div class="header-controls">
+        <div class="district-selector">
+          <label for="district-select">Select District</label>
+          <select id="district-select">
+            <option value="">Loading districts...</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <div class="container">
+    <div id="loading" class="loading" style="display: none;">
+      <div class="spinner"></div>
+      <p>Loading dashboard data...</p>
+    </div>
+
+    <div id="error" class="error-message" style="display: none;"></div>
+
+    <!-- SECTION 1: DISTRICT OVERVIEW -->
+    <div class="section" id="overview-section" style="display: none;">
+      <h2 class="section-title">District Overview</h2>
+
+      <div id="district-info" class="overview-cards" style="display: none;">
+        <div class="stat-card">
+          <div class="stat-card-label">District Name</div>
+          <div class="stat-card-value" id="district-name">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Total Enrollment</div>
+          <div class="stat-card-value" id="enrollment">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Schools</div>
+          <div class="stat-card-value" id="school-count">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Strategic Goals</div>
+          <div class="stat-card-value" id="goal-count">—</div>
+        </div>
+      </div>
+
+      <div class="status-cards" id="goal-status" style="display: none;">
+        <div class="status-card on-track">
+          <div class="status-value" id="on-track-count">0</div>
+          <div class="status-label">On Track</div>
+        </div>
+        <div class="status-card at-risk">
+          <div class="status-value" id="at-risk-count">0</div>
+          <div class="status-label">At Risk</div>
+        </div>
+        <div class="status-card off-track">
+          <div class="status-value" id="off-track-count">0</div>
+          <div class="status-label">Off Track</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: CROSS-SCHOOL GOAL ANALYSIS -->
+    <div class="section" id="goals-section" style="display: none;">
+      <h2 class="section-title">Cross-School Goal Analysis</h2>
+      <div class="goal-matrix-wrapper">
+        <table class="goal-matrix" id="goal-matrix">
+          <thead>
+            <tr>
+              <th>School</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 3: PROGRESS MONITORING TIMELINE -->
+    <div class="section" id="progress-section" style="display: none;">
+      <h2 class="section-title">Progress Monitoring Timeline</h2>
+
+      <div class="chart-header">
+        <div class="chart-title">Goal Category Progress Over Time</div>
+        <div class="chart-controls" id="category-toggles"></div>
+      </div>
+
+      <div class="chart-wrapper">
+        <canvas id="progress-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- SECTION 4: FIDELITY ANALYSIS -->
+    <div class="section" id="fidelity-section" style="display: none;">
+      <h2 class="section-title">Implementation Fidelity Analysis</h2>
+
+      <div class="goal-matrix-wrapper">
+        <table class="fidelity-table" id="fidelity-table">
+          <thead>
+            <tr>
+              <th>School</th>
+              <th>Strategy</th>
+              <th>Implementation Level</th>
+              <th>Fidelity Score</th>
+              <th>Primary Barriers</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="fidelity-insight" id="fidelity-insight"></div>
+    </div>
+
+    <!-- SECTION 5: SPP-TO-STRATEGIC PLAN ALIGNMENT -->
+    <div class="section" id="alignment-section" style="display: none;">
+      <h2 class="section-title">School Plan-to-Strategic Priority Alignment</h2>
+
+      <div class="alignment-matrix">
+        <table class="alignment-table" id="alignment-table">
+          <thead>
+            <tr>
+              <th class="category-col">Strategic Priority</th>
+              <th colspan="10">School Coverage</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="gap-alert" id="gap-alert"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>&copy; 2026 Strategic District. All rights reserved. | Data updated in real-time from Supabase</p>
+  </div>
+
+  <script>
+    // Supabase configuration
+    const SUPABASE_URL = "https://mrdyxownxnyzjubvpwrk.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1yZHl4b3dueG55emp1YnZwd3JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MzYwODksImV4cCI6MjA4OTIxMjA4OX0.4TQomjn_4hu-5TrcyGi90wyv1HxxGKmEP1mu682hJHM";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Global state
+    let currentDistrictId = null;
+    let districtData = {};
+    let progressChart = null;
+
+    // Chart color configuration
+    const chartColors = [
+      '#0A9396', '#005F73', '#00B4CC', '#94D2BD', '#6B4C9A',
+      '#D4A537', '#E07A5F', '#6ECF6E', '#BB3E03', '#A39171'
+    ];
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadDistricts();
+      document.getElementById('district-select').addEventListener('change', handleDistrictChange);
+    });
+
+    // Load all districts for dropdown
+    async function loadDistricts() {
+      try {
+        const { data, error } = await supabase
+          .from('sd_districts')
+          .select('id, name')
+          .order('name');
+
+        if (error) throw error;
+
+        const select = document.getElementById('district-select');
+        select.innerHTML = '<option value="">Select a district...</option>';
+        data.forEach(district => {
+          const option = document.createElement('option');
+          option.value = district.id;
+          option.textContent = district.name;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        showError('Failed to load districts: ' + error.message);
+      }
+    }
+
+    // Handle district selection
+    async function handleDistrictChange(event) {
+      currentDistrictId = event.target.value;
+      if (!currentDistrictId) {
+        hideAllSections();
+        return;
+      }
+
+      showLoading(true);
+      try {
+        await loadDashboardData();
+        showLoading(false);
+        displayDashboard();
+      } catch (error) {
+        showLoading(false);
+        showError('Failed to load dashboard data: ' + error.message);
+      }
+    }
+
+    // Load all dashboard data
+    async function loadDashboardData() {
+      // Fetch district details
+      const { data: districtInfo } = await supabase
+        .from('sd_districts')
+        .select('*')
+        .eq('id', currentDistrictId)
+        .single();
+
+      // Fetch schools
+      const { data: schools } = await supabase
+        .from('sd_schools')
+        .select('*')
+        .eq('district_id', currentDistrictId);
+
+      // Fetch goals
+      const { data: goals } = await supabase
+        .from('sd_plan_goals')
+        .select('*')
+        .eq('district_id', currentDistrictId);
+
+      // Fetch goal progress
+      const { data: progress } = await supabase
+        .from('sd_goal_progress')
+        .select('*')
+        .eq('district_id', currentDistrictId);
+
+      // Fetch fidelity data
+      const { data: fidelity } = await supabase
+        .from('sd_strategy_fidelity')
+        .select('*')
+        .eq('district_id', currentDistrictId);
+
+      districtData = {
+        district: districtInfo,
+        schools: schools || [],
+        goals: goals || [],
+        progress: progress || [],
+        fidelity: fidelity || []
+      };
+    }
+
+    // Display all dashboard sections
+    function displayDashboard() {
+      displayOverview();
+      displayGoalMatrix();
+      displayProgressChart();
+      displayFidelityAnalysis();
+      displayAlignment();
+      showAllSections();
+    }
+
+    // SECTION 1: Overview
+    function displayOverview() {
+      const { district, schools, goals, progress } = districtData;
+
+      document.getElementById('district-name').textContent = district.name;
+      document.getElementById('enrollment').textContent = (district.total_enrollment || 0).toLocaleString();
+      document.getElementById('school-count').textContent = schools.length;
+      document.getElementById('goal-count').textContent = goals.length;
+
+      // Calculate status counts
+      const statusCounts = { on_track: 0, at_risk: 0, off_track: 0 };
+      progress.forEach(p => {
+        if (p.status) {
+          statusCounts[p.status]++;
+        }
+      });
+
+      document.getElementById('on-track-count').textContent = statusCounts.on_track;
+      document.getElementById('at-risk-count').textContent = statusCounts.at_risk;
+      document.getElementById('off-track-count').textContent = statusCounts.off_track;
+    }
+
+    // SECTION 2: Goal Matrix
+    function displayGoalMatrix() {
+      const { schools, goals, progress } = districtData;
+      const categories = [...new Set(goals.map(g => g.goal_category))];
+
+      // Build header
+      let headerHtml = '<tr><th>School</th>';
+      categories.forEach(cat => {
+        headerHtml += `<th>${cat}</th>`;
+      });
+      headerHtml += '<th>Variability</th></tr>';
+
+      const thead = document.querySelector('#goal-matrix thead');
+      thead.innerHTML = headerHtml;
+
+      // Build rows
+      let bodyHtml = '';
+      schools.forEach(school => {
+        bodyHtml += `<tr><td class="school-name">${school.name}</td>`;
+
+        categories.forEach(cat => {
+          const schoolGoals = goals.filter(g => g.school_id === school.id && g.goal_category === cat);
+          const schoolProgress = progress.filter(p =>
+            p.school_id === school.id &&
+            schoolGoals.some(g => g.id === p.goal_id)
+          );
+
+          const status = schoolProgress.length > 0 ? schoolProgress[0].status : 'unknown';
+          const dotClass = status === 'on_track' ? 'on-track' : status === 'at_risk' ? 'at-risk' : status === 'off_track' ? 'off-track' : '';
+          const dotHtml = schoolGoals.length > 0 ? `<span class="status-dot ${dotClass}"></span>` : '—';
+
+          bodyHtml += `<td>${dotHtml}${schoolGoals.length}</td>`;
+        });
+
+        // Calculate variability (simplified)
+        const schoolStatuses = categories.map(cat => {
+          const p = progress.find(pr => pr.school_id === school.id && goals.find(g => g.id === pr.goal_id && g.goal_category === cat));
+          return p ? p.status : null;
+        }).filter(s => s);
+        const uniqueStatuses = new Set(schoolStatuses).size;
+        const variability = uniqueStatuses > 1 ? '⚠️ High' : '✓ Low';
+
+        bodyHtml += `<td>${variability}</td></tr>`;
+      });
+
+      document.querySelector('#goal-matrix tbody').innerHTML = bodyHtml;
+    }
+
+    // SECTION 3: Progress Timeline Chart
+    function displayProgressChart() {
+      const { progress, goals, schools } = districtData;
+      const categories = [...new Set(goals.map(g => g.goal_category))];
+
+      // Create category toggle buttons
+      const togglesHtml = categories.map((cat, idx) =>
+        `<button class="category-toggle ${idx === 0 ? 'active' : ''}" data-category="${cat}">${cat}</button>`
+      ).join('');
+      document.getElementById('category-toggles').innerHTML = togglesHtml;
+
+      // Setup toggle handlers
+      document.querySelectorAll('.category-toggle').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.category-toggle').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          updateProgressChart(e.target.dataset.category);
+        });
+      });
+
+      // Initial chart
+      if (categories.length > 0) {
+        updateProgressChart(categories[0]);
+      }
+    }
+
+    function updateProgressChart(category) {
+      const { progress, goals, schools } = districtData;
+      const ctx = document.getElementById('progress-chart').getContext('2d');
+
+      // Filter data for selected category
+      const categoryGoals = goals.filter(g => g.goal_category === category);
+      const periods = ['Baseline', 'Q1', 'Q2', 'Q3'];
+
+      // Build datasets for each school
+      const datasets = schools.map((school, idx) => {
+        const schoolProgress = progress.filter(p =>
+          p.school_id === school.id &&
+          categoryGoals.some(g => g.id === p.goal_id)
+        );
+
+        const values = periods.map(period => {
+          const p = schoolProgress.find(pr => pr.monitoring_period === period);
+          if (!p || !p.current_value) return null;
+          // Extract numeric part
+          const num = parseFloat(p.current_value.toString().match(/[\d.]+/)?.[0]);
+          return isNaN(num) ? null : num;
+        });
+
+        return {
+          label: school.name,
+          data: values,
+          borderColor: chartColors[idx % chartColors.length],
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          fill: false,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: chartColors[idx % chartColors.length]
+        };
+      });
+
+      if (progressChart) {
+        progressChart.destroy();
+      }
+
+      progressChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: periods,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom',
+              labels: {
+                font: { family: "'Inter', sans-serif", size: 12 },
+                color: '#0A0908',
+                usePointStyle: true,
+                padding: 15
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                font: { family: "'Inter', sans-serif", size: 12 },
+                color: '#5E503F'
+              },
+              grid: {
+                color: 'rgba(198, 172, 143, 0.1)'
+              }
+            },
+            x: {
+              ticks: {
+                font: { family: "'Inter', sans-serif", size: 12 },
+                color: '#5E503F'
+              },
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // SECTION 4: Fidelity Analysis
+    function displayFidelityAnalysis() {
+      const { fidelity, schools } = districtData;
+
+      let tbody = '';
+      fidelity.forEach(f => {
+        const school = schools.find(s => s.id === f.school_id);
+        const stars = '★'.repeat(f.fidelity_score) + '☆'.repeat(5 - f.fidelity_score);
+
+        tbody += `<tr>
+          <td>${school?.name || '—'}</td>
+          <td>${f.strategy_name || '—'}</td>
+          <td>${f.implementation_level || '—'}</td>
+          <td class="stars">${stars}</td>
+          <td>${f.barriers || '—'}</td>
+        </tr>`;
+      });
+
+      document.querySelector('#fidelity-table tbody').innerHTML = tbody;
+
+      // Calculate fidelity insight
+      const avgHighFidelity = fidelity.filter(f => f.fidelity_score >= 4).length;
+      const avgLowFidelity = fidelity.filter(f => f.fidelity_score < 3).length;
+      const highFidelityPercent = avgHighFidelity > 0 ? Math.round((avgHighFidelity / fidelity.length) * 100) : 0;
+
+      let insight = `Schools with average fidelity score ≥ 4 represent ${highFidelityPercent}% of implementations. `;
+      if (avgHighFidelity > avgLowFidelity) {
+        insight += 'Strong implementation practices are evident across the district.';
+      } else {
+        insight += 'Consider targeted support for schools with lower fidelity scores.';
+      }
+
+      document.getElementById('fidelity-insight').innerHTML = `<strong>Key Insight:</strong> ${insight}`;
+    }
+
+    // SECTION 5: Alignment Analysis
+    function displayAlignment() {
+      const { goals, schools } = districtData;
+      const categories = [...new Set(goals.map(g => g.goal_category))];
+      const priorities = [...new Set(goals.map(g => g.strategic_priority))];
+
+      let tbody = '';
+      priorities.forEach(priority => {
+        tbody += `<tr><td class="category-col">${priority}</td>`;
+
+        schools.forEach(school => {
+          const schoolGoalsForPriority = goals.filter(g =>
+            g.school_id === school.id && g.strategic_priority === priority
+          );
+
+          let coverageClass = 'coverage-none';
+          let text = '—';
+
+          if (schoolGoalsForPriority.length > 0) {
+            if (schoolGoalsForPriority.length >= 2) {
+              coverageClass = 'coverage-full';
+              text = '✓';
+            } else {
+              coverageClass = 'coverage-partial';
+              text = '◐';
+            }
+          }
+
+          tbody += `<td class="${coverageClass}">${text}</td>`;
+        });
+
+        tbody += '</tr>';
+      });
+
+      // Build header with school names
+      let headerHtml = '<tr><th class="category-col">Strategic Priority</th>';
+      schools.forEach(school => {
+        headerHtml += `<th>${school.name}</th>`;
+      });
+      headerHtml += '</tr>';
+
+      document.querySelector('#alignment-table thead').innerHTML = headerHtml;
+      document.querySelector('#alignment-table tbody').innerHTML = tbody;
+
+      // Calculate gap analysis
+      const totalGoals = goals.length;
+      const coveredPriorities = priorities.filter(p =>
+        goals.some(g => g.strategic_priority === p && g.school_id)
+      ).length;
+      const gapCount = priorities.length - coveredPriorities;
+
+      let gapHtml = `<strong>Gap Analysis:</strong> ${coveredPriorities} of ${priorities.length} strategic priorities have school-level goals. `;
+      if (gapCount > 0) {
+        gapHtml += `<strong>${gapCount} priorities</strong> are not yet represented in school plans. Consider action planning to address these gaps.`;
+      } else {
+        gapHtml += 'All strategic priorities are well-represented across school plans.';
+      }
+
+      document.getElementById('gap-alert').innerHTML = gapHtml;
+    }
+
+    // Utility functions
+    function showLoading(show) {
+      document.getElementById('loading').style.display = show ? 'block' : 'none';
+    }
+
+    function showError(message) {
+      const errorEl = document.getElementById('error');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+
+    function hideAllSections() {
+      document.getElementById('overview-section').style.display = 'none';
+      document.getElementById('goals-section').style.display = 'none';
+      document.getElementById('progress-section').style.display = 'none';
+      document.getElementById('fidelity-section').style.display = 'none';
+      document.getElementById('alignment-section').style.display = 'none';
+    }
+
+    function showAllSections() {
+      document.getElementById('overview-section').style.display = 'block';
+      document.getElementById('goals-section').style.display = 'block';
+      document.getElementById('progress-section').style.display = 'block';
+      document.getElementById('fidelity-section').style.display = 'block';
+      document.getElementById('alignment-section').style.display = 'block';
+      document.getElementById('district-info').style.display = 'grid';
+      document.getElementById('goal-status').style.display = 'grid';
+    }
+  </script>
+</body>
+</html>

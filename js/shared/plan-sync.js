@@ -84,7 +84,7 @@
         },
 
         /**
-         * Internal: save to Supabase
+         * Internal: save to Supabase with automatic version history
          */
         _saveToCloud: function(planType, storageKey, planState, planName) {
             if (!window.sdAuth || !window.sdAuth.currentUser || !window.sdAuth.client) {
@@ -97,7 +97,7 @@
             // Check if plan already exists for this user + type
             return client
                 .from('saved_plans')
-                .select('id')
+                .select('id, plan_data, current_version')
                 .eq('user_id', userId)
                 .eq('plan_type', planType)
                 .then(function(result) {
@@ -107,27 +107,46 @@
                     }
 
                     var existingId = (result.data && result.data.length > 0) ? result.data[0].id : null;
+                    var existingData = (result.data && result.data.length > 0) ? result.data[0].plan_data : null;
+                    var currentVersion = (result.data && result.data.length > 0) ? (result.data[0].current_version || 1) : 0;
 
                     if (existingId) {
-                        // UPDATE existing plan
-                        return client
-                            .from('saved_plans')
-                            .update({
-                                plan_data: planState,
+                        // Snapshot the previous version before overwriting
+                        var versionPromise = existingData
+                            ? client.from('sd_plan_versions').insert({
+                                plan_id: existingId,
+                                plan_type: planType,
+                                version_number: currentVersion,
+                                plan_data: existingData,
                                 plan_name: planName || 'My Plan',
-                                updated_at: new Date().toISOString()
+                                created_by: userId,
+                                change_summary: 'Auto-saved version ' + currentVersion
                             })
-                            .eq('id', existingId)
-                            .then(function(updateResult) {
-                                if (updateResult.error) {
-                                    console.error('Cloud update error:', updateResult.error);
-                                    return null;
-                                }
-                                planSync._showSaveIndicator('saved');
-                                return existingId;
-                            });
+                            : Promise.resolve(null);
+
+                        return versionPromise.then(function() {
+                            var newVersion = currentVersion + 1;
+                            // UPDATE existing plan with new data and bumped version
+                            return client
+                                .from('saved_plans')
+                                .update({
+                                    plan_data: planState,
+                                    plan_name: planName || 'My Plan',
+                                    current_version: newVersion,
+                                    updated_at: new Date().toISOString()
+                                })
+                                .eq('id', existingId)
+                                .then(function(updateResult) {
+                                    if (updateResult.error) {
+                                        console.error('Cloud update error:', updateResult.error);
+                                        return null;
+                                    }
+                                    planSync._showSaveIndicator('saved');
+                                    return existingId;
+                                });
+                        });
                     } else {
-                        // INSERT new plan
+                        // INSERT new plan (version 1, no previous version to snapshot)
                         return client
                             .from('saved_plans')
                             .insert({
@@ -135,6 +154,7 @@
                                 plan_type: planType,
                                 plan_name: planName || 'My Plan',
                                 plan_data: planState,
+                                current_version: 1,
                                 is_finalized: false
                             })
                             .select('id')
@@ -201,6 +221,75 @@
                 console.warn('localStorage load failed:', e);
             }
             return null;
+        },
+
+        /**
+         * Get version history for a plan
+         * @param {string} planType - 'district' or 'school'
+         * @returns {Promise<Array>} - array of version objects
+         */
+        getVersionHistory: function(planType) {
+            if (!window.sdAuth || !window.sdAuth.currentUser || !window.sdAuth.client) {
+                return Promise.resolve([]);
+            }
+
+            var userId = window.sdAuth.currentUser.id;
+            var client = window.sdAuth.client;
+
+            // First get the plan ID
+            return client
+                .from('saved_plans')
+                .select('id, current_version')
+                .eq('user_id', userId)
+                .eq('plan_type', planType)
+                .then(function(result) {
+                    if (result.error || !result.data || result.data.length === 0) {
+                        return [];
+                    }
+                    var planId = result.data[0].id;
+
+                    return client
+                        .from('sd_plan_versions')
+                        .select('id, version_number, plan_name, change_summary, created_at')
+                        .eq('plan_id', planId)
+                        .order('version_number', { ascending: false })
+                        .limit(50)
+                        .then(function(vResult) {
+                            if (vResult.error) return [];
+                            return vResult.data || [];
+                        });
+                })
+                .catch(function() { return []; });
+        },
+
+        /**
+         * Restore a specific version
+         * @param {string} versionId - UUID of the version to restore
+         * @param {string} planType - 'district' or 'school'
+         * @param {string} storageKey - localStorage key
+         * @returns {Promise<object|null>} - restored plan data
+         */
+        restoreVersion: function(versionId, planType, storageKey) {
+            if (!window.sdAuth || !window.sdAuth.client) {
+                return Promise.resolve(null);
+            }
+
+            var client = window.sdAuth.client;
+
+            return client
+                .from('sd_plan_versions')
+                .select('plan_data, version_number')
+                .eq('id', versionId)
+                .single()
+                .then(function(result) {
+                    if (result.error || !result.data) return null;
+
+                    var restoredData = result.data.plan_data;
+                    // Save restored version as current (which will snapshot the current first)
+                    planSync.saveNow(planType, storageKey, restoredData, restoredData.planName || 'Restored Plan');
+                    return restoredData;
+                })
+                .catch(function() { return null; });
         },
 
         /**

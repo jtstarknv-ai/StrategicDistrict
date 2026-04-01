@@ -92,14 +92,14 @@ function showToast(message, duration = 3000) {
 /**
  * Get current plan ID from localStorage
  */
-export function getCurrentPlanId() {
+function getCurrentPlanId() {
   return localStorage.getItem('sd_current_plan_id');
 }
 
 /**
  * Get current plan name from localStorage
  */
-export function getCurrentPlanName() {
+function getCurrentPlanName() {
   return localStorage.getItem('sd_current_plan_name');
 }
 
@@ -228,7 +228,7 @@ function populateSchoolBuilder(planData) {
 /**
  * Main function to load selected plan and populate forms
  */
-export async function loadSelectedPlan() {
+async function loadSelectedPlan() {
   try {
     // Check if a plan is selected
     const planId = getCurrentPlanId();
@@ -270,7 +270,7 @@ export async function loadSelectedPlan() {
 /**
  * Clear selected plan from localStorage
  */
-export function clearSelectedPlan() {
+function clearSelectedPlan() {
   localStorage.removeItem('sd_current_plan_id');
   localStorage.removeItem('sd_current_plan_name');
   localStorage.removeItem('sd_plan_data');

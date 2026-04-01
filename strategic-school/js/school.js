@@ -2396,7 +2396,7 @@ function updateGuidanceContent(stepNum) {
     9: { title: 'Resource Allocation', tips: [{ title: 'Align to priorities', text: 'Ensure your budget reflects your school\'s highest priorities.' }] },
     10: { title: 'Implementation Calendar', tips: [{ title: 'Sequence matters', text: 'Build in time for professional development before launching initiatives.' }] },
     11: { title: 'Monitoring & Accountability', tips: [{ title: 'Monthly reviews', text: 'Review leading indicators frequently to stay on track.' }] },
-    12: { title: 'Review & Export', tips: [{ title: 'Final check', text: 'Ensure all required fields are complete before finalizing.' }] }
+    12: { title: 'Preview and Finalize', tips: [{ title: 'Final check', text: 'Ensure all required fields are complete before finalizing.' }] }
   };
 
   var content = guidance[stepNum] || { title: 'Help', tips: [] };

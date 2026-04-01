@@ -623,7 +623,7 @@ const ASSISTANT_CONTENT = {
  * @param {string} containerId - DOM element ID to render into
  * @param {string} builderType - 'district' or 'school'
  */
-export function renderAssistantPanel(containerId, builderType) {
+function renderAssistantPanel(containerId, builderType) {
   const container = document.getElementById(containerId);
   if (!container) {
     console.error(`Container ${containerId} not found`);
@@ -693,7 +693,7 @@ export function renderAssistantPanel(containerId, builderType) {
  * Update assistant panel content when user navigates to a new step
  * @param {number} stepNumber - The step number to load content for
  */
-export function updateAssistantStep(stepNumber) {
+function updateAssistantStep(stepNumber) {
   const panel = document.getElementById('assistant-panel-root');
   if (!panel) return;
 

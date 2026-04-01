@@ -262,6 +262,7 @@
   };
 
   window.sdAuth = sdAuth;
+  window.signOut = function() { return sdAuth.signOut(); };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function() {

@@ -407,7 +407,7 @@ function clearStep(stepNum) {
     document.getElementById('autoFillStatus').innerHTML = '';
   }
   if (stepNum === 2) {
-    // Clear Budget & Funding Sources
+    // Clear Strategic Planning Budget
     planState.budgetSetup = {
       totalBudget: 0,
       fundingSources: {},
@@ -2084,17 +2084,19 @@ function renderReviewPage() {
   }
   var checks = [
     { label: 'District Profile', done: !!planState.districtName, step: 1 },
-    { label: 'Stakeholder Engagement', done: !!(planState.stakeholderConveningPlan && Object.keys(planState.stakeholderConveningPlan).length), step: 2 },
-    { label: 'Vision & Mission', done: !!(planState.vision || planState.mission), step: 3 },
-    { label: 'Core Values', done: !!(planState.coreValues && planState.coreValues.length), step: 4 },
-    { label: 'Competencies', done: compCount > 0, step: 5 },
-    { label: 'Strategic Domains', done: !!(planState.strategicDomains && planState.strategicDomains.length), step: 6 },
-    { label: 'Strategic Goals', done: !!(planState.goals && planState.goals.length), step: 7 },
-    { label: 'Goal Forecasting', done: !!planState.goalAmbition, step: 8 },
-    { label: 'Central Office Alignment', done: !!(planState.selectedDepartments && planState.selectedDepartments.length), step: 9 },
-    { label: 'Action Initiatives', done: !!(planState.initiatives && planState.initiatives.length), step: 10 },
-    { label: 'Stakeholder Review', done: !!(planState.postPlanAnalysis && Object.keys(planState.postPlanAnalysis).length), step: 11 },
-    { label: 'Implementation Calendar', done: !!(planState.calendar && Object.keys(planState.calendar).length), step: 12 }
+    { label: 'Strategic Planning Budget', done: !!(planState.budgetSetup && planState.budgetSetup.totalBudget), step: 2 },
+    { label: 'Stakeholder Engagement', done: !!(planState.stakeholderConveningPlan && Object.keys(planState.stakeholderConveningPlan).length), step: 3 },
+    { label: 'Vision & Mission', done: !!(planState.vision || planState.mission), step: 4 },
+    { label: 'Core Values', done: !!(planState.coreValues && planState.coreValues.length), step: 5 },
+    { label: 'Competencies', done: compCount > 0, step: 6 },
+    { label: 'Strategic Domains', done: !!(planState.strategicDomains && planState.strategicDomains.length), step: 7 },
+    { label: 'Strategic Goals', done: !!(planState.goals && planState.goals.length), step: 8 },
+    { label: 'Goal Forecasting', done: !!planState.goalAmbition, step: 9 },
+    { label: 'Central Office Alignment', done: !!(planState.selectedDepartments && planState.selectedDepartments.length), step: 10 },
+    { label: 'Action Initiatives', done: !!(planState.initiatives && planState.initiatives.length), step: 11 },
+    { label: 'Stakeholder Review', done: !!(planState.postPlanAnalysis && Object.keys(planState.postPlanAnalysis).length), step: 12 },
+    { label: 'Implementation Calendar', done: !!(planState.calendar && Object.keys(planState.calendar).length), step: 13 },
+    { label: 'Preview and Finalize', done: false, step: 14 }
   ];
   var doneCount = checks.filter(function(c) { return c.done; }).length;
   var pct = Math.round((doneCount / checks.length) * 100);

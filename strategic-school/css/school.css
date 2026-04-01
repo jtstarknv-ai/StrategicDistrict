@@ -152,7 +152,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ============ LAYOUT CONTAINERS ============ */
 .school-builder-container {
     display: grid;
-    grid-template-columns: 260px 1fr;
+    grid-template-columns: 260px 1fr 380px;
     gap: 0;
     height: 100vh;
     overflow: hidden;
@@ -377,6 +377,15 @@ h1, h2, h3, h4, h5, h6 {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* ============ ASSISTANT PANEL CONTAINER ============ */
+#assistantPanelContainer {
+    width: 380px;
+    min-width: 380px;
+    overflow-y: auto;
+    border-left: 1px solid #e0d5c7;
+    background: white;
 }
 
 /* ============ STEP HEADER ============ */

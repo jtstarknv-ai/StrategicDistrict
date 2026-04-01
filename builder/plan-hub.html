@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plan Hub - Strategic District</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --navy: #22333B;
+      --cream: #EAE0D5;
+      --tan: #C6AC8F;
+      --brown: #5E503F;
+      --teal: #00B4CC;
+      --gold: #D4A537;
+      --green: #6ECF6E;
+      --coral: #E07A5F;
+      --purple: #6B4C9A;
+      --gradient: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background-color: #F9F7F3;
+      color: var(--navy);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Gradient Bar */
+    .gradient-bar {
+      height: 5px;
+      background: var(--gradient);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    /* Header */
+    header {
+      padding-top: 25px;
+      padding: 25px 40px;
+      background: white;
+      border-bottom: 1px solid rgba(34, 51, 59, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 32px;
+      height: 32px;
+      background: var(--gradient);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: white;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .logo-text {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+    }
+
+    .sign-out-btn {
+      background: none;
+      border: 1px solid rgba(34, 51, 59, 0.2);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--navy);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .sign-out-btn:hover {
+      background: rgba(34, 51, 59, 0.05);
+      border-color: rgba(34, 51, 59, 0.3);
+    }
+
+    /* Main Content */
+    main {
+      flex: 1;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      margin-bottom: 60px;
+    }
+
+    .greeting {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: rgba(34, 51, 59, 0.65);
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    /* Plans Grid Container */
+    .plans-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 24px;
+      width: 100%;
+    }
+
+    @media (max-width: 1200px) {
+      .plans-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .plans-container {
+        grid-template-columns: 1fr;
+      }
+
+      main {
+        padding: 40px 20px;
+      }
+
+      .greeting {
+        font-size: 32px;
+      }
+
+      header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    /* Create New Plan Card */
+    .create-plan-card {
+      background: var(--teal);
+      border: none;
+      border-radius: 16px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 220px;
+      box-shadow: 0 4px 20px rgba(0, 180, 204, 0.15);
+      text-decoration: none;
+    }
+
+    .create-plan-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 180, 204, 0.25);
+    }
+
+    .create-plan-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      color: white;
+    }
+
+    .create-plan-text {
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+      text-align: center;
+      font-family: 'Source Serif Pro', serif;
+      letter-spacing: -0.3px;
+    }
+
+    .create-plan-subtext {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* Plan Card */
+    .plan-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(34, 51, 59, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      min-height: 280px;
+      position: relative;
+    }
+
+    .plan-card:hover {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(34, 51, 59, 0.15);
+      box-shadow: 0 8px 32px rgba(34, 51, 59, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .plan-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .plan-name {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.3px;
+      flex: 1;
+      line-height: 1.3;
+      margin-right: 12px;
+    }
+
+    .kebab-menu {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: rgba(34, 51, 59, 0.4);
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .kebab-menu:hover {
+      background: rgba(34, 51, 59, 0.08);
+      color: var(--navy);
+    }
+
+    .plan-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .badge-district {
+      background: rgba(0, 180, 204, 0.15);
+      color: var(--teal);
+    }
+
+    .badge-school {
+      background: rgba(224, 122, 95, 0.15);
+      color: var(--coral);
+    }
+
+    .plan-meta {
+      font-size: 14px;
+      color: rgba(34, 51, 59, 0.6);
+      margin-bottom: 16px;
+    }
+
+    .plan-meta-item {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .plan-meta-label {
+      font-weight: 500;
+      color: rgba(34, 51, 59, 0.5);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .plan-meta-value {
+      font-size: 14px;
+      color: var(--navy);
+    }
+
+    /* Progress Bar */
+    .progress-section {
+      margin-bottom: 20px;
+      flex: 1;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .progress-label-left {
+      color: rgba(34, 51, 59, 0.6);
+    }
+
+    .progress-label-right {
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: rgba(34, 51, 59, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--teal);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    /* Continue Button */
+    .continue-btn {
+      background: var(--teal);
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.3px;
+    }
+
+    .continue-btn:hover {
+      background: #0099AA;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 180, 204, 0.3);
+    }
+
+    .continue-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Menu Dropdown */
+    .menu-dropdown {
+      position: absolute;
+      top: 40px;
+      right: 24px;
+      background: white;
+      border: 1px solid rgba(34, 51, 59, 0.15);
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(34, 51, 59, 0.15);
+      min-width: 140px;
+      z-index: 100;
+      overflow: hidden;
+      display: none;
+    }
+
+    .menu-dropdown.active {
+      display: block;
+    }
+
+    .menu-item {
+      padding: 10px 16px;
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--navy);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: background 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .menu-item:hover {
+      background: rgba(34, 51, 59, 0.05);
+    }
+
+    .menu-item.danger {
+      color: #D32F2F;
+    }
+
+    .menu-item.danger:hover {
+      background: rgba(211, 47, 47, 0.08);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(34, 51, 59, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(34, 51, 59, 0.2);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+      letter-spacing: -0.3px;
+    }
+
+    .modal-subtext {
+      font-size: 14px;
+      color: rgba(34, 51, 59, 0.6);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(34, 51, 59, 0.2);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--navy);
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0, 180, 204, 0.1);
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid rgba(34, 51, 59, 0.2);
+      background: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(34, 51, 59, 0.05);
+      border-color: rgba(34, 51, 59, 0.3);
+    }
+
+    .btn-primary {
+      flex: 1;
+      padding: 12px 16px;
+      background: var(--teal);
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary:hover {
+      background: #0099AA;
+    }
+
+    .btn-primary:disabled {
+      background: rgba(34, 51, 59, 0.2);
+      cursor: not-allowed;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 80px 40px;
+      grid-column: 1 / -1;
+    }
+
+    .empty-state-icon {
+      font-size: 64px;
+      margin-bottom: 24px;
+      opacity: 0.3;
+    }
+
+    .empty-state-text {
+      font-size: 18px;
+      color: rgba(34, 51, 59, 0.5);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .empty-state-subtext {
+      font-size: 14px;
+      color: rgba(34, 51, 59, 0.4);
+    }
+
+    /* Loading State */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(34, 51, 59, 0.1);
+      border-top: 4px solid var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="gradient-bar"></div>
+
+  <header>
+    <div class="header-left">
+      <div class="logo">SD</div>
+      <div class="logo-text">Strategic District</div>
+    </div>
+    <button class="sign-out-btn" onclick="handleSignOut()">Sign Out</button>
+  </header>
+
+  <main id="main-content">
+    <div class="hero">
+      <h1 class="greeting">Welcome back, <span id="user-greeting">User</span></h1>
+      <p class="subtitle">Select a strategic plan to continue working, or create a new one.</p>
+    </div>
+
+    <div class="plans-container" id="plans-grid">
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <h2 class="modal-header">Create New Plan</h2>
+      <p class="modal-subtext">Give your plan a name to get started. You can change this later.</p>
+
+      <form onsubmit="handleCreatePlan(event)">
+        <div class="form-group">
+          <label class="form-label" for="plan-name-input">Plan Name</label>
+          <input
+            type="text"
+            id="plan-name-input"
+            class="form-input"
+            placeholder="e.g., District Strategic Plan 2025-26"
+            required
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="form-buttons">
+          <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn-primary" id="create-btn">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Initialize Supabase
+    const SUPABASE_URL = "https://mrdyxownxnyzjubvpwrk.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1yZHl4b3dueG55emp1YnZwd3JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MzYwODksImV4cCI6MjA4OTIxMjA4OX0.4TQomjn_4hu-5TrcyGi90wyv1HxxGKmEP1mu682hJHM";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null;
+    let allPlans = [];
+
+    // Initialize
+    async function init() {
+      await checkAuth();
+      if (currentUser) {
+        await loadPlans();
+      }
+    }
+
+    // Check authentication
+    async function checkAuth() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+          window.location.href = '/login/';
+          return;
+        }
+
+        currentUser = user;
+        const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+        document.getElementById('user-greeting').textContent = displayName;
+      } catch (error) {
+        console.error('Auth error:', error);
+        window.location.href = '/login/';
+      }
+    }
+
+    // Load user's plans
+    async function loadPlans() {
+      try {
+        const { data, error } = await supabase
+          .from('saved_plans')
+          .select('*')
+          .eq('user_id', currentUser.id)
+          .order('updated_at', { ascending: false });
+
+        if (error) throw error;
+
+        allPlans = data || [];
+        renderPlans();
+      } catch (error) {
+        console.error('Error loading plans:', error);
+        renderError('Failed to load your plans. Please try again.');
+      }
+    }
+
+    // Render plans grid
+    function renderPlans() {
+      const grid = document.getElementById('plans-grid');
+
+      if (allPlans.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <div class="empty-state-text">No plans yet</div>
+            <div class="empty-state-subtext">Create your first plan to get started</div>
+          </div>
+        `;
+        return;
+      }
+
+      const createCard = `
+        <div class="create-plan-card" onclick="openModal()">
+          <div class="create-plan-icon">+</div>
+          <div class="create-plan-text">Create New Plan</div>
+          <div class="create-plan-subtext">Start a new strategic plan</div>
+        </div>
+      `;
+
+      const planCards = allPlans.map(plan => {
+        const planType = plan.plan_type?.toLowerCase() || 'district';
+        const isBadgeDistrict = !planType.includes('school') && !planType.includes('spp');
+        const badgeClass = isBadgeDistrict ? 'badge-district' : 'badge-school';
+        const badgeText = isBadgeDistrict ? 'District Plan' : 'School Plan';
+
+        const lastModified = new Date(plan.updated_at);
+        const formattedDate = lastModified.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+
+        const progress = plan.plan_data?.completion_percentage || 0;
+
+        return `
+          <div class="plan-card">
+            <div class="plan-card-header">
+              <div class="plan-name">${escapeHtml(plan.plan_name)}</div>
+              <button class="kebab-menu" onclick="toggleMenu(event, '${plan.id}')" title="Menu">⋯</button>
+              <div class="menu-dropdown" id="menu-${plan.id}">
+                <button class="menu-item" onclick="renamePlan('${plan.id}', '${escapeHtml(plan.plan_name)}')">Rename</button>
+                <button class="menu-item danger" onclick="deletePlan('${plan.id}')">Delete</button>
+              </div>
+            </div>
+
+            <div class="plan-badge ${badgeClass}">${badgeText}</div>
+
+            <div class="plan-meta">
+              <div class="plan-meta-item">
+                <span class="plan-meta-label">Organization</span>
+                <div class="plan-meta-value">${escapeHtml(plan.district_name || 'Unnamed')}</div>
+              </div>
+              <div class="plan-meta-item">
+                <span class="plan-meta-label">Last Modified</span>
+                <div class="plan-meta-value">${formattedDate}</div>
+              </div>
+            </div>
+
+            <div class="progress-section">
+              <div class="progress-label">
+                <span class="progress-label-left">Progress</span>
+                <span class="progress-label-right">${progress}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+              </div>
+            </div>
+
+            <button class="continue-btn" onclick="continuePlan('${plan.id}', '${escapeHtml(plan.plan_name)}', '${planType}')">Continue</button>
+          </div>
+        `;
+      }).join('');
+
+      grid.innerHTML = createCard + planCards;
+    }
+
+    // Render error state
+    function renderError(message) {
+      const grid = document.getElementById('plans-grid');
+      grid.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">⚠️</div>
+          <div class="empty-state-text">${message}</div>
+          <div class="empty-state-subtext">Please refresh the page and try again</div>
+        </div>
+      `;
+    }
+
+    // Continue with a plan
+    function continuePlan(planId, planName, planType) {
+      localStorage.setItem('sd_current_plan_id', planId);
+      localStorage.setItem('sd_current_plan_name', planName);
+
+      // Redirect based on plan type
+      if (planType.includes('school') || planType.includes('spp')) {
+        window.location.href = '/strategic-school/index.html';
+      } else {
+        window.location.href = '/builder/index.html';
+      }
+    }
+
+    // Toggle menu
+    function toggleMenu(event, planId) {
+      event.stopPropagation();
+      const menu = document.getElementById(`menu-${planId}`);
+
+      // Close other menus
+      document.querySelectorAll('.menu-dropdown.active').forEach(m => {
+        if (m.id !== `menu-${planId}`) {
+          m.classList.remove('active');
+        }
+      });
+
+      menu.classList.toggle('active');
+    }
+
+    // Close menu when clicking elsewhere
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.kebab-menu')) {
+        document.querySelectorAll('.menu-dropdown.active').forEach(m => {
+          m.classList.remove('active');
+        });
+      }
+    });
+
+    // Modal functions
+    function openModal() {
+      document.getElementById('modal-overlay').classList.add('active');
+      document.getElementById('plan-name-input').focus();
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('active');
+      document.getElementById('plan-name-input').value = '';
+    }
+
+    // Create plan
+    async function handleCreatePlan(event) {
+      event.preventDefault();
+
+      const planName = document.getElementById('plan-name-input').value.trim();
+      if (!planName) return;
+
+      const createBtn = document.getElementById('create-btn');
+      createBtn.disabled = true;
+      createBtn.textContent = 'Creating...';
+
+      try {
+        const { data, error } = await supabase
+          .from('saved_plans')
+          .insert([
+            {
+              user_id: currentUser.id,
+              plan_name: planName,
+              plan_type: 'District Plan',
+              district_name: 'New District',
+              plan_data: { completion_percentage: 0 },
+            }
+          ])
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        closeModal();
+
+        // Store and redirect
+        localStorage.setItem('sd_current_plan_id', data.id);
+        localStorage.setItem('sd_current_plan_name', data.plan_name);
+
+        window.location.href = '/builder/index.html';
+      } catch (error) {
+        console.error('Error creating plan:', error);
+        alert('Failed to create plan. Please try again.');
+        createBtn.disabled = false;
+        createBtn.textContent = 'Create';
+      }
+    }
+
+    // Rename plan
+    async function renameplan(planId, currentName) {
+      const newName = prompt('Enter new plan name:', currentName);
+      if (!newName || newName.trim() === currentName) return;
+
+      try {
+        const { error } = await supabase
+          .from('saved_plans')
+          .update({ plan_name: newName.trim() })
+          .eq('id', planId)
+          .eq('user_id', currentUser.id);
+
+        if (error) throw error;
+
+        await loadPlans();
+      } catch (error) {
+        console.error('Error renaming plan:', error);
+        alert('Failed to rename plan. Please try again.');
+      }
+    }
+
+    // Delete plan
+    async function deletePlan(planId) {
+      if (!confirm('Are you sure? This action cannot be undone.')) return;
+
+      try {
+        const { error } = await supabase
+          .from('saved_plans')
+          .delete()
+          .eq('id', planId)
+          .eq('user_id', currentUser.id);
+
+        if (error) throw error;
+
+        await loadPlans();
+      } catch (error) {
+        console.error('Error deleting plan:', error);
+        alert('Failed to delete plan. Please try again.');
+      }
+    }
+
+    // Sign out
+    async function handleSignOut() {
+      try {
+        await supabase.auth.signOut();
+        window.location.href = '/login/';
+      } catch (error) {
+        console.error('Sign out error:', error);
+        alert('Failed to sign out. Please try again.');
+      }
+    }
+
+    // Escape HTML
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // Close modal when clicking overlay
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modal-overlay')) {
+        closeModal();
+      }
+    });
+
+    // Initialize on load
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>

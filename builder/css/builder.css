@@ -49,7 +49,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Layout */
 .container {
     display: flex;
-    height: calc(100vh - 5px);
+    height: calc(100vh - 60px);
     padding-top: 0;
     overflow: hidden;
 }
@@ -3738,4 +3738,14 @@ select:focus {
     height: 1px;
     background: linear-gradient(to right, transparent, #e0d8cc, transparent);
     margin: 2rem 0;
+}
+
+/* Assistant Panel Container */
+#assistantPanelContainer {
+    width: 380px;
+    min-width: 380px;
+    overflow-y: auto;
+    border-left: 1px solid #e0d5c7;
+    background: white;
+    flex-shrink: 0;
 }

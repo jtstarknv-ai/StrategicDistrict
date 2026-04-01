@@ -3,30 +3,29 @@
 // Vanilla JS, no frameworks. Handles budget allocation, multi-year projections.
 // ============================================================================
 
-// Funding source definitions with metadata
+// Funding source definitions for planning process (not district operations)
 var FUNDING_SOURCES = [
-  { key: 'title_i', label: 'Title I (ESSA)', category: 'federal' },
-  { key: 'title_ii', label: 'Title II (ESSA)', category: 'federal' },
-  { key: 'title_iii', label: 'Title III (ESSA)', category: 'federal' },
-  { key: 'title_iv', label: 'Title IV (ESSA)', category: 'federal' },
-  { key: 'idea', label: 'IDEA (Special Education)', category: 'federal' },
-  { key: 'esser', label: 'ESSER/Federal Relief', category: 'federal_temporary', expiresYear: 2025 },
+  { key: 'facilitation', label: 'Facilitation & Leadership', category: 'planning' },
+  { key: 'community_engagement', label: 'Community Engagement', category: 'planning' },
+  { key: 'staff_time', label: 'Staff Time & Compensation', category: 'planning' },
+  { key: 'data_tools', label: 'Data Tools & Analysis', category: 'planning' },
+  { key: 'external_consultant', label: 'External Consultant Fees', category: 'planning' },
+  { key: 'materials_comms', label: 'Materials & Communications', category: 'planning' },
+  { key: 'monitoring_eval', label: 'Monitoring & Evaluation', category: 'planning' },
+  { key: 'title_funds', label: 'Title I/II/III/IV Allocation', category: 'federal' },
   { key: 'general_fund', label: 'General Fund', category: 'local' },
-  { key: 'state_allocation', label: 'State Allocation', category: 'state' },
-  { key: 'federal_grant', label: 'Federal Grant', category: 'grant' },
-  { key: 'local_grant', label: 'Local/Private Grant', category: 'grant' },
-  { key: 'bond_capital', label: 'Bond/Capital Funds', category: 'capital' },
+  { key: 'grant_planning', label: 'Planning-Specific Grant', category: 'grant' },
   { key: 'other', label: 'Other (custom)', category: 'other' }
 ];
 
 var BUDGET_PRIORITIES = [
-  { key: 'academic', label: 'Academic Achievement' },
-  { key: 'sel', label: 'Social-Emotional Learning' },
-  { key: 'teacher_dev', label: 'Teacher Development' },
-  { key: 'tech_infra', label: 'Technology & Infrastructure' },
-  { key: 'family_community', label: 'Family & Community Engagement' },
-  { key: 'equity', label: 'Equity & Access' },
-  { key: 'safety_climate', label: 'Safety & Climate' },
+  { key: 'facilitation', label: 'Quality Facilitation & Leadership' },
+  { key: 'stakeholder_engagement', label: 'Robust Stakeholder Engagement' },
+  { key: 'data_insights', label: 'Data Tools & Analysis' },
+  { key: 'external_expertise', label: 'External Expertise & Consulting' },
+  { key: 'communications', label: 'Clear Communications & Transparency' },
+  { key: 'equity_focus', label: 'Equity-Centered Approach' },
+  { key: 'monitoring', label: 'Monitoring & Evaluation' },
   { key: 'other_priority', label: 'Other (custom)' }
 ];
 

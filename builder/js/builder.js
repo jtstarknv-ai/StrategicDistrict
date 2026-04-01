@@ -360,7 +360,12 @@ function stepGoto(stepNum) {
   if (stepNum === 12 && typeof showPostPlanSurveySetup === 'function') showPostPlanSurveySetup();
   if (stepNum === 13) renderImplementationCalendar();
   if (stepNum === 14) { renderReviewPage(); if (typeof renderBudgetDashboard === 'function') renderBudgetDashboard('budgetDashboardContainer'); if (typeof renderFeasibilityCheck === 'function') renderFeasibilityCheck(); }
-  
+
+  // Update Assistant Panel for current step
+  if (typeof updateAssistantStep === 'function') {
+    updateAssistantStep(stepNum);
+  }
+
   updatePreview();
 }
 

@@ -78,7 +78,7 @@
         });
 
         var builderBtn = document.createElement("a");
-        builderBtn.href = "/builder/";
+        builderBtn.href = "/builder/plan-hub.html";
         builderBtn.className = "header-link header-builder";
         builderBtn.textContent = "Builder";
 

@@ -164,6 +164,7 @@ function stepGoto(stepNum) {
   renderStep(currentStep);
   updateProgressBar();
   updateGuidanceContent(currentStep);
+  updateAssistantStep(stepNum);
   window.scrollTo(0, 0);
 }
 

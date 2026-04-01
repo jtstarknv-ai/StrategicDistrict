@@ -12,6 +12,7 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/school.css">
+    <link rel="stylesheet" href="/css/assistant-panel.css">
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
@@ -23,35 +24,19 @@
     <!-- Auth & Sync -->
     <script src="/js/shared/auth.js"></script>
     <script src="/js/shared/plan-sync.js"></script>
+    <script src="/js/shared/plan-loader.js"></script>
+
+    <!-- Shared Header Component -->
+    <script src="/js/shared/header-nav.js"></script>
+
+    <!-- Assistant Panel Component -->
+    <script src="/js/shared/assistant-panel.js"></script>
 
     <!-- Vendor Scripts -->
     <script src="/js/vendor/pretext.min.js"></script>
 </head>
 <body>
-    <!-- Gradient Bar -->
-    <div class="gradient-bar"></div>
-
-    <!-- Header Navigation -->
-    <header class="site-header">
-        <div class="header-container">
-            <div class="logo-section">
-                <div class="logo">
-                    <svg width="22" height="22" viewBox="0 0 72 72" fill="none" style="flex-shrink:0"><circle cx="36" cy="36" r="20" fill="url(#sdGrad)" fill-opacity="0.08"/><circle cx="36" cy="36" r="20" stroke="url(#sdGrad)" stroke-width="1.5" stroke-opacity="0.2"/><text x="36" y="42" text-anchor="middle" font-family="Source Serif Pro, serif" font-weight="700" font-size="20" fill="#22333B">SD</text><defs><linearGradient id="sdGrad" x1="16" y1="16" x2="56" y2="56"><stop stop-color="#00B4CC"/><stop offset="0.5" stop-color="#D4A537"/><stop offset="1" stop-color="#6B4C9A"/></linearGradient></defs></svg>
-                    Strategic District Plan
-                </div>
-            </div>
-
-            <nav class="nav-center">
-                <a href="../builder/index.html" class="nav-link" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="16" height="16" viewBox="0 0 48 48" fill="none" style="flex-shrink:0"><rect x="10" y="20" width="9" height="16" rx="2" fill="#00B4CC" fill-opacity="0.75"/><rect x="20" y="14" width="9" height="22" rx="2" fill="#00B4CC" fill-opacity="0.5"/><rect x="30" y="8" width="9" height="28" rx="2" fill="#00B4CC" fill-opacity="0.35"/></svg>District Strategic Plan</a>
-                <a href="../builder/dashboard.html" class="nav-link" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="16" height="16" viewBox="0 0 48 48" fill="none" style="flex-shrink:0"><polyline points="8,34 16,26 24,30 32,16 40,12" stroke="#6ECF6E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="32" cy="16" r="3" fill="#6ECF6E" fill-opacity="0.8"/></svg>Progress Dashboard</a>
-                <a href="../strategic-school/index.html" class="nav-link active" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="16" height="16" viewBox="0 0 48 48" fill="none" style="flex-shrink:0"><rect x="14" y="24" width="20" height="14" rx="2" fill="#E07A5F" fill-opacity="0.6"/><polygon points="24,12 12,26 36,26" fill="#E07A5F" fill-opacity="0.4"/><rect x="21" y="30" width="6" height="8" rx="1" fill="#EAE0D5" fill-opacity="0.9"/></svg>Strategic School</a>
-            </nav>
-
-            <div class="nav-actions">
-                <button class="sign-out-btn" onclick="handleSignOut(event)">Sign Out</button>
-            </div>
-        </div>
-    </header>
+    <script>renderSharedHeader('school');</script>
 
     <!-- Main Container -->
     <div class="school-builder-container">
@@ -106,7 +91,7 @@
                 </li>
                 <li class="step-item" data-step="12" onclick="stepGoto(12)">
                     <span class="step-number">12</span>
-                    <span class="step-label">Review & Export</span>
+                    <span class="step-label">Preview and Finalize</span>
                 </li>
             </ul>
 
@@ -707,12 +692,18 @@
                 </div>
             </div>
 
-            <!-- Step 12: Review & Export -->
+            <!-- Step 12: Preview and Finalize -->
             <div class="step-content" data-step="12">
                 <div class="step-header">
-                    <h1 class="step-title">Review & Export</h1>
+                    <h1 class="step-title">Preview and Finalize</h1>
                 </div>
                 <p class="section-purpose">Review your completed plan, finalize it, and export for stakeholder sharing.</p>
+
+                <!-- Live Plan Preview -->
+                <div id="livePlanPreview" style="background: white; border: 2px solid #e0d5c7; border-radius: 12px; padding: 24px; margin-bottom: 24px; margin-top: 1rem;">
+                    <h3 style="font-family: 'Source Serif Pro', serif; color: #22333B; margin-bottom: 16px;">Live Plan Preview</h3>
+                    <div id="previewContent" style="color: #666; font-size: 0.95rem; line-height: 1.6;">Loading preview...</div>
+                </div>
 
                 <div style="padding:1.5rem 0">
                     <!-- Compliance Checklist -->
@@ -770,19 +761,21 @@
                 </div>
             </div>
         </main>
-    </div>
 
-    <!-- Guidance Panel -->
-    <div class="guidance-panel" id="guidancePanel">
-        <button class="guidance-toggle" onclick="toggleGuidance()" title="Help & Guidance">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </button>
-        <div class="guidance-content" id="guidanceContent"></div>
+        <!-- Assistant Panel Container -->
+        <div id="assistantPanelContainer"></div>
     </div>
 
     <!-- Scripts -->
     <script src="js/state-config.js"></script>
     <script src="js/school-data.js"></script>
     <script src="js/school.js"></script>
+
+    <!-- Initialize Assistant Panel -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        renderAssistantPanel('assistantPanelContainer', 'school');
+    });
+    </script>
 </body>
 </html>

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Districts | StrategicDistrict</title>
+  <meta name="description" content="Browse and explore saved district strategic plans, view progress, and access monitoring dashboards.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/header.css">
+  <link rel="stylesheet" href="/styles/footer.css">
+  <link rel="stylesheet" href="/styles/components.css">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0/dist/umd/supabase.js"></script>
+
+  <style>
+    /* Override body padding */
+    body {
+      padding-top: 0;
+    }
+
+    header {
+      margin-top: 6px;
+    }
+
+    .header-content {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .logo img {
+      height: 48px;
+      width: auto;
+    }
+
+    .logo span {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    /* Animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    
+    .stagger > * { transition-delay: calc(var(--i, 0) * 120ms); }
+
+    /* Hero Section */
+    .hero {
+      padding: 60px 20px;
+      background: linear-gradient(135deg, var(--color-primary-cream) 0%, rgba(198, 172, 143, 0.15) 100%);
+      min-height: 380px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--color-primary-navy);
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-family: var(--font-sans);
+      font-size: 1.125rem;
+      line-height: 1.6;
+      color: var(--color-primary-brown);
+      margin: 0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Section Title */
+    .section-title {
+      text-align: center;
+      margin-bottom: 48px;
+      padding: 0 20px;
+    }
+
+    .section-title h2 {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin: 0 0 12px 0;
+    }
+
+    .section-title p {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      color: var(--color-primary-brown);
+      margin: 0;
+    }
+
+    /* Districts Container */
+    .districts-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      background: white;
+    }
+
+    .districts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    /* District Card */
+    .district-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(198, 172, 143, 0.2);
+      background: white;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .district-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+      border-color: rgba(0, 180, 204, 0.3);
+    }
+
+    .card-header {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid rgba(198, 172, 143, 0.15);
+      background: linear-gradient(135deg, rgba(0, 180, 204, 0.03), rgba(212, 165, 55, 0.02));
+    }
+
+    .card-badge {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 99px;
+      background: rgba(0, 180, 204, 0.15);
+      color: #00997a;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin: 0;
+      word-break: break-word;
+    }
+
+    .card-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(198, 172, 143, 0.1);
+    }
+
+    .card-stat:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .stat-label {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      color: var(--color-primary-brown);
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-family: var(--font-sans);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+    }
+
+    .stat-value.teal {
+      color: var(--color-pop-teal);
+    }
+
+    .stat-value.gold {
+      color: var(--color-pop-gold);
+    }
+
+    .card-footer {
+      padding: 20px 24px 24px;
+      border-top: 1px solid rgba(198, 172, 143, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card-links {
+      display: flex;
+      gap: 12px;
+      flex-direction: column;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .card-link.primary {
+      background: var(--color-pop-teal);
+      color: white;
+      border-color: var(--color-pop-teal);
+    }
+
+    .card-link.primary:hover {
+      background: #0099aa;
+      border-color: #0099aa;
+      transform: translateY(-1px);
+    }
+
+    .card-link.secondary {
+      background: rgba(212, 165, 55, 0.08);
+      color: var(--color-pop-gold);
+      border-color: rgba(212, 165, 55, 0.2);
+    }
+
+    .card-link.secondary:hover {
+      background: rgba(212, 165, 55, 0.15);
+      border-color: rgba(212, 165, 55, 0.4);
+    }
+
+    /* Empty State */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--color-primary-brown);
+    }
+
+    .empty-state h3 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin-bottom: 12px;
+    }
+
+    /* Section Divider */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(198, 172, 143, 0.2), 
+        transparent);
+      margin: 0;
+    }
+
+    /* Loading State */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--color-primary-brown);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(0, 180, 204, 0.2);
+      border-top-color: var(--color-pop-teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .districts-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .hero {
+        padding: 40px 16px;
+        min-height: 300px;
+      }
+
+      .hero h1 {
+        font-size: 1.75rem;
+      }
+
+      .section-title h2 {
+        font-size: 1.5rem;
+      }
+
+      .districts-container {
+        padding: 40px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Gradient Bar -->
+  <div class="gradient-bar"></div>
+
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-content">
+      <div class="logo">
+        <a href="/" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--color-primary-navy);">
+          <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
+            <rect x="10" y="12" width="28" height="24" rx="4" stroke="currentColor" stroke-width="2" fill="none"/>
+            <line x1="10" y1="20" x2="38" y2="20" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="15" cy="28" r="2" fill="currentColor" opacity="0.6"/>
+            <circle cx="20" cy="28" r="2" fill="currentColor" opacity="0.6"/>
+            <circle cx="25" cy="28" r="2" fill="currentColor" opacity="0.6"/>
+          </svg>
+          <span>Strategic District</span>
+        </a>
+      </div>
+
+      <nav class="main-nav">
+        <a href="/what-we-offer/">What We Offer</a>
+        <a href="/how-it-works/">How It Works</a>
+        <a href="/sample-plan/">Strategic Plans</a>
+        <a href="/districts/">Districts</a>
+        <a href="/reports/district-monitoring.html">Monitoring</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="/login/" class="btn-text">Log in</a>
+        <a href="/signup/" class="btn-primary">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero reveal">
+    <div class="hero-inner">
+      <h1>Explore Districts</h1>
+      <p>Browse saved strategic plans from partner districts, monitor progress in real-time, and learn from proven implementation practices.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Districts Section -->
+  <section class="districts-container">
+    <div class="section-title reveal">
+      <h2>Available Districts</h2>
+      <p>Select a district to view its strategic plan, goals, and progress monitoring dashboard.</p>
+    </div>
+
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading districts...</p>
+    </div>
+
+    <div id="error" style="display: none; text-align: center; padding: 40px 20px; color: #c4604a; background: rgba(224, 122, 95, 0.05); border-radius: var(--radius-lg); margin-bottom: 20px;"></div>
+
+    <div class="districts-grid stagger" id="districtsGrid">
+      <!-- Populated by JavaScript -->
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Strategic District</h4>
+        <p>Build your district's strategic plan in weeks, not months. Research-based framework trusted by education leaders.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="/what-we-offer/">What We Offer</a></li>
+          <li><a href="/how-it-works/">How It Works</a></li>
+          <li><a href="/sample-plan/">Strategic Plans</a></li>
+          <li><a href="/districts/">Districts</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/">Home</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Strategic District. All rights reserved. | <a href="/">Privacy & Terms</a></p>
+    </div>
+  </footer>
+
+  <script src="/js/shared/auth.js"></script>
+  <script>
+    // Supabase configuration
+    const SUPABASE_URL = "https://mrdyxownxnyzjubvpwrk.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1yZHl4b3dueG55emp1YnZwd3JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MzYwODksImV4cCI6MjA4OTIxMjA4OX0.4TQomjn_4hu-5TrcyGi90wyv1HxxGKmEP1mu682hJHM";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let districtsData = [];
+
+    async function loadDistricts() {
+      try {
+        // Fetch all district plans
+        const { data: plans, error: plansError } = await supabase
+          .from('saved_plans')
+          .select('*')
+          .eq('plan_type', 'district');
+
+        if (plansError) throw plansError;
+
+        if (!plans || plans.length === 0) {
+          showEmpty();
+          return;
+        }
+
+        // Build districts array with aggregated data
+        const districts = [];
+        
+        for (const plan of plans) {
+          const districtInfo = plan.plan_data?.district_info || {};
+          const districtId = plan.id;
+          const districtName = districtInfo.name || 'Unnamed District';
+
+          // Fetch goals for this district
+          const { data: goals } = await supabase
+            .from('sd_plan_goals')
+            .select('*')
+            .eq('district_id', districtId);
+
+          // Count goals by status
+          let goalCounts = {
+            total: goals?.length || 0,
+            on_track: goals?.filter(g => g.status === 'on_track').length || 0,
+            at_risk: goals?.filter(g => g.status === 'at_risk').length || 0,
+            behind: goals?.filter(g => g.status === 'behind').length || 0
+          };
+
+          districts.push({
+            id: districtId,
+            name: districtName,
+            status: plan.current_version || 'Draft',
+            goals: goalCounts,
+            createdAt: plan.created_at
+          });
+        }
+
+        districtsData = districts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        displayDistricts();
+      } catch (err) {
+        console.error('Error loading districts:', err);
+        showError('Failed to load districts. Please try again.');
+      }
+    }
+
+    function displayDistricts() {
+      const grid = document.getElementById('districtsGrid');
+      document.getElementById('loading').style.display = 'none';
+
+      if (districtsData.length === 0) {
+        showEmpty();
+        return;
+      }
+
+      grid.innerHTML = districtsData.map((district, index) => `
+        <div class="district-card reveal" style="--i: ${index};">
+          <div class="card-header">
+            <div class="card-badge">${district.status}</div>
+            <h3 class="card-title">${escapeHtml(district.name)}</h3>
+          </div>
+
+          <div class="card-body">
+            <div class="card-stat">
+              <span class="stat-label">Total Goals</span>
+              <span class="stat-value teal">${district.goals.total}</span>
+            </div>
+            <div class="card-stat">
+              <span class="stat-label">On Track</span>
+              <span class="stat-value">${district.goals.on_track}</span>
+            </div>
+            <div class="card-stat">
+              <span class="stat-label">At Risk</span>
+              <span class="stat-value">${district.goals.at_risk}</span>
+            </div>
+            <div class="card-stat">
+              <span class="stat-label">Behind</span>
+              <span class="stat-value">${district.goals.behind}</span>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="card-links">
+              <a href="/reports/district-monitoring.html?district_id=${encodeURIComponent(district.id)}" class="card-link primary">
+                View Monitoring Dashboard
+              </a>
+              <a href="#" class="card-link secondary">
+                View Full Strategic Plan
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Trigger animations
+      setTimeout(() => {
+        document.querySelectorAll('.reveal').forEach(el => {
+          el.classList.add('visible');
+        });
+      }, 50);
+    }
+
+    function showEmpty() {
+      const grid = document.getElementById('districtsGrid');
+      document.getElementById('loading').style.display = 'none';
+      grid.innerHTML = `
+        <div class="empty-state reveal">
+          <h3>No Districts Yet</h3>
+          <p>Saved district strategic plans will appear here. Start building your district's plan to get started.</p>
+          <a href="/" style="display: inline-block; margin-top: 20px; padding: 12px 24px; background: var(--color-pop-teal); color: white; border-radius: var(--radius-md); text-decoration: none; font-weight: 600;">
+            Build a Strategic Plan
+          </a>
+        </div>
+      `;
+      
+      setTimeout(() => {
+        document.querySelector('.empty-state').classList.add('visible');
+      }, 50);
+    }
+
+    function showError(message) {
+      document.getElementById('loading').style.display = 'none';
+      const errorEl = document.getElementById('error');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', loadDistricts);
+  </script>
+</body>
+</html>

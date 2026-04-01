@@ -708,20 +708,48 @@
       margin-bottom: var(--spacing-lg);
       opacity: 0.5;
     }
+
+    /* BACK LINK */
+    .back-link {
+      display: none;
+      margin-bottom: var(--spacing-lg);
+      padding: var(--spacing-md);
+    }
+
+    .back-link a {
+      color: var(--color-pop-teal);
+      text-decoration: none;
+      font-weight: var(--font-weight-medium);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      transition: opacity 0.2s ease;
+    }
+
+    .back-link a:hover {
+      opacity: 0.8;
+    }
+
+    .back-link a::before {
+      content: '? ';
+    }
   </style>
 </head>
 <body>
   <!-- HEADER -->
   <div class="header">
     <div class="header-container">
+      <div class="back-link" id="back-link">
+        <a href="/districts/">Back to All Districts</a>
+      </div>
       <h1>District Progress Monitoring Dashboard</h1>
       <div class="header-controls">
-        <div class="district-selector">
+        <div id="district-selector"><div class="district-selector">
           <label for="district-select">Select District</label>
           <select id="district-select">
             <option value="">Loading districts...</option>
           </select>
-        </div>
+        </div></div>
       </div>
     </div>
   </div>
@@ -867,10 +895,55 @@
       '#D4A537', '#E07A5F', '#6ECF6E', '#BB3E03', '#A39171'
     ];
 
+
+    // Get district_id from URL parameters
+    function getDistrictIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('district_id');
+    }
+
+    // Update page title with district name
+    function updatePageTitle(districtName) {
+      document.title = `${districtName} - District Progress Monitoring Dashboard`;
+      const h1 = document.querySelector('h1');
+      if (h1) {
+        h1.textContent = districtName + ' - Progress Monitoring Dashboard';
+      }
+    }
     // Initialize
     document.addEventListener('DOMContentLoaded', async () => {
-      await loadDistricts();
-      document.getElementById('district-select').addEventListener('change', handleDistrictChange);
+      const districtIdFromURL = getDistrictIdFromURL();
+      
+      if (districtIdFromURL) {
+        // If district_id is in URL, load that district directly
+        currentDistrictId = districtIdFromURL;
+        document.getElementById('district-selector').style.display = 'none';
+        document.getElementById('back-link').style.display = 'block';
+        
+        showLoading(true);
+        try {
+          await loadDashboardData();
+          const districtInfo = await supabase
+            .from('sd_districts')
+            .select('name')
+            .eq('id', currentDistrictId)
+            .single();
+          
+          if (districtInfo.data) {
+            updatePageTitle(districtInfo.data.name);
+          }
+          
+          showLoading(false);
+          displayDashboard();
+        } catch (error) {
+          showLoading(false);
+          showError('Failed to load dashboard data: ' + error.message);
+        }
+      } else {
+        // Default behavior: show dropdown
+        await loadDistricts();
+        document.getElementById('district-select').addEventListener('change', handleDistrictChange);
+      }
     });
 
     // Load all districts for dropdown

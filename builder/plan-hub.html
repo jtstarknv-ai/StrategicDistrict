@@ -758,7 +758,7 @@
           year: 'numeric'
         });
 
-        const progress = plan.plan_data?.completion_percentage || 0;
+        const progress = plan.plan_data?.completionPercentage || plan.plan_data?.completion_percentage || 0;
 
         return `
           <div class="plan-card">
@@ -776,7 +776,7 @@
             <div class="plan-meta">
               <div class="plan-meta-item">
                 <span class="plan-meta-label">Organization</span>
-                <div class="plan-meta-value">${escapeHtml(plan.district_name || 'Unnamed')}</div>
+                <div class="plan-meta-value">${escapeHtml(plan.plan_data?.district?.name || plan.plan_data?.planName || plan.plan_name || 'Unnamed')}</div>
               </div>
               <div class="plan-meta-item">
                 <span class="plan-meta-label">Last Modified</span>
@@ -880,9 +880,8 @@
             {
               user_id: currentUser.id,
               plan_name: planName,
-              plan_type: 'District Plan',
-              district_name: 'New District',
-              plan_data: { completion_percentage: 0 },
+              plan_type: 'district',
+              plan_data: { completionPercentage: 0 },
             }
           ])
           .select()
@@ -906,7 +905,7 @@
     }
 
     // Rename plan
-    async function renameplan(planId, currentName) {
+    async function renamePlan(planId, currentName) {
       const newName = prompt('Enter new plan name:', currentName);
       if (!newName || newName.trim() === currentName) return;
 

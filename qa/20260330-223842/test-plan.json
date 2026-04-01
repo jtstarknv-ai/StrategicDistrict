@@ -1,0 +1,743 @@
+{
+  "timestamp": "2026-03-30T22:42:00Z",
+  "metadata": {
+    "architect": "Agent 2 - QA Council",
+    "analysisDate": "2026-03-30T22:38:42Z",
+    "coverageScope": "District Builder (14 steps, 11 JS files) + School Builder (12 steps, 1 JS file)"
+  },
+  "suites": [
+    {
+      "name": "Critical Path - App Initialization",
+      "target": "both",
+      "priority": "P0",
+      "tests": [
+        {
+          "id": "TEST-001",
+          "name": "App loads without JavaScript errors",
+          "priority": "P0",
+          "type": "structural",
+          "target": "both",
+          "steps": [
+            "Open district-builder/index.html in browser",
+            "Check browser console for JS errors (F12 → Console)",
+            "Wait 2 seconds for all scripts to load",
+            "Verify no red error messages in console"
+          ],
+          "expectedResult": "No JavaScript syntax, reference, or runtime errors in console. All 11 JS files load successfully (district) or school.js loads successfully (school).",
+          "dependsOn": []
+        },
+        {
+          "id": "TEST-002",
+          "name": "Global planState object initializes correctly",
+          "priority": "P0",
+          "type": "structural",
+          "target": "district",
+          "steps": [
+            "Open district builder",
+            "Open console and type: typeof planState",
+            "Check planState has required properties: districtName, budget, stakeholders, vision, values, competencies, domains, goals, initiatives, calendar, alignment"
+          ],
+          "expectedResult": "planState is defined as object. Contains all 11 required root properties. No undefined errors.",
+          "dependsOn": ["TEST-001"]
+        },
+        {
+          "id": "TEST-003",
+          "name": "School builder initializes with correct step structure",
+          "priority": "P0",
+          "type": "structural",
+          "target": "school",
+          "steps": [
+            "Open school builder",
+            "Verify 12 steps are present in sidebar",
+            "Check each step has contentDiv and sidebarEntry",
+            "Verify no missing step structural elements"
+          ],
+          "expectedResult": "All 12 steps load with complete DOM structure. Sidebar shows all steps numbered 1-12.",
+          "dependsOn": ["TEST-001"]
+        }
+      ]
+    },
+    {
+      "name": "Critical Path - Step Navigation",
+      "target": "both",
+      "priority": "P0",
+      "tests": [
+        {
+          "id": "TEST-004",
+          "name": "District builder: All 14 steps are navigable (step 1-14)",
+          "priority": "P0",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Start at step 1",
+            "Click next button, verify step 2 loads",
+            "Repeat for all steps 2→3→4→...→14",
+            "Verify content div changes for each step",
+            "Verify sidebar active state updates"
+          ],
+          "expectedResult": "User can navigate forward through all 14 steps sequentially. Each step's content div displays correct content. Sidebar highlights current step.",
+          "dependsOn": ["TEST-002"]
+        },
+        {
+          "id": "TEST-005",
+          "name": "District builder: All 14 steps are backnavigable (step 14-1)",
+          "priority": "P0",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Reach step 14",
+            "Click previous button, verify step 13 loads",
+            "Repeat for all steps 14→13→12→...→1",
+            "Verify content div changes for each step backward",
+            "Verify sidebar active state updates"
+          ],
+          "expectedResult": "User can navigate backward through all 14 steps. No data loss when moving backward. Sidebar reflects current step.",
+          "dependsOn": ["TEST-004"]
+        },
+        {
+          "id": "TEST-006",
+          "name": "School builder: All 12 steps are navigable and backnavigable",
+          "priority": "P0",
+          "type": "functional",
+          "target": "school",
+          "steps": [
+            "Start at step 1",
+            "Navigate forward through all 12 steps",
+            "Navigate backward from step 12 to step 1",
+            "Verify content divs change correctly",
+            "Verify sidebar highlighting works"
+          ],
+          "expectedResult": "All 12 steps are reachable in both directions. Content updates correctly. No navigation errors.",
+          "dependsOn": ["TEST-003"]
+        },
+        {
+          "id": "TEST-007",
+          "name": "Direct step navigation via sidebar links",
+          "priority": "P0",
+          "type": "functional",
+          "target": "both",
+          "steps": [
+            "Click step 1 sidebar entry",
+            "Click step 7 sidebar entry directly",
+            "Verify step 7 content loads",
+            "Click step 3 sidebar entry",
+            "Verify step 3 content loads (backward jump)"
+          ],
+          "expectedResult": "Sidebar links navigate directly to steps. No sequential navigation required. Can jump forward and backward.",
+          "dependsOn": ["TEST-004", "TEST-006"]
+        }
+      ]
+    },
+    {
+      "name": "Critical Path - Data Persistence",
+      "target": "both",
+      "priority": "P0",
+      "tests": [
+        {
+          "id": "TEST-008",
+          "name": "District builder: Basic form data persists to localStorage",
+          "priority": "P0",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Navigate to step 1 (District Profile)",
+            "Enter test data in planNameTop field",
+            "Move to step 2",
+            "Move back to step 1",
+            "Verify entered data is still present"
+          ],
+          "expectedResult": "Form field data persists across step navigation. No data loss when changing steps.",
+          "dependsOn": ["TEST-004"]
+        },
+        {
+          "id": "TEST-009",
+          "name": "School builder: Goal data persists across navigation",
+          "priority": "P0",
+          "type": "functional",
+          "target": "school",
+          "steps": [
+            "Navigate to goal creation section",
+            "Enter goal name, metric, target",
+            "Navigate away and back",
+            "Verify goal data is still present"
+          ],
+          "expectedResult": "School builder goal data persists. No data loss on step changes.",
+          "dependsOn": ["TEST-006"]
+        },
+        {
+          "id": "TEST-010",
+          "name": "Page refresh preserves all entered data",
+          "priority": "P0",
+          "type": "functional",
+          "target": "both",
+          "steps": [
+            "Enter data in multiple fields across steps (district or school)",
+            "Perform browser refresh (F5)",
+            "Navigate to previously filled steps",
+            "Verify all data is restored from localStorage"
+          ],
+          "expectedResult": "All data survives page refresh. localStorage persistence works correctly.",
+          "dependsOn": ["TEST-008", "TEST-009"]
+        }
+      ]
+    },
+    {
+      "name": "Critical Path - Duplicate Function Resolution",
+      "target": "district",
+      "priority": "P0",
+      "tests": [
+        {
+          "id": "TEST-011",
+          "name": "calculateFeasibilityScore conflict resolution",
+          "priority": "P0",
+          "type": "structural",
+          "target": "district",
+          "steps": [
+            "Console: search for calculateFeasibilityScore calls",
+            "Identify which version is called (ai-engine.js vs budget-integration.js)",
+            "Test feasibility score calculation on a strategic goal",
+            "Verify results are consistent",
+            "Check console for duplicate function warnings"
+          ],
+          "expectedResult": "Only one calculateFeasibilityScore is active. Results are consistent. No function conflicts or undefined behaviors. Implementation matches expected signature.",
+          "dependsOn": ["TEST-002"]
+        },
+        {
+          "id": "TEST-012",
+          "name": "updateBudgetSummary conflict resolution",
+          "priority": "P0",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Navigate to step 2 (Budget & Funding Sources)",
+            "Enter budget values",
+            "Verify budget summary updates",
+            "Move to step 8 (Strategic Goals) and back",
+            "Verify budget summary display is consistent"
+          ],
+          "expectedResult": "Budget summary displays consistently. Only one updateBudgetSummary function is executing. No display conflicts or inconsistent calculations.",
+          "dependsOn": ["TEST-004", "TEST-008"]
+        }
+      ]
+    },
+    {
+      "name": "P1 - Missing DOM Elements (District Builder)",
+      "target": "district",
+      "priority": "P1",
+      "tests": [
+        {
+          "id": "TEST-013",
+          "name": "AI Helper panel elements exist or are created dynamically",
+          "priority": "P1",
+          "type": "structural",
+          "target": "district",
+          "steps": [
+            "Look for AI Helper in UI",
+            "Console: search for aiHelper, aiHelperPanel, aiHelperBody, aiHelperTitle",
+            "If not found, verify they're created dynamically when needed",
+            "Test AI Helper functionality if available"
+          ],
+          "expectedResult": "AI Helper elements exist statically or are created dynamically without errors. No undefined reference errors when AI Helper is used.",
+          "dependsOn": ["TEST-001"]
+        },
+        {
+          "id": "TEST-014",
+          "name": "AI API key input fields functional or hidden appropriately",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Check for ai-cf-token input",
+            "Check for ai-groq-key input",
+            "If visible, test entering API keys",
+            "If hidden, verify they're not referenced when not needed"
+          ],
+          "expectedResult": "API key inputs are either functional when visible, or properly hidden/removed without causing errors.",
+          "dependsOn": ["TEST-013"]
+        },
+        {
+          "id": "TEST-015",
+          "name": "Calendar view elements (quarterly and timeline)",
+          "priority": "P1",
+          "type": "structural",
+          "target": "district",
+          "steps": [
+            "Navigate to step 13 (Implementation Calendar)",
+            "Look for calendar quarterly view toggle",
+            "Look for calendar timeline view toggle",
+            "Try switching between views if available"
+          ],
+          "expectedResult": "Calendar views are implemented or feature is disabled gracefully. No errors when calendar controls are clicked.",
+          "dependsOn": ["TEST-004"]
+        },
+        {
+          "id": "TEST-016",
+          "name": "Custom domain and competency creation fields",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Navigate to step 6 (Competencies)",
+            "Look for custom competency category and skill fields",
+            "Try creating a custom competency if interface available",
+            "Navigate to step 7 (Strategic Domains)",
+            "Look for custom domain name and description fields",
+            "Try creating custom domain if interface available"
+          ],
+          "expectedResult": "Custom field inputs are available or feature is not required. No errors when attempting custom entries.",
+          "dependsOn": ["TEST-004"]
+        },
+        {
+          "id": "TEST-017",
+          "name": "Stakeholder survey elements display",
+          "priority": "P1",
+          "type": "structural",
+          "target": "district",
+          "steps": [
+            "Navigate to step 3 (Stakeholder Engagement)",
+            "Verify survey form container is present",
+            "Check for response count displays (response-count, total-responses, live-responses)",
+            "Check for role breakdown chart (role-breakdown)"
+          ],
+          "expectedResult": "Survey elements display or are conditionally hidden. No console errors from missing elements.",
+          "dependsOn": ["TEST-004"]
+        },
+        {
+          "id": "TEST-018",
+          "name": "Per-pupil expenditure metric display",
+          "priority": "P1",
+          "type": "structural",
+          "target": "district",
+          "steps": [
+            "Navigate to step 2 (Budget & Funding Sources)",
+            "Look for per-pupil expenditure display",
+            "Enter budget and enrollment data",
+            "Verify metric calculates or displays"
+          ],
+          "expectedResult": "Per-pupil expenditure is calculated and displayed, or feature is not in current scope.",
+          "dependsOn": ["TEST-004"]
+        },
+        {
+          "id": "TEST-019",
+          "name": "Upgrade modal appears when required",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Identify premium feature in district builder",
+            "Attempt to access premium feature without upgrade",
+            "Check if upgradeModal appears",
+            "Verify modal functionality"
+          ],
+          "expectedResult": "Upgrade modal appears when accessing premium features. Modal displays without errors.",
+          "dependsOn": ["TEST-002"]
+        },
+        {
+          "id": "TEST-020",
+          "name": "Drift alert container for feature drift detection",
+          "priority": "P1",
+          "type": "structural",
+          "target": "district",
+          "steps": [
+            "Look for drift alert container in UI",
+            "Trigger a scenario that might cause feature drift",
+            "Verify alerts display if needed"
+          ],
+          "expectedResult": "Drift alerts display when drift is detected, or feature is not active. No errors.",
+          "dependsOn": ["TEST-002"]
+        }
+      ]
+    },
+    {
+      "name": "P1 - Missing DOM Elements (School Builder)",
+      "target": "school",
+      "priority": "P1",
+      "tests": [
+        {
+          "id": "TEST-021",
+          "name": "Goal creation modal and form fields exist",
+          "priority": "P1",
+          "type": "structural",
+          "target": "school",
+          "steps": [
+            "Navigate to goal creation area",
+            "Look for goalBuilderModal",
+            "Look for goal form fields: goalStatement, goalNeed, goalRootCause, goalMetric, goalTarget, goalDate",
+            "Attempt to create a goal using the form"
+          ],
+          "expectedResult": "Goal modal and all form fields are present and functional. Goal creation succeeds without errors.",
+          "dependsOn": ["TEST-003"]
+        },
+        {
+          "id": "TEST-022",
+          "name": "Goal area add modal exists and works",
+          "priority": "P1",
+          "type": "functional",
+          "target": "school",
+          "steps": [
+            "Look for goalAreaAddModal in UI",
+            "Try adding a new goal area/category",
+            "Verify modal displays and functions"
+          ],
+          "expectedResult": "Goal area add modal appears and functions. New goal areas can be added.",
+          "dependsOn": ["TEST-021"]
+        }
+      ]
+    },
+    {
+      "name": "P1 - Budget Calculations",
+      "target": "district",
+      "priority": "P1",
+      "tests": [
+        {
+          "id": "TEST-023",
+          "name": "Budget allocation calculations are accurate",
+          "priority": "P1",
+          "type": "math",
+          "target": "district",
+          "steps": [
+            "Navigate to step 2 (Budget & Funding Sources)",
+            "Enter total budget: 10,000,000",
+            "Allocate to funding sources (e.g., 60% state, 30% federal, 10% local)",
+            "Verify total equals sum of allocations",
+            "Test with multiple budget scenarios"
+          ],
+          "expectedResult": "Budget allocations calculate correctly. Total of allocations equals input budget. No rounding errors > 0.01%.",
+          "dependsOn": ["TEST-004"]
+        },
+        {
+          "id": "TEST-024",
+          "name": "Budget-to-goals alignment verification",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Set budget in step 2",
+            "Create initiative budgets in step 11",
+            "Verify total initiative spending <= total budget",
+            "Check alignment dashboard on step 10"
+          ],
+          "expectedResult": "Budget constraints are enforced. Over-allocation is prevented or warned. Alignment view is accurate.",
+          "dependsOn": ["TEST-023"]
+        }
+      ]
+    },
+    {
+      "name": "P1 - Goal Hierarchy CRUD",
+      "target": "both",
+      "priority": "P1",
+      "tests": [
+        {
+          "id": "TEST-025",
+          "name": "District builder: Create strategic goals",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Navigate to step 8 (Strategic Goal Setting)",
+            "Create 3 test goals with different metrics",
+            "Verify goals appear in list",
+            "Verify goals are saved to planState"
+          ],
+          "expectedResult": "Goals are created and persist. Each goal gets unique ID. Goals display correctly.",
+          "dependsOn": ["TEST-008"]
+        },
+        {
+          "id": "TEST-026",
+          "name": "District builder: Edit strategic goals",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Create a goal in step 8",
+            "Click edit button on goal",
+            "Change goal text, metric, or target",
+            "Save changes",
+            "Verify changes persist"
+          ],
+          "expectedResult": "Goals can be edited. Changes persist across navigation and refresh.",
+          "dependsOn": ["TEST-025"]
+        },
+        {
+          "id": "TEST-027",
+          "name": "District builder: Delete strategic goals",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Create a goal",
+            "Click delete button",
+            "Confirm deletion",
+            "Verify goal is removed from list",
+            "Verify goal is removed from planState"
+          ],
+          "expectedResult": "Goals can be deleted. Deletion is permanent and persists.",
+          "dependsOn": ["TEST-026"]
+        },
+        {
+          "id": "TEST-028",
+          "name": "School builder: Create goals with full CRUD",
+          "priority": "P1",
+          "type": "functional",
+          "target": "school",
+          "steps": [
+            "Create goal with statement, need, root cause, metric, target, date",
+            "Edit goal values",
+            "Delete goal",
+            "Verify all operations work without errors"
+          ],
+          "expectedResult": "School builder goals support create, read, update, delete. No data loss.",
+          "dependsOn": ["TEST-021"]
+        }
+      ]
+    },
+    {
+      "name": "P1 - Cross-File Variable Resolution",
+      "target": "district",
+      "priority": "P1",
+      "tests": [
+        {
+          "id": "TEST-029",
+          "name": "planState mutations across all modules are coordinated",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Enter data in step 1 (affects builder.js)",
+            "Navigate to step 2 and enter budget (affects budget-*.js)",
+            "Navigate to step 3 and enter stakeholders (affects stakeholder.js)",
+            "Navigate to step 6 and add competencies (affects features.js)",
+            "Verify all data is present in planState"
+          ],
+          "expectedResult": "All modules correctly update shared planState. No data conflicts or overwrites. Cross-module references work.",
+          "dependsOn": ["TEST-002", "TEST-008"]
+        },
+        {
+          "id": "TEST-030",
+          "name": "AI engine accesses correct planState for feasibility",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Set up complete district profile and goals",
+            "Trigger AI feasibility analysis",
+            "Verify AI has access to current planState",
+            "Check feasibility scores are based on actual data"
+          ],
+          "expectedResult": "AI engine reads from shared planState. Feasibility analysis uses correct data. No stale state issues.",
+          "dependsOn": ["TEST-029"]
+        }
+      ]
+    },
+    {
+      "name": "P1 - Export Functionality",
+      "target": "district",
+      "priority": "P1",
+      "tests": [
+        {
+          "id": "TEST-031",
+          "name": "Generate strategic plan document",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Complete all required steps in district builder",
+            "Click export/generate document button",
+            "Verify document is created",
+            "Check document contains all plan data",
+            "Verify formatting is correct"
+          ],
+          "expectedResult": "Strategic plan document generates without errors. Contains all user-entered data. Proper formatting and structure.",
+          "dependsOn": ["TEST-004", "TEST-008"]
+        },
+        {
+          "id": "TEST-032",
+          "name": "Export plan data as JSON",
+          "priority": "P1",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Populate plan with test data",
+            "Click export as JSON button",
+            "Verify JSON file downloads",
+            "Parse JSON and verify structure",
+            "Check all planState properties are included"
+          ],
+          "expectedResult": "JSON export includes complete planState. File is valid JSON. Can be re-imported.",
+          "dependsOn": ["TEST-008"]
+        }
+      ]
+    },
+    {
+      "name": "P2 - Function Crash Testing",
+      "target": "both",
+      "priority": "P0",
+      "tests": [
+        {
+          "id": "TEST-033",
+          "name": "No function crashes on any district step",
+          "priority": "P0",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Navigate through all 14 steps",
+            "On each step, interact with all visible buttons and inputs",
+            "Monitor console for errors",
+            "Test edge cases: empty inputs, large numbers, special characters"
+          ],
+          "expectedResult": "No function crashes. All user interactions are handled gracefully. Error messages are user-friendly if input is invalid.",
+          "dependsOn": ["TEST-004"]
+        },
+        {
+          "id": "TEST-034",
+          "name": "No function crashes on any school step",
+          "priority": "P0",
+          "type": "functional",
+          "target": "school",
+          "steps": [
+            "Navigate through all 12 steps",
+            "Interact with all buttons and inputs on each step",
+            "Test goal creation with various inputs",
+            "Monitor console for errors"
+          ],
+          "expectedResult": "No function crashes. Goal operations (create, edit, delete) never crash. Graceful error handling.",
+          "dependsOn": ["TEST-006"]
+        }
+      ]
+    },
+    {
+      "name": "P2 - Styling and Visual Consistency",
+      "target": "both",
+      "priority": "P2",
+      "tests": [
+        {
+          "id": "TEST-035",
+          "name": "Consistent styling across all steps",
+          "priority": "P2",
+          "type": "structural",
+          "target": "both",
+          "steps": [
+            "Navigate through all steps",
+            "Verify fonts, colors, spacing are consistent",
+            "Check form inputs have consistent styling",
+            "Verify buttons have consistent appearance"
+          ],
+          "expectedResult": "All steps have consistent visual styling. No jarring style changes between steps.",
+          "dependsOn": ["TEST-004", "TEST-006"]
+        },
+        {
+          "id": "TEST-036",
+          "name": "Responsive design on mobile viewports",
+          "priority": "P2",
+          "type": "structural",
+          "target": "both",
+          "steps": [
+            "Open builder on mobile device or use browser responsive mode",
+            "Test at 375px width (mobile)",
+            "Test at 768px width (tablet)",
+            "Verify all elements are readable and functional",
+            "Check navigation works on mobile"
+          ],
+          "expectedResult": "Layout adapts to mobile/tablet viewports. All content is readable. Navigation is mobile-friendly.",
+          "dependsOn": ["TEST-004"]
+        }
+      ]
+    },
+    {
+      "name": "P2 - Progress Tracking",
+      "target": "both",
+      "priority": "P2",
+      "tests": [
+        {
+          "id": "TEST-037",
+          "name": "Progress indicator shows accurate completion status",
+          "priority": "P2",
+          "type": "functional",
+          "target": "district",
+          "steps": [
+            "Start at step 1, check progress bar/indicator shows 1/14",
+            "Move to step 7, verify progress shows 7/14 (50%)",
+            "Move to step 14, verify progress shows 14/14 (100%)",
+            "Go back to step 5, verify progress updates to 5/14"
+          ],
+          "expectedResult": "Progress indicator accurately reflects current step position. Updates immediately when navigating.",
+          "dependsOn": ["TEST-004"]
+        },
+        {
+          "id": "TEST-038",
+          "name": "Step completion markers indicate filled steps",
+          "priority": "P2",
+          "type": "functional",
+          "target": "both",
+          "steps": [
+            "Fill out step 1 with data",
+            "Navigate away and back",
+            "Verify step 1 is marked as complete/filled in sidebar",
+            "Check empty steps are not marked complete"
+          ],
+          "expectedResult": "Completed steps are visually marked. Empty steps are unmarked. Markers persist correctly.",
+          "dependsOn": ["TEST-008"]
+        }
+      ]
+    },
+    {
+      "name": "P2 - Empty State Handling",
+      "target": "both",
+      "priority": "P2",
+      "tests": [
+        {
+          "id": "TEST-039",
+          "name": "Empty goal list shows appropriate message",
+          "priority": "P2",
+          "type": "structural",
+          "target": "district",
+          "steps": [
+            "Navigate to step 8 (Strategic Goal Setting) on fresh session",
+            "Verify empty state message appears",
+            "Create a goal, verify message disappears",
+            "Delete all goals, verify empty state returns"
+          ],
+          "expectedResult": "Empty state message is clear and helpful. Empty state message disappears when content exists.",
+          "dependsOn": ["TEST-025"]
+        },
+        {
+          "id": "TEST-040",
+          "name": "Empty lists show 'Add' or 'Create' prompts",
+          "priority": "P2",
+          "type": "structural",
+          "target": "both",
+          "steps": [
+            "Check empty state on values list (district)",
+            "Check empty state on competencies list (district)",
+            "Check empty state on goals list (school)",
+            "Verify each shows appropriate action prompts"
+          ],
+          "expectedResult": "Empty states provide clear guidance on how to add content. CTAs are visible and clickable.",
+          "dependsOn": ["TEST-002"]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalTests": 40,
+    "p0Tests": 12,
+    "p1Tests": 20,
+    "p2Tests": 8,
+    "suiteCount": 9,
+    "executionPath": "Run P0 suites first (blocks deployment). P1 suites are significant but non-blocking. P2 suites are polish/refinement.",
+    "criticalPath": [
+      "Initialization (TEST-001 to TEST-003)",
+      "Navigation (TEST-004 to TEST-007)",
+      "Data Persistence (TEST-008 to TEST-010)",
+      "Duplicate Functions (TEST-011 to TEST-012)",
+      "Function Stability (TEST-033 to TEST-034)"
+    ],
+    "estimatedDuration": "8-10 hours for full execution (P0: 2h, P1: 5h, P2: 1.5h)",
+    "notes": {
+      "district": "24 missing DOM IDs (likely dynamic or feature flags). 2 critical duplicate functions. Extensive test coverage needed for cross-module state management.",
+      "school": "8 missing goal-related DOM IDs (goalBuilderModal, goalStatement, etc.). These are likely conditional or need implementation. Less complex than district builder.",
+      "dependencies": "Most tests have dependencies on core functionality working first. Execute in suite order.",
+      "regression": "After fixing any P0 issue, re-run all P0 tests to verify no regressions."
+    }
+  }
+}

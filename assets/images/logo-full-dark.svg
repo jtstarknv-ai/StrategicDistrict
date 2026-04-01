@@ -1,0 +1,45 @@
+<svg viewBox="0 0 240 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon Mark - Dark Version for Reports -->
+  <g id="icon">
+    <!-- Primary compass/arrow form with district blocks -->
+    <!-- North arrow point -->
+    <path d="M 12 4 L 14.4 10.2 L 12 8.4 L 9.6 10.2 Z" fill="#001219"/>
+
+    <!-- Geometric compass circle with layered districts -->
+    <!-- Outer circle (planning layer 3) -->
+    <circle cx="12" cy="12" r="7.5" fill="none" stroke="#001219" stroke-width="0.8"/>
+
+    <!-- Middle circle (planning layer 2) -->
+    <circle cx="12" cy="12" r="5.5" fill="none" stroke="#001219" stroke-width="0.8"/>
+
+    <!-- Inner circle (planning layer 1) -->
+    <circle cx="12" cy="12" r="3.5" fill="#001219"/>
+
+    <!-- Cardinal direction indicators -->
+    <line x1="12" y1="4" x2="12" y2="20" stroke="#001219" stroke-width="1" stroke-linecap="round"/>
+    <line x1="4" y1="12" x2="20" y2="12" stroke="#001219" stroke-width="1" stroke-linecap="round"/>
+
+    <!-- Gold accent on compass point (northeast) -->
+    <circle cx="14.5" cy="9.5" r="0.6" fill="#E9D8A6"/>
+
+    <!-- Right side: District blocks -->
+    <!-- Block 1 (top right) -->
+    <rect x="22" y="6" width="3" height="3" fill="#001219" opacity="0.9"/>
+    <!-- Block 2 (mid right) -->
+    <rect x="26.5" y="9" width="3" height="3" fill="#001219"/>
+    <!-- Block 3 (lower right) -->
+    <rect x="22" y="12.5" width="3" height="3" fill="#001219" opacity="0.8"/>
+    <!-- Block 4 (bottom far right) -->
+    <rect x="26.5" y="15.5" width="3" height="3" fill="#001219" opacity="0.7"/>
+
+    <!-- Connecting line from compass to blocks -->
+    <line x1="19.5" y1="12" x2="21" y2="12" stroke="#E9D8A6" stroke-width="0.6"/>
+  </g>
+
+  <!-- Text: "Strategic District" - Dark -->
+  <text x="36" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#001219" letter-spacing="-0.3">Strategic</text>
+  <text x="36" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="400" fill="#001219" letter-spacing="-0.3">District</text>
+
+  <!-- Gold accent line under text -->
+  <line x1="36" y1="36.5" x2="155" y2="36.5" stroke="#E9D8A6" stroke-width="1.2"/>
+</svg>

@@ -1,0 +1,391 @@
+/* ============================================================================
+   STRATEGICDISTRICT.COM - HEADER STYLES
+   New layout with SD logo, auth buttons, and responsive nav
+   ============================================================================ */
+
+/* Rainbow bar at very top */
+.rainbow-bar {
+  height: 6px;
+  background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+  width: 100%;
+}
+
+/* ========== HEADER CONTAINER ========== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: white;
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: 0 1px 3px rgba(10, 9, 8, 0.05);
+  transition: all var(--transition-base);
+  padding: 0;
+}
+
+header.scrolled {
+  box-shadow: 0 4px 12px rgba(10, 9, 8, 0.15);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--spacing-md) var(--spacing-lg);
+  gap: var(--spacing-lg);
+  position: relative;
+  z-index: 1000;
+}
+
+@media (min-width: 768px) {
+  .header-content {
+    padding: var(--spacing-md) var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .header-content {
+    padding: var(--spacing-md) var(--spacing-3xl);
+  }
+}
+
+/* ========== LOGO SECTION ========== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  text-decoration: none;
+  color: var(--color-primary-navy);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1.125rem;
+  transition: opacity var(--transition-base);
+  flex-shrink: 0;
+}
+
+.logo:hover {
+  opacity: 0.8;
+}
+
+.logo img {
+  height: 36px;
+  width: auto;
+  display: block;
+}
+
+/* ========== MAIN NAVIGATION ========== */
+.main-nav {
+  display: none;
+  align-items: center;
+  gap: var(--spacing-xl);
+  flex: 1;
+  margin-left: var(--spacing-xl);
+}
+
+@media (min-width: 1024px) {
+  .main-nav {
+    display: flex;
+  }
+}
+
+.main-nav a {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color var(--transition-base);
+  position: relative;
+}
+
+.main-nav a:hover {
+  color: var(--color-primary-navy);
+}
+
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-pop-teal);
+  transition: width var(--transition-base);
+}
+
+.main-nav a:hover::after {
+  width: 100%;
+}
+
+.main-nav a.active {
+  color: var(--color-primary-navy);
+  font-weight: 600;
+}
+
+.main-nav a.active::after {
+  width: 100%;
+}
+
+/* ========== HEADER ACTIONS (Auth buttons + CTA) ========== */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  margin-left: auto;
+}
+
+/* Auth buttons container */
+#auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.header-link {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color var(--transition-base);
+  white-space: nowrap;
+}
+
+.header-link:hover {
+  color: var(--color-pop-teal);
+}
+
+.header-user-name {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.header-signup-btn {
+  display: inline-block;
+  background-color: var(--color-pop-teal);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+.header-signup-btn:hover {
+  background-color: #0099aa;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 180, 204, 0.25);
+}
+
+.header-signup-btn:visited {
+  color: white;
+}
+
+.header-builder {
+  display: inline-block;
+  background-color: var(--color-pop-teal);
+  color: white !important;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all var(--transition-base);
+}
+
+.header-builder:hover {
+  background-color: #0099aa;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 180, 204, 0.25);
+}
+
+.header-signout {
+  background-color: #f5f5f5;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  display: inline-block;
+  color: var(--color-primary-navy);
+  transition: all var(--transition-base);
+}
+
+.header-signout:hover {
+  background-color: #e8e8e8;
+}
+
+/* Button styling for CTA button */
+.header-actions .btn {
+  white-space: nowrap;
+}
+
+.header-actions .btn-primary {
+  background-color: var(--color-pop-teal);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-block;
+}
+
+.header-actions .btn-primary:hover {
+  background-color: #0099aa;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 180, 204, 0.25);
+}
+
+/* ========== HAMBURGER MENU ========== */
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: opacity var(--transition-base);
+}
+
+@media (min-width: 1024px) {
+  .hamburger {
+    display: none;
+  }
+}
+
+.hamburger:hover {
+  opacity: 0.7;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-text-primary);
+  margin: 4px 0;
+  transition: all var(--transition-base);
+  transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translateY(10px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translateY(-10px);
+}
+
+/* ========== MOBILE NAVIGATION ========== */
+.mobile-nav {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: 0 4px 6px rgba(10, 9, 8, 0.1);
+  padding: var(--spacing-md) var(--spacing-lg);
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  animation: slideDown 200ms ease-out;
+}
+
+@media (min-width: 1024px) {
+  .mobile-nav {
+    display: none !important;
+  }
+}
+
+.mobile-nav.active {
+  display: flex;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-nav a {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body-md);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--color-border-light);
+  transition: color var(--transition-base);
+}
+
+.mobile-nav a:last-child {
+  border-bottom: none;
+}
+
+.mobile-nav a:hover {
+  color: var(--color-primary-navy);
+}
+
+.mobile-nav a.active {
+  color: var(--color-primary-navy);
+  font-weight: 600;
+}
+
+/* ========== RESPONSIVE BEHAVIOR ========== */
+@media (max-width: 1023px) {
+  .main-nav {
+    display: none;
+  }
+
+  .header-actions {
+    margin-left: auto;
+    gap: var(--spacing-sm);
+  }
+
+  #auth-buttons {
+    display: none;
+  }
+
+  .header-content {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+}
+
+/* ========== ACCESSIBILITY ========== */
+.hamburger:focus-visible {
+  outline: 2px solid var(--color-primary-navy);
+  outline-offset: 2px;
+}
+
+.main-nav a:focus-visible {
+  outline: 2px solid var(--color-primary-navy);
+  outline-offset: 4px;
+}
+
+.mobile-nav a:focus-visible {
+  outline: 2px solid var(--color-primary-navy);
+  outline-offset: 2px;
+  background-color: #f5f5f5;
+  border-radius: var(--radius-md);
+}
+
+.header-link:focus-visible {
+  outline: 2px solid var(--color-primary-navy);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}

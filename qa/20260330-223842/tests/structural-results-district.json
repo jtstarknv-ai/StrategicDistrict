@@ -1,0 +1,164 @@
+{
+  "target": "district",
+  "timestamp": "2026-03-31T06:01:48.000Z",
+  "passed": 29,
+  "failed": 2,
+  "total": 31,
+  "results": [
+    {
+      "test": "Syntax: js/builder.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/budget-setup.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/budget-integration.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/budget-alignment.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/budget-tracker.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/paywall.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/ai-engine.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/features.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/stakeholder.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/toolkit.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/doc-generator.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "All static IDs exist in HTML",
+      "passed": false,
+      "details": "Missing: upgradeModal, ai-groq-key, ai-cf-token, driftAlertContainer, survey-form"
+    },
+    {
+      "test": "All onclick handlers exported to window",
+      "passed": false,
+      "details": "Missing: stepGoto, clearStep, clearEntirePlan, filterTemplates, applyTemplate"
+    },
+    {
+      "test": "Step 1 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 2 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 3 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 4 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 5 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 6 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 7 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 8 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 9 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 10 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 11 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 12 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 13 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 14 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "planState defined in builder.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Cross-ref: planState used in js/ai-engine.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Cross-ref: planState used in js/budget-setup.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Cross-ref: planState used in js/features.js",
+      "passed": true,
+      "details": ""
+    }
+  ]
+}

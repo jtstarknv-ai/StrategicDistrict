@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategic District — Icon & Design Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #22333B;
+  --cream: #EAE0D5;
+  --brown: #5E503F;
+  --teal: #00B4CC;
+  --gold: #D4A537;
+  --green: #6ECF6E;
+  --coral: #E07A5F;
+  --purple: #6B4C9A;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #fafaf9;
+  color: var(--navy);
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-family: 'Source Serif Pro', serif;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--brown);
+  font-size: 0.95rem;
+  margin-bottom: 3rem;
+  max-width: 700px;
+  line-height: 1.6;
+}
+
+.section-title {
+  font-family: 'Source Serif Pro', serif;
+  font-size: 1.35rem;
+  margin: 3rem 0 0.5rem 0;
+  color: var(--navy);
+}
+
+.section-desc {
+  color: var(--brown);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.icon-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(34, 51, 59, 0.06);
+  border: 1px solid rgba(94, 80, 63, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.icon-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(34, 51, 59, 0.1);
+}
+
+.icon-card svg {
+  margin-bottom: 1rem;
+}
+
+.icon-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--navy);
+  margin-bottom: 0.25rem;
+}
+
+.icon-usage {
+  font-size: 0.75rem;
+  color: var(--brown);
+}
+
+/* Before/After comparison */
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.comp-panel {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(34, 51, 59, 0.06);
+  border: 1px solid rgba(94, 80, 63, 0.08);
+}
+
+.comp-panel h3 {
+  font-family: 'Source Serif Pro', serif;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--brown);
+}
+
+.placement-demo {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 2px 12px rgba(34, 51, 59, 0.06);
+  border: 1px solid rgba(94, 80, 63, 0.08);
+}
+
+.sidebar-demo {
+  background: var(--navy);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  max-width: 280px;
+}
+
+.sidebar-demo .step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  color: rgba(234, 224, 213, 0.7);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  transition: background 0.15s;
+}
+
+.sidebar-demo .step-item.active {
+  background: rgba(0, 180, 204, 0.15);
+  color: white;
+}
+
+.sidebar-demo .step-item svg {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.sidebar-demo .step-item.active svg {
+  opacity: 1;
+}
+
+.header-demo {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border-bottom: 1px solid rgba(94, 80, 63, 0.12);
+  margin-bottom: 1.5rem;
+}
+
+.header-demo .logo-area {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'Source Serif Pro', serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--navy);
+}
+
+.empty-state-demo {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #f7f5f0, #f0f7f7);
+  border-radius: 12px;
+  border: 2px dashed rgba(94, 80, 63, 0.15);
+}
+
+.empty-state-demo p {
+  color: var(--brown);
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tag-teal { background: rgba(0,180,204,0.1); color: var(--teal); }
+.tag-gold { background: rgba(212,165,55,0.1); color: var(--gold); }
+.tag-coral { background: rgba(224,122,95,0.1); color: var(--coral); }
+.tag-green { background: rgba(110,207,110,0.1); color: var(--green); }
+.tag-purple { background: rgba(107,76,154,0.1); color: var(--purple); }
+
+.divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(94,80,63,0.12), transparent);
+  margin: 3rem 0;
+}
+
+@media (max-width: 768px) {
+  .comparison { grid-template-columns: 1fr; }
+  .icon-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<h1>Strategic District — Design Upgrade Proposal</h1>
+<p class="subtitle">Glassmorphism-inspired icons using our existing color palette. Subtle, professional, purpose-built for K-12 strategic planning. Below are the proposed icons, where they'd go, and before/after comparisons.</p>
+
+<!-- ===== SECTION 1: PRODUCT SUITE ICONS ===== -->
+<h2 class="section-title">1. Product Suite Icons</h2>
+<p class="section-desc">These represent the three core tools. Used in the header nav, landing pages, and anywhere we reference the products. Each gets its own signature color from our palette.</p>
+
+<div class="icon-grid">
+
+  <!-- District Builder Icon -->
+  <div class="icon-card">
+    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Glass base -->
+      <rect x="8" y="12" width="56" height="48" rx="12" fill="url(#distGrad)" fill-opacity="0.15"/>
+      <rect x="8" y="12" width="56" height="48" rx="12" stroke="url(#distGrad)" stroke-width="1.5" stroke-opacity="0.3"/>
+      <!-- Building blocks -->
+      <rect x="18" y="32" width="14" height="20" rx="3" fill="var(--teal)" fill-opacity="0.85"/>
+      <rect x="29" y="24" width="14" height="28" rx="3" fill="var(--teal)" fill-opacity="0.6"/>
+      <rect x="40" y="18" width="14" height="34" rx="3" fill="var(--teal)" fill-opacity="0.4"/>
+      <!-- Sparkle -->
+      <circle cx="54" cy="16" r="4" fill="var(--gold)" fill-opacity="0.9"/>
+      <circle cx="54" cy="16" r="6" fill="var(--gold)" fill-opacity="0.2"/>
+      <defs>
+        <linearGradient id="distGrad" x1="8" y1="12" x2="64" y2="60">
+          <stop stop-color="#00B4CC"/>
+          <stop offset="1" stop-color="#22333B"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="icon-label">District Strategic Plan</div>
+    <div class="icon-usage">Header nav, landing page</div>
+    <span class="tag tag-teal">Teal</span>
+  </div>
+
+  <!-- Progress Dashboard Icon -->
+  <div class="icon-card">
+    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Glass base -->
+      <rect x="8" y="12" width="56" height="48" rx="12" fill="url(#dashGrad)" fill-opacity="0.12"/>
+      <rect x="8" y="12" width="56" height="48" rx="12" stroke="url(#dashGrad)" stroke-width="1.5" stroke-opacity="0.3"/>
+      <!-- Chart line -->
+      <polyline points="18,48 28,38 38,42 48,26 56,22" stroke="var(--green)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <!-- Glow under line -->
+      <polygon points="18,48 28,38 38,42 48,26 56,22 56,52 18,52" fill="var(--green)" fill-opacity="0.12"/>
+      <!-- Data dots -->
+      <circle cx="28" cy="38" r="3" fill="var(--green)" fill-opacity="0.9"/>
+      <circle cx="38" cy="42" r="3" fill="var(--green)" fill-opacity="0.7"/>
+      <circle cx="48" cy="26" r="3" fill="var(--green)" fill-opacity="0.9"/>
+      <!-- Arrow up -->
+      <path d="M52 24 L56 18 L60 24" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <defs>
+        <linearGradient id="dashGrad" x1="8" y1="12" x2="64" y2="60">
+          <stop stop-color="#6ECF6E"/>
+          <stop offset="1" stop-color="#22333B"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="icon-label">Progress Dashboard</div>
+    <div class="icon-usage">Header nav, reports</div>
+    <span class="tag tag-green">Green</span>
+  </div>
+
+  <!-- Strategic School Icon -->
+  <div class="icon-card">
+    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Glass base -->
+      <rect x="8" y="12" width="56" height="48" rx="12" fill="url(#schoolGrad)" fill-opacity="0.12"/>
+      <rect x="8" y="12" width="56" height="48" rx="12" stroke="url(#schoolGrad)" stroke-width="1.5" stroke-opacity="0.3"/>
+      <!-- School building -->
+      <rect x="22" y="30" width="28" height="22" rx="3" fill="var(--coral)" fill-opacity="0.7"/>
+      <!-- Roof / triangle -->
+      <polygon points="36,18 20,32 52,32" fill="var(--coral)" fill-opacity="0.5"/>
+      <!-- Door -->
+      <rect x="32" y="40" width="8" height="12" rx="2" fill="var(--cream)" fill-opacity="0.9"/>
+      <!-- Windows -->
+      <rect x="25" y="34" width="6" height="5" rx="1" fill="var(--cream)" fill-opacity="0.7"/>
+      <rect x="41" y="34" width="6" height="5" rx="1" fill="var(--cream)" fill-opacity="0.7"/>
+      <!-- Flag -->
+      <line x1="36" y1="14" x2="36" y2="20" stroke="var(--gold)" stroke-width="1.5"/>
+      <rect x="36" y="14" width="8" height="5" rx="1" fill="var(--gold)" fill-opacity="0.8"/>
+      <defs>
+        <linearGradient id="schoolGrad" x1="8" y1="12" x2="64" y2="60">
+          <stop stop-color="#E07A5F"/>
+          <stop offset="1" stop-color="#22333B"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="icon-label">Strategic School</div>
+    <div class="icon-usage">Header nav, landing page</div>
+    <span class="tag tag-coral">Coral</span>
+  </div>
+
+  <!-- Brand Mark -->
+  <div class="icon-card">
+    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer ring -->
+      <circle cx="36" cy="36" r="28" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-opacity="0.2"/>
+      <!-- Inner glass -->
+      <circle cx="36" cy="36" r="22" fill="url(#brandGrad)" fill-opacity="0.08"/>
+      <!-- SD monogram -->
+      <text x="36" y="42" text-anchor="middle" font-family="Source Serif Pro, serif" font-weight="700" font-size="22" fill="var(--navy)">SD</text>
+      <!-- Accent dots -->
+      <circle cx="18" cy="20" r="3" fill="var(--teal)" fill-opacity="0.6"/>
+      <circle cx="54" cy="20" r="3" fill="var(--gold)" fill-opacity="0.6"/>
+      <circle cx="18" cy="52" r="3" fill="var(--green)" fill-opacity="0.6"/>
+      <circle cx="54" cy="52" r="3" fill="var(--coral)" fill-opacity="0.6"/>
+      <defs>
+        <linearGradient id="brandGrad" x1="8" y1="8" x2="64" y2="64">
+          <stop stop-color="#00B4CC"/>
+          <stop offset="0.5" stop-color="#D4A537"/>
+          <stop offset="1" stop-color="#6B4C9A"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="icon-label">Brand Mark</div>
+    <div class="icon-usage">Favicon, app icon, loading</div>
+    <span class="tag tag-purple">Multi</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 2: FEATURE ICONS ===== -->
+<h2 class="section-title">2. Step & Feature Icons</h2>
+<p class="section-desc">Small inline icons for the wizard sidebar, section headers, and cards. Clean linework with color accents. These replace the plain numbered circles and add visual identity to each step area.</p>
+
+<div class="icon-grid">
+
+  <!-- Budget -->
+  <div class="icon-card">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <rect x="6" y="10" width="36" height="28" rx="8" fill="var(--gold)" fill-opacity="0.12"/>
+      <circle cx="24" cy="24" r="10" fill="var(--gold)" fill-opacity="0.2" stroke="var(--gold)" stroke-width="1.5"/>
+      <text x="24" y="28" text-anchor="middle" font-family="Inter" font-weight="700" font-size="12" fill="var(--gold)">$</text>
+    </svg>
+    <div class="icon-label">Budget & Funding</div>
+    <div class="icon-usage">Step 2, budget cards</div>
+  </div>
+
+  <!-- Stakeholders -->
+  <div class="icon-card">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="16" r="6" fill="var(--teal)" fill-opacity="0.25" stroke="var(--teal)" stroke-width="1.5"/>
+      <circle cx="14" cy="20" r="4" fill="var(--teal)" fill-opacity="0.15" stroke="var(--teal)" stroke-width="1"/>
+      <circle cx="34" cy="20" r="4" fill="var(--teal)" fill-opacity="0.15" stroke="var(--teal)" stroke-width="1"/>
+      <path d="M10 38 C10 30 18 26 24 26 C30 26 38 30 38 38" stroke="var(--teal)" stroke-width="1.5" fill="var(--teal)" fill-opacity="0.08" stroke-linecap="round"/>
+    </svg>
+    <div class="icon-label">Stakeholders</div>
+    <div class="icon-usage">Step 3, engagement</div>
+  </div>
+
+  <!-- Vision -->
+  <div class="icon-card">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="14" fill="var(--purple)" fill-opacity="0.08" stroke="var(--purple)" stroke-width="1.5"/>
+      <circle cx="24" cy="24" r="8" fill="var(--purple)" fill-opacity="0.15"/>
+      <circle cx="24" cy="24" r="3" fill="var(--purple)" fill-opacity="0.7"/>
+      <!-- Rays -->
+      <line x1="24" y1="6" x2="24" y2="10" stroke="var(--purple)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      <line x1="24" y1="38" x2="24" y2="42" stroke="var(--purple)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      <line x1="6" y1="24" x2="10" y2="24" stroke="var(--purple)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      <line x1="38" y1="24" x2="42" y2="24" stroke="var(--purple)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+    </svg>
+    <div class="icon-label">Vision & Mission</div>
+    <div class="icon-usage">Step 4, direction</div>
+  </div>
+
+  <!-- Goals -->
+  <div class="icon-card">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="16" fill="none" stroke="var(--coral)" stroke-width="1.5" stroke-opacity="0.3"/>
+      <circle cx="24" cy="24" r="10" fill="none" stroke="var(--coral)" stroke-width="1.5" stroke-opacity="0.5"/>
+      <circle cx="24" cy="24" r="4" fill="var(--coral)" fill-opacity="0.8"/>
+      <!-- Arrow hitting target -->
+      <line x1="38" y1="10" x2="27" y2="21" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round"/>
+      <polyline points="34,10 38,10 38,14" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    </svg>
+    <div class="icon-label">Strategic Goals</div>
+    <div class="icon-usage">Step 8, goal setting</div>
+  </div>
+
+  <!-- Calendar -->
+  <div class="icon-card">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <rect x="8" y="12" width="32" height="28" rx="6" fill="var(--green)" fill-opacity="0.1" stroke="var(--green)" stroke-width="1.5"/>
+      <line x1="8" y1="20" x2="40" y2="20" stroke="var(--green)" stroke-width="1.5" stroke-opacity="0.4"/>
+      <line x1="16" y1="8" x2="16" y2="14" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="32" y1="8" x2="32" y2="14" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/>
+      <!-- Check mark -->
+      <polyline points="18,28 22,32 30,24" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="icon-label">Implementation</div>
+    <div class="icon-usage">Step 13, calendar</div>
+  </div>
+
+  <!-- Finalize -->
+  <div class="icon-card">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <rect x="10" y="8" width="28" height="34" rx="4" fill="var(--navy)" fill-opacity="0.06" stroke="var(--navy)" stroke-width="1.5" stroke-opacity="0.3"/>
+      <line x1="16" y1="16" x2="32" y2="16" stroke="var(--navy)" stroke-width="1.5" stroke-opacity="0.2" stroke-linecap="round"/>
+      <line x1="16" y1="22" x2="32" y2="22" stroke="var(--navy)" stroke-width="1.5" stroke-opacity="0.2" stroke-linecap="round"/>
+      <line x1="16" y1="28" x2="26" y2="28" stroke="var(--navy)" stroke-width="1.5" stroke-opacity="0.2" stroke-linecap="round"/>
+      <!-- Seal/badge -->
+      <circle cx="34" cy="34" r="9" fill="var(--gold)" fill-opacity="0.2" stroke="var(--gold)" stroke-width="1.5"/>
+      <polyline points="30,34 33,37 38,31" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="icon-label">Review & Finalize</div>
+    <div class="icon-usage">Step 14, export</div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 3: PLACEMENT DEMOS ===== -->
+<h2 class="section-title">3. Where They'd Go</h2>
+<p class="section-desc">Here's how these integrate into the existing UI. Subtle additions, not a redesign. The goal is to add visual polish and wayfinding without changing the UX.</p>
+
+<!-- Header Demo -->
+<h3 style="font-size:0.9rem;font-weight:600;color:var(--brown);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.05em">Header Navigation (with product icons)</h3>
+<div class="header-demo">
+  <div class="logo-area">
+    <svg width="28" height="28" viewBox="0 0 72 72" fill="none">
+      <circle cx="36" cy="36" r="22" fill="url(#brandGrad2)" fill-opacity="0.08"/>
+      <text x="36" y="42" text-anchor="middle" font-family="Source Serif Pro, serif" font-weight="700" font-size="22" fill="var(--navy)">SD</text>
+      <defs><linearGradient id="brandGrad2" x1="8" y1="8" x2="64" y2="64"><stop stop-color="#00B4CC"/><stop offset="0.5" stop-color="#D4A537"/><stop offset="1" stop-color="#6B4C9A"/></linearGradient></defs>
+    </svg>
+    Strategic District Plan
+  </div>
+  <div style="display:flex;gap:2rem;flex:1;justify-content:center">
+    <a href="#" style="display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;font-weight:500;color:var(--brown);text-decoration:none;padding:0.4rem 0;border-bottom:2px solid transparent">
+      <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><rect x="10" y="14" width="10" height="16" rx="2" fill="var(--teal)" fill-opacity="0.7"/><rect x="19" y="10" width="10" height="20" rx="2" fill="var(--teal)" fill-opacity="0.5"/><rect x="28" y="6" width="10" height="24" rx="2" fill="var(--teal)" fill-opacity="0.35"/></svg>
+      District Plan
+    </a>
+    <a href="#" style="display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;font-weight:600;color:var(--navy);text-decoration:none;padding:0.4rem 0;border-bottom:2px solid var(--teal)">
+      <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><polyline points="10,34 18,26 26,30 34,18 40,14" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" fill="none"/><circle cx="34" cy="18" r="2.5" fill="var(--green)"/></svg>
+      Dashboard
+    </a>
+    <a href="#" style="display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;font-weight:500;color:var(--brown);text-decoration:none;padding:0.4rem 0;border-bottom:2px solid transparent">
+      <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><rect x="14" y="22" width="20" height="14" rx="2" fill="var(--coral)" fill-opacity="0.5"/><polygon points="24,12 12,24 36,24" fill="var(--coral)" fill-opacity="0.35"/></svg>
+      School Plan
+    </a>
+  </div>
+  <button style="padding:0.4rem 1rem;background:var(--navy);color:white;border:none;border-radius:6px;font-size:0.8rem;font-weight:500;cursor:pointer">Sign Out</button>
+</div>
+
+<!-- Sidebar Demo -->
+<h3 style="font-size:0.9rem;font-weight:600;color:var(--brown);margin:2rem 0 0.75rem 0;text-transform:uppercase;letter-spacing:0.05em">Sidebar Steps (with step icons)</h3>
+<div style="display:grid;grid-template-columns:280px 1fr;gap:2rem">
+  <div class="sidebar-demo">
+    <div style="color:rgba(234,224,213,0.5);font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;padding-left:0.75rem">Strategic Plan Builder</div>
+
+    <div class="step-item">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><rect x="10" y="12" width="28" height="24" rx="4" stroke="currentColor" stroke-width="2"/><line x1="10" y1="20" x2="38" y2="20" stroke="currentColor" stroke-width="1.5"/></svg>
+      1. District Profile
+    </div>
+    <div class="step-item active">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="10" stroke="var(--gold)" stroke-width="2"/><text x="24" y="28" text-anchor="middle" font-family="Inter" font-weight="700" font-size="12" fill="var(--gold)">$</text></svg>
+      2. Budget & Funding
+    </div>
+    <div class="step-item">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="5" stroke="currentColor" stroke-width="2"/><path d="M14 38 C14 30 19 27 24 27 C29 27 34 30 34 38" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+      3. Stakeholders
+    </div>
+    <div class="step-item">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="12" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="4" fill="currentColor" opacity="0.4"/></svg>
+      4. Vision & Mission
+    </div>
+    <div class="step-item">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><path d="M24 10 L28 20 L38 20 L30 26 L33 36 L24 30 L15 36 L18 26 L10 20 L20 20 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+      5. Core Values
+    </div>
+    <div class="step-item">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><rect x="12" y="12" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="26" y="12" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="26" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="26" y="26" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/></svg>
+      6. Competencies
+    </div>
+  </div>
+
+  <div>
+    <h3 style="font-size:0.9rem;font-weight:600;color:var(--brown);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.05em">Empty State (with illustration)</h3>
+    <div class="empty-state-demo">
+      <svg width="80" height="80" viewBox="0 0 72 72" fill="none">
+        <rect x="8" y="12" width="56" height="48" rx="12" fill="url(#emptyGrad)" fill-opacity="0.08"/>
+        <rect x="8" y="12" width="56" height="48" rx="12" stroke="url(#emptyGrad)" stroke-width="1.5" stroke-opacity="0.15"/>
+        <rect x="18" y="32" width="10" height="20" rx="2" fill="var(--teal)" fill-opacity="0.25"/>
+        <rect x="31" y="24" width="10" height="28" rx="2" fill="var(--teal)" fill-opacity="0.2"/>
+        <rect x="44" y="36" width="10" height="16" rx="2" fill="var(--teal)" fill-opacity="0.15"/>
+        <line x1="16" y1="52" x2="56" y2="52" stroke="var(--brown)" stroke-width="1" stroke-opacity="0.15"/>
+        <defs><linearGradient id="emptyGrad" x1="8" y1="12" x2="64" y2="60"><stop stop-color="#00B4CC"/><stop offset="1" stop-color="#D4A537"/></linearGradient></defs>
+      </svg>
+      <p>No strategic goals defined yet.<br>Complete Steps 1-7 to unlock goal setting.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== SECTION 4: APPROACH ===== -->
+<h2 class="section-title">4. The Approach</h2>
+<p class="section-desc" style="max-width:800px">Every icon is built as inline SVG using our existing color palette (teal, gold, green, coral, purple, navy). No external image files needed. They render crisp at any size, load instantly, and can be themed. The glassmorphism effect comes from layered opacity, soft gradients, and subtle strokes — not heavy blur effects that would slow things down.</p>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));gap:1.5rem;margin-top:1.5rem">
+  <div style="padding:1.25rem;background:white;border-radius:12px;border:1px solid rgba(94,80,63,0.08)">
+    <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.35rem;color:var(--teal)">Zero Dependencies</div>
+    <div style="font-size:0.8rem;color:var(--brown);line-height:1.5">Pure SVG. No image files, no CDN, no loading delays. Deploys with FTP like everything else.</div>
+  </div>
+  <div style="padding:1.25rem;background:white;border-radius:12px;border:1px solid rgba(94,80,63,0.08)">
+    <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.35rem;color:var(--gold)">On-Brand Colors</div>
+    <div style="font-size:0.8rem;color:var(--brown);line-height:1.5">Uses the exact CSS variables already in the design system. Teal for builder, green for dashboard, coral for school.</div>
+  </div>
+  <div style="padding:1.25rem;background:white;border-radius:12px;border:1px solid rgba(94,80,63,0.08)">
+    <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.35rem;color:var(--green)">Subtle, Not Loud</div>
+    <div style="font-size:0.8rem;color:var(--brown);line-height:1.5">Translucent fills, thin strokes, soft accents. Professional enough for superintendent presentations. Clean enough for daily use.</div>
+  </div>
+  <div style="padding:1.25rem;background:white;border-radius:12px;border:1px solid rgba(94,80,63,0.08)">
+    <div style="font-weight:600;font-size:0.85rem;margin-bottom:0.35rem;color:var(--coral)">Where They Go</div>
+    <div style="font-size:0.8rem;color:var(--brown);line-height:1.5">Header nav links, sidebar step list, empty states, export covers, and the landing/login page. Targeted placement, not icon soup.</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div style="text-align:center;padding:2rem 0;color:var(--brown);font-size:0.9rem">
+  <p style="font-family:'Source Serif Pro',serif;font-size:1.1rem;font-weight:600;color:var(--navy);margin-bottom:0.5rem">Ready when you are.</p>
+  <p>Green light = I'll integrate these into the production files across all three tools.</p>
+</div>
+
+</body>
+</html>

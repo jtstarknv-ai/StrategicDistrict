@@ -1,0 +1,104 @@
+{
+  "target": "district-builder-budget",
+  "timestamp": "2026-03-31T06:01:48.187Z",
+  "passed": 18,
+  "failed": 1,
+  "total": 19,
+  "results": [
+    {
+      "test": "FUNDING_SOURCES has 12 sources",
+      "passed": true,
+      "details": "Found 12/12 sources"
+    },
+    {
+      "test": "Function defined: renderBudgetSetup (budget-setup.js)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function defined: recalculateBudgetTotals (budget-setup.js)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function defined: getBudgetEnvelope (budget-setup.js)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function defined: getRemainingBudget (budget-setup.js)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function defined: saveBudgetSetup (budget-setup.js)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function defined: renderGoalBudgetContext (budget-integration.js)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function defined: renderBudgetAllocationTracker (budget-integration.js)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function defined: calculateFeasibilityScore (budget-integration.js)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Key functions exported to window",
+      "passed": true,
+      "details": "Found 6/6 required exports"
+    },
+    {
+      "test": "Feasibility weights sum to ~1.0",
+      "passed": true,
+      "details": "Actual sum: 1.000"
+    },
+    {
+      "test": "Container exists: budgetAlignmentContainer",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Container exists: budgetAllocationTracker",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Container exists: budgetTrackingContainer",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Container exists: budgetDashboardContainer",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Container exists: budgetProgressSidebar",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Total budget calculation present",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Per-item allocation calculation present",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Budget validation logic present",
+      "passed": false,
+      "details": ""
+    }
+  ]
+}

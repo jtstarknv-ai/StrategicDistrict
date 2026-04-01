@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategic Plan Survey | Strategic District</title>
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #22333B;
+      line-height: 1.6;
+      background: linear-gradient(135deg, #f5f5f5 0%, #fafaf8 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .survey-container {
+      max-width: 720px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .survey-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 3px solid #00B4CC;
+    }
+    .survey-header img {
+      height: 40px;
+      margin-bottom: 1rem;
+    }
+    .survey-header h1 {
+      font-family: 'Source Serif Pro', serif;
+      color: #22333B;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .survey-header p {
+      color: #5E503F;
+      font-size: 0.95rem;
+    }
+    .survey-meta {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #888;
+    }
+    .form-group {
+      margin: 2rem 0;
+    }
+    .form-group h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #22333B;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .form-group label.field-label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #5E503F;
+      font-size: 0.95rem;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: #22333B;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    textarea { min-height: 100px; }
+    textarea:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: #00B4CC;
+      box-shadow: 0 0 0 3px rgba(0,180,204,0.1);
+    }
+    .radio-group {
+      margin: 0.4rem 0;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 400;
+      font-size: 0.95rem;
+      transition: background 0.15s;
+    }
+    .radio-group label:hover {
+      background: #f0f0f0;
+    }
+    .radio-group input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #00B4CC;
+    }
+    .likert-scale {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+    .likert-option {
+      text-align: center;
+    }
+    .likert-option input[type="radio"] {
+      display: block;
+      margin: 0 auto 0.4rem;
+      width: 20px;
+      height: 20px;
+      accent-color: #00B4CC;
+    }
+    .likert-option label {
+      font-size: 0.8rem;
+      color: #5E503F;
+      cursor: pointer;
+      line-height: 1.3;
+    }
+    .likert-labels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      font-size: 0.8rem;
+      color: #999;
+      margin-top: 0.25rem;
+    }
+    .likert-labels span:last-child { text-align: right; }
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #00B4CC, #009BB0);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 2rem;
+      transition: transform 0.1s, box-shadow 0.2s;
+    }
+    .submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,180,204,0.3);
+    }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .note {
+      background: #EAE0D5;
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      color: #5E503F;
+    }
+    .success-message {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    .success-message .checkmark {
+      width: 80px;
+      height: 80px;
+      background: #6ECF6E;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2.5rem;
+      color: white;
+    }
+    .success-message h2 {
+      font-family: 'Source Serif Pro', serif;
+      color: #22333B;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .success-message p {
+      color: #5E503F;
+      font-size: 1rem;
+    }
+    .error-state {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    .error-state h2 { color: #E07A5F; margin-bottom: 0.75rem; }
+    .required { color: #E07A5F; }
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: #eee;
+      border-radius: 2px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00B4CC, #6ECF6E);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+    @media (max-width: 600px) {
+      .survey-container { padding: 1.5rem; margin: 1rem auto; }
+      .likert-scale { grid-template-columns: repeat(5, 1fr); gap: 0.25rem; }
+      .likert-option label { font-size: 0.7rem; }
+      .survey-meta { flex-direction: column; gap: 0.25rem; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="survey-container" id="surveyApp">
+  <div id="loading" style="text-align:center; padding: 3rem;">
+    <p style="color: #888;">Loading survey...</p>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Parse URL parameters
+  var params = new URLSearchParams(window.location.search);
+  var surveyId = params.get('id');
+  var surveyType = params.get('type') || 'preplan';
+  var app = document.getElementById('surveyApp');
+
+  if (!surveyId) {
+    app.innerHTML = '<div class="error-state">' +
+      '<h2>Survey Not Found</h2>' +
+      '<p>This survey link appears to be invalid. Please check the link or QR code and try again.</p>' +
+      '<p style="margin-top:1rem;"><a href="/" style="color:#00B4CC;font-weight:600;text-decoration:none;">Visit Strategic District</a></p>' +
+      '</div>';
+    return;
+  }
+
+  var storageKey = 'sd_survey_' + surveyId;
+
+  // Check if already submitted
+  var submitted = localStorage.getItem('sd_survey_submitted_' + surveyId);
+  if (submitted) {
+    showSuccess();
+    return;
+  }
+
+  // Render appropriate survey
+  if (surveyType === 'postplan') {
+    renderPostPlanSurvey();
+  } else {
+    renderPrePlanSurvey();
+  }
+
+  // ========================================================================
+  // PRE-PLAN SURVEY
+  // ========================================================================
+  function renderPrePlanSurvey() {
+    app.innerHTML = '' +
+      '<div class="survey-header">' +
+        '<h1>Strategic Plan Input Survey</h1>' +
+        '<p>Help us build a strategic plan that reflects what our community values.</p>' +
+        '<div class="survey-meta">' +
+          '<span>5-7 minutes</span>' +
+          '<span>Responses are confidential</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>' +
+      '<form id="surveyForm">' +
+        '<div class="form-group">' +
+          '<h2>1. Your Role <span class="required">*</span></h2>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="family" required> Family/Parent</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="student"> Student</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="staff"> Staff Member</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="administrator"> Administrator/Leader</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="board"> Board Member</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="community"> Community Member</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="other"> Other</label></div>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>2. District Strengths</h2>' +
+          '<label class="field-label">What do you see as our district\'s greatest strengths?</label>' +
+          '<textarea name="strengths" placeholder="What are we doing well? What should we keep doing?"></textarea>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>3. District Challenges</h2>' +
+          '<label class="field-label">What are the biggest challenges facing our district?</label>' +
+          '<textarea name="challenges" placeholder="What needs to improve? Where are the gaps?"></textarea>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>4. Graduate Competencies</h2>' +
+          '<label class="field-label">What skills, habits, and knowledge should every graduate have?</label>' +
+          '<textarea name="competencies" placeholder="What should students know and be able to do when they leave our schools?"></textarea>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>5. Priority Goals</h2>' +
+          '<label class="field-label">What should our district prioritize over the next 3-5 years?</label>' +
+          '<textarea name="goals" placeholder="What goals matter most? Academic achievement, equity, safety, community engagement..."></textarea>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>6. Action Initiatives</h2>' +
+          '<label class="field-label">What specific programs, strategies, or changes would you like to see?</label>' +
+          '<textarea name="initiatives" placeholder="What should the district start, stop, or continue doing?"></textarea>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>7. Additional Thoughts</h2>' +
+          '<label class="field-label">Anything else you\'d like to share?</label>' +
+          '<textarea name="feedback" placeholder="Any other thoughts, ideas, or concerns..."></textarea>' +
+        '</div>' +
+
+        '<div class="note">' +
+          '<strong>Confidentiality:</strong> Your responses are confidential. Only aggregate themes and patterns will be shared with the planning team. Your individual responses will not be attributed to you.' +
+        '</div>' +
+
+        '<button type="submit" class="submit-btn" id="submitBtn">Submit My Input</button>' +
+      '</form>';
+
+    setupForm();
+  }
+
+  // ========================================================================
+  // POST-PLAN SURVEY
+  // ========================================================================
+  function renderPostPlanSurvey() {
+    app.innerHTML = '' +
+      '<div class="survey-header">' +
+        '<h1>Strategic Plan Review Survey</h1>' +
+        '<p>Our strategic plan is taking shape. We need your feedback to make sure it reflects what our community values.</p>' +
+        '<div class="survey-meta">' +
+          '<span>8-10 minutes</span>' +
+          '<span>Responses are confidential</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>' +
+      '<form id="surveyForm">' +
+        '<div class="form-group">' +
+          '<h2>1. Your Role <span class="required">*</span></h2>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="family" required> Family/Parent</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="student"> Student</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="staff"> Staff Member</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="administrator"> Administrator/Leader</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="board"> Board Member</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="community"> Community Member</label></div>' +
+          '<div class="radio-group"><label><input type="radio" name="role" value="other"> Other</label></div>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>2. Best Student Experience</h2>' +
+          '<label class="field-label">When this district is at its best, what should every student experience?</label>' +
+          '<textarea name="student_experience" placeholder="Think about the ideal: what does a great day look like for a student in our schools?"></textarea>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>3. Goal Alignment <span class="required">*</span></h2>' +
+          '<label class="field-label">How well do our strategic goals reflect what this district should prioritize?</label>' +
+          '<div class="likert-scale">' +
+            '<div class="likert-option"><input type="radio" name="goal_alignment" value="1" id="ga1" required><label for="ga1">Strongly Disagree</label></div>' +
+            '<div class="likert-option"><input type="radio" name="goal_alignment" value="2" id="ga2"><label for="ga2">Disagree</label></div>' +
+            '<div class="likert-option"><input type="radio" name="goal_alignment" value="3" id="ga3"><label for="ga3">Neutral</label></div>' +
+            '<div class="likert-option"><input type="radio" name="goal_alignment" value="4" id="ga4"><label for="ga4">Agree</label></div>' +
+            '<div class="likert-option"><input type="radio" name="goal_alignment" value="5" id="ga5"><label for="ga5">Strongly Agree</label></div>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>4. Plan Clarity <span class="required">*</span></h2>' +
+          '<label class="field-label">After reviewing the plan, how clear is it what this district is trying to accomplish?</label>' +
+          '<div class="likert-scale">' +
+            '<div class="likert-option"><input type="radio" name="goal_clarity" value="1" id="gc1" required><label for="gc1">Very Unclear</label></div>' +
+            '<div class="likert-option"><input type="radio" name="goal_clarity" value="2" id="gc2"><label for="gc2">Unclear</label></div>' +
+            '<div class="likert-option"><input type="radio" name="goal_clarity" value="3" id="gc3"><label for="gc3">Somewhat Clear</label></div>' +
+            '<div class="likert-option"><input type="radio" name="goal_clarity" value="4" id="gc4"><label for="gc4">Clear</label></div>' +
+            '<div class="likert-option"><input type="radio" name="goal_clarity" value="5" id="gc5"><label for="gc5">Very Clear</label></div>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>5. District Identity</h2>' +
+          '<label class="field-label">In your words, what should this district be known for?</label>' +
+          '<textarea name="known_for" placeholder="What\'s our reputation? What makes us special?"></textarea>' +
+        '</div>' +
+
+        '<div class="form-group">' +
+          '<h2>6. Additional Feedback</h2>' +
+          '<label class="field-label">What else would you like the planning team to know?</label>' +
+          '<textarea name="additional_feedback" placeholder="Any additional thoughts, concerns, or suggestions..."></textarea>' +
+        '</div>' +
+
+        '<div class="note">' +
+          '<strong>Confidentiality:</strong> Your responses are confidential. Only aggregate themes and patterns will be shared with the planning team. Your individual responses will not be attributed to you.' +
+        '</div>' +
+
+        '<button type="submit" class="submit-btn" id="submitBtn">Submit My Feedback</button>' +
+      '</form>';
+
+    setupForm();
+  }
+
+  // ========================================================================
+  // FORM HANDLING
+  // ========================================================================
+  function setupForm() {
+    var form = document.getElementById('surveyForm');
+    var progressFill = document.getElementById('progressFill');
+
+    // Track progress
+    form.addEventListener('input', function() {
+      var inputs = form.querySelectorAll('textarea, input[type="radio"]:checked');
+      var totalFields = form.querySelectorAll('.form-group').length;
+      var filledFields = 0;
+
+      form.querySelectorAll('.form-group').forEach(function(group) {
+        var textarea = group.querySelector('textarea');
+        var radio = group.querySelector('input[type="radio"]:checked');
+        if ((textarea && textarea.value.trim()) || radio) {
+          filledFields++;
+        }
+      });
+
+      var pct = Math.round((filledFields / totalFields) * 100);
+      progressFill.style.width = pct + '%';
+    });
+
+    // Submit
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      var formData = new FormData(form);
+      var response = { timestamp: new Date().toISOString() };
+
+      formData.forEach(function(value, key) {
+        response[key] = value;
+      });
+
+      // Save to localStorage
+      var existing = [];
+      try {
+        var raw = localStorage.getItem(storageKey);
+        if (raw) existing = JSON.parse(raw);
+      } catch(err) {}
+
+      existing.push(response);
+      localStorage.setItem(storageKey, JSON.stringify(existing));
+      localStorage.setItem('sd_survey_submitted_' + surveyId, 'true');
+
+      showSuccess();
+    });
+  }
+
+  // ========================================================================
+  // SUCCESS STATE
+  // ========================================================================
+  function showSuccess() {
+    app.innerHTML = '' +
+      '<div class="success-message">' +
+        '<div class="checkmark">&#10003;</div>' +
+        '<h2>Thank You!</h2>' +
+        '<p>Your feedback has been submitted successfully. Your input will help shape the future of our district.</p>' +
+        '<p style="margin-top: 1.5rem; color: #888; font-size: 0.9rem;">You can close this window now.</p>' +
+        '<p style="margin-top: 2rem;"><a href="https://strategicdistrict.com" style="color:#00B4CC;font-weight:600;text-decoration:none;">Learn more about Strategic District</a></p>' +
+      '</div>';
+  }
+
+})();
+</script>
+
+</body>
+</html>

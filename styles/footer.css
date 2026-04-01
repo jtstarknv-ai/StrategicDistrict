@@ -1,0 +1,171 @@
+/* ============================================================================
+   STRATEGICDISTRICT.COM - FOOTER STYLES
+   Footer with logo, links, and rainbow gradient bar
+   ============================================================================ */
+
+footer {
+  background-color: var(--color-primary-navy);
+  color: var(--color-text-inverse);
+  margin-top: auto;
+  padding-top: var(--spacing-4xl);
+  padding-bottom: 0;
+  border-top: 1px solid rgba(234, 224, 213, 0.2);
+}
+
+.footer-content {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+  .footer-content {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-content {
+    padding: 0 var(--spacing-3xl);
+  }
+}
+
+/* ========== FOOTER GRID ========== */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-3xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-4xl);
+  }
+}
+
+/* ========== FOOTER COLUMNS ========== */
+.footer-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-column h3 {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text-inverse);
+}
+
+/* ========== FOOTER LINKS ========== */
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-links li {
+  margin: 0;
+}
+
+.footer-links a {
+  color: rgba(234, 224, 213, 0.85);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: color var(--transition-base);
+  position: relative;
+  display: inline-block;
+}
+
+.footer-links a:hover {
+  color: var(--color-pop-teal);
+}
+
+.footer-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-pop-teal);
+  transition: width var(--transition-base);
+}
+
+.footer-links a:hover::after {
+  width: 100%;
+}
+
+/* ========== FOOTER DIVIDER ========== */
+.footer-divider {
+  height: 1px;
+  background-color: rgba(234, 224, 213, 0.2);
+  margin: var(--spacing-3xl) 0;
+}
+
+/* ========== FOOTER BOTTOM ========== */
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  align-items: center;
+  text-align: center;
+  padding-bottom: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+}
+
+.footer-copyright {
+  font-size: 0.875rem;
+  color: rgba(234, 224, 213, 0.85);
+}
+
+.footer-copyright a {
+  color: rgba(234, 224, 213, 0.9);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.footer-copyright a:hover {
+  color: var(--color-pop-teal);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 767px) {
+  footer {
+    padding-top: var(--spacing-3xl);
+  }
+
+  .footer-grid {
+    gap: var(--spacing-2xl);
+  }
+
+  .footer-column {
+    text-align: center;
+  }
+}
+
+/* ========== ACCESSIBILITY ========== */
+.footer-links a:focus-visible {
+  outline: 2px solid var(--color-pop-teal);
+  outline-offset: 2px;
+}

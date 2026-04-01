@@ -1,0 +1,177 @@
+{
+  "timestamp": "2026-03-30T22:42:00Z",
+  "generatedBy": "The Engineer (Agent 3 - QA Council)",
+  "executionMode": "static-analysis",
+  "description": "Executable test scripts for district and school builders. All tests run without Playwright/browser (static Node.js analysis).",
+  "tests": [
+    {
+      "name": "structural-checks-district.js",
+      "target": "district-builder",
+      "basePath": "/sessions/sleepy-gifted-allen/mnt/site/builder",
+      "type": "structural",
+      "description": "Validates district builder HTML/JS cross-references, syntax, element IDs, onclick handlers, step completeness, and cross-file variable references.",
+      "tests": [
+        "Syntax validation across 11 JS files",
+        "All getElementById references exist (static checks)",
+        "All onclick handlers exported to window",
+        "All 14 steps have content divs and sidebar entries",
+        "Cross-file variable references (planState)"
+      ],
+      "coverage": "Covers P0 test requirements: TEST-001, TEST-004, TEST-007",
+      "resultFile": "structural-results-district.json"
+    },
+    {
+      "name": "structural-checks-school.js",
+      "target": "school-builder",
+      "basePath": "/sessions/sleepy-gifted-allen/mnt/site/strategic-school",
+      "type": "structural",
+      "description": "Validates school builder HTML/JS cross-references, syntax, element IDs, onclick handlers, step completeness, cross-file variables, and dynamic goal modal creation.",
+      "tests": [
+        "Syntax validation across 3 JS files",
+        "All getElementById references exist (static checks)",
+        "All onclick handlers exported to window",
+        "All 12 steps have content divs and sidebar entries",
+        "Cross-file variable references (GOAL_AREAS_DB, ESSA_EVIDENCE_TIERS, NAMED_PROGRAMS_DB, STATE_ESSA_CONFIG)",
+        "Dynamic ID creation for goal modals"
+      ],
+      "coverage": "Covers P0 test requirements: TEST-003, TEST-006, TEST-021, TEST-022",
+      "resultFile": "structural-results-school.json"
+    },
+    {
+      "name": "budget-math-checks.js",
+      "target": "district-builder",
+      "basePath": "/sessions/sleepy-gifted-allen/mnt/site/builder",
+      "type": "budget-validation",
+      "description": "Validates budget calculation structure, funding sources, functions, window exports, feasibility weights, and budget containers.",
+      "tests": [
+        "FUNDING_SOURCES array has 12 expected sources",
+        "Key budget functions exist (renderBudgetSetup, recalculateBudgetTotals, etc.)",
+        "Required functions exported to window",
+        "Feasibility score weights sum to 1.0",
+        "Budget container IDs exist in HTML",
+        "Budget calculation and validation logic present"
+      ],
+      "coverage": "Covers P0 test requirements: TEST-023, TEST-024",
+      "resultFile": "budget-results.json"
+    },
+    {
+      "name": "duplicate-function-checks.js",
+      "target": "district-builder",
+      "basePath": "/sessions/sleepy-gifted-allen/mnt/site/builder",
+      "type": "code-quality",
+      "description": "Scans all district builder JS files for duplicate function definitions. Specifically validates critical duplicates: calculateFeasibilityScore and updateBudgetSummary.",
+      "tests": [
+        "Full codebase scan for duplicate function definitions",
+        "Critical function audit: calculateFeasibilityScore (ai-engine.js vs budget-integration.js)",
+        "Critical function audit: updateBudgetSummary (budget-alignment.js vs budget-tracker.js)",
+        "Function signature consistency checks"
+      ],
+      "coverage": "Covers P0 test requirements: TEST-011, TEST-012 (duplicate function resolution)",
+      "resultFile": "duplicate-results.json",
+      "knownIssues": [
+        {
+          "function": "calculateFeasibilityScore",
+          "severity": "P0",
+          "locations": ["js/ai-engine.js:725", "js/budget-integration.js:519"],
+          "note": "Two different implementations with different signatures. ai-engine.js takes planState parameter, budget-integration.js does not."
+        },
+        {
+          "function": "updateBudgetSummary",
+          "severity": "P0",
+          "locations": ["js/budget-alignment.js:118", "js/budget-tracker.js:56"],
+          "note": "Two different implementations causing budget summary display inconsistencies."
+        }
+      ]
+    },
+    {
+      "name": "school-goal-modal-checks.js",
+      "target": "school-builder",
+      "basePath": "/sessions/sleepy-gifted-allen/mnt/site/strategic-school",
+      "type": "dom-element-validation",
+      "description": "Validates school builder goal modal elements. Tests for 8 missing goal-related DOM IDs that are referenced in school.js but absent from index.html (static or dynamic).",
+      "tests": [
+        "Static HTML contains goal modal IDs: goalBuilderModal, goalAreaAddModal, goalStatement, goalNeed, goalRootCause, goalMetric, goalTarget, goalDate",
+        "Dynamic element creation patterns in school.js for missing IDs",
+        "Modal-related functions exist: openGoalModal, closeGoalModal, saveGoal, editGoal, deleteGoal, addGoalArea",
+        "Form field references in goal creation code",
+        "Modal display/hide logic and event handlers"
+      ],
+      "coverage": "Covers P1 test requirements: TEST-021 (goal creation modal), TEST-022 (goal area add modal)",
+      "resultFile": "goal-modal-results.json",
+      "knownIssues": [
+        {
+          "id": "goalBuilderModal",
+          "severity": "P1",
+          "referencedIn": "school.js:1881",
+          "description": "Modal container for goal building - might be created dynamically"
+        },
+        {
+          "id": "goalStatement",
+          "severity": "P1",
+          "referencedIn": "school.js:1887",
+          "description": "Goal statement input field"
+        },
+        {
+          "id": "goalNeed",
+          "severity": "P1",
+          "referencedIn": "school.js:1885",
+          "description": "Goal need/context input"
+        },
+        {
+          "id": "goalRootCause",
+          "severity": "P1",
+          "referencedIn": "school.js:1886",
+          "description": "Goal root cause input"
+        },
+        {
+          "id": "goalMetric",
+          "severity": "P1",
+          "referencedIn": "school.js:1888",
+          "description": "Goal metric/measure field"
+        },
+        {
+          "id": "goalTarget",
+          "severity": "P1",
+          "referencedIn": "school.js:1889",
+          "description": "Goal target/outcome field"
+        },
+        {
+          "id": "goalDate",
+          "severity": "P1",
+          "referencedIn": "school.js:1890",
+          "description": "Goal target date field"
+        },
+        {
+          "id": "goalAreaAddModal",
+          "severity": "P1",
+          "referencedIn": "school.js:1261",
+          "description": "Modal for adding new goal areas"
+        }
+      ]
+    }
+  ],
+  "executionInstructions": {
+    "individual": "cd /sessions/sleepy-gifted-allen/mnt/site/qa/20260330-223842/tests && node [script-name].js",
+    "all": "cd /sessions/sleepy-gifted-allen/mnt/site/qa/20260330-223842/tests && for f in structural-checks-district.js structural-checks-school.js budget-math-checks.js duplicate-function-checks.js school-goal-modal-checks.js; do echo '=== Running '$f' ===' && node $f || true; done",
+    "exitCodes": {
+      "0": "All tests passed",
+      "1": "One or more tests failed"
+    }
+  },
+  "outputFiles": {
+    "structural-results-district.json": "Test results for district builder structure validation",
+    "structural-results-school.json": "Test results for school builder structure validation",
+    "budget-results.json": "Test results for budget math and calculations",
+    "duplicate-results.json": "Test results for duplicate function detection (includes detailed conflict report)",
+    "goal-modal-results.json": "Test results for school builder goal modal elements"
+  },
+  "summary": {
+    "totalScripts": 5,
+    "totalTests": 68,
+    "p0Coverage": "11 P0 tests mapped (initialization, navigation, duplicate functions)",
+    "p1Coverage": "20 P1 tests partially covered (structural validation for missing DOM, goal CRUD prep, budget checks)",
+    "staticAnalysisOnly": "No Playwright/browser required. All tests use Node.js file I/O and regex parsing.",
+    "estimatedRunTime": "30-45 seconds for all 5 scripts combined",
+    "notes": "These scripts validate code structure, syntax, and cross-references. They cannot test actual runtime behavior (step navigation, form interactions, data persistence) which requires Playwright/browser automation. Run these first as a quick gate check before moving to functional/integration tests."
+  }
+}

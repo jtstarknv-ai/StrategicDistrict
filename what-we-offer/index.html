@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What We Offer | StrategicDistrict</title>
+
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/header.css">
+  <link rel="stylesheet" href="/styles/footer.css">
+  <link rel="stylesheet" href="/styles/components.css">
+
+  <style>
+    body { padding-top: 0; }
+    header { margin-top: 6px; }
+    .header-content { padding-top: 8px; padding-bottom: 8px; }
+    .logo img { height: 48px; width: auto; }
+    .logo span { font-size: 1.25rem; font-weight: 700; }
+
+    /* Slim section divider */
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Hero section */
+    .hero-section {
+      background: var(--color-primary-cream);
+      color: var(--color-primary-navy);
+      padding: 60px var(--spacing-lg);
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-section h1 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h1);
+      margin-bottom: var(--spacing-xl);
+      line-height: var(--line-height-tight);
+      color: var(--color-primary-navy);
+    }
+
+    .hero-section p {
+      font-size: var(--font-size-body-lg);
+      margin-bottom: 0;
+      color: var(--color-primary-navy);
+      opacity: 0.9;
+    }
+
+    /* Feature grid section */
+    .features-section {
+      padding: var(--spacing-4xl) var(--spacing-lg);
+      background: linear-gradient(135deg, #F9F7F3 0%, #FEFDFB 100%);
+    }
+
+    .features-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .section-heading h2 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h2);
+      margin-bottom: var(--spacing-md);
+      color: var(--color-primary-navy);
+    }
+
+    .section-heading p {
+      font-size: var(--font-size-body-lg);
+      color: var(--color-text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-xl);
+    }
+
+    .feature-card {
+      background-color: white;
+      border: 1px solid var(--color-border-light);
+      border-top: 5px solid transparent;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl) var(--spacing-lg);
+      text-align: center;
+      transition: all var(--transition-base);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .feature-card:nth-child(1)  { border-top-color: var(--color-pop-green); }
+    .feature-card:nth-child(2)  { border-top-color: var(--color-pop-teal); }
+    .feature-card:nth-child(3)  { border-top-color: var(--color-pop-gold); }
+    .feature-card:nth-child(4)  { border-top-color: var(--color-pop-coral); }
+    .feature-card:nth-child(5)  { border-top-color: var(--color-pop-purple); }
+    .feature-card:nth-child(6)  { border-top-color: var(--color-pop-green); }
+    .feature-card:nth-child(7)  { border-top-color: var(--color-pop-teal); }
+    .feature-card:nth-child(8)  { border-top-color: var(--color-pop-gold); }
+    .feature-card:nth-child(9)  { border-top-color: var(--color-pop-coral); }
+    .feature-card:nth-child(10) { border-top-color: var(--color-pop-purple); }
+    .feature-card:nth-child(11) { border-top-color: var(--color-pop-green); }
+    .feature-card:nth-child(12) { border-top-color: var(--color-pop-teal); }
+
+    .feature-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto var(--spacing-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-lg);
+      font-size: 1.4rem;
+    }
+
+    .feature-card:nth-child(1) .feature-icon  { background: rgba(110, 207, 110, 0.12); color: var(--color-pop-green); }
+    .feature-card:nth-child(2) .feature-icon  { background: rgba(0, 180, 204, 0.12); color: var(--color-pop-teal); }
+    .feature-card:nth-child(3) .feature-icon  { background: rgba(212, 165, 55, 0.12); color: var(--color-pop-gold); }
+    .feature-card:nth-child(4) .feature-icon  { background: rgba(224, 122, 95, 0.12); color: var(--color-pop-coral); }
+    .feature-card:nth-child(5) .feature-icon  { background: rgba(107, 76, 154, 0.12); color: var(--color-pop-purple); }
+    .feature-card:nth-child(6) .feature-icon  { background: rgba(110, 207, 110, 0.12); color: var(--color-pop-green); }
+    .feature-card:nth-child(7) .feature-icon  { background: rgba(0, 180, 204, 0.12); color: var(--color-pop-teal); }
+    .feature-card:nth-child(8) .feature-icon  { background: rgba(212, 165, 55, 0.12); color: var(--color-pop-gold); }
+    .feature-card:nth-child(9) .feature-icon  { background: rgba(224, 122, 95, 0.12); color: var(--color-pop-coral); }
+    .feature-card:nth-child(10) .feature-icon { background: rgba(107, 76, 154, 0.12); color: var(--color-pop-purple); }
+    .feature-card:nth-child(11) .feature-icon { background: rgba(110, 207, 110, 0.12); color: var(--color-pop-green); }
+    .feature-card:nth-child(12) .feature-icon { background: rgba(0, 180, 204, 0.12); color: var(--color-pop-teal); }
+
+    .feature-card h3 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h5);
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-primary-navy);
+    }
+
+    .feature-card p {
+      font-size: var(--font-size-body-md);
+      color: var(--color-text-muted);
+      line-height: var(--line-height-relaxed);
+    }
+
+    /* School builder section */
+    .school-builder-section {
+      padding: var(--spacing-4xl) var(--spacing-lg);
+      background: linear-gradient(135deg, #E8DCC9 0%, #F9F7F3 100%);
+    }
+
+    .school-builder-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-4xl);
+      align-items: center;
+    }
+
+    .school-builder-text h2 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h2);
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-primary-navy);
+    }
+
+    .school-builder-text p {
+      font-size: var(--font-size-body-lg);
+      color: var(--color-text-muted);
+      margin-bottom: var(--spacing-lg);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .school-checkmarks {
+      list-style: none;
+      padding: 0;
+      margin: var(--spacing-lg) 0;
+    }
+
+    .school-checkmarks li {
+      padding: var(--spacing-md) 0;
+      padding-left: var(--spacing-2xl);
+      position: relative;
+      color: var(--color-text-primary);
+      font-size: var(--font-size-body-md);
+    }
+
+    .school-checkmarks li::before {
+      content: '\2713';
+      position: absolute;
+      left: 0;
+      color: var(--color-pop-green);
+      font-weight: var(--font-weight-bold);
+      font-size: 1.25rem;
+    }
+
+    .school-mockup {
+      background-color: white;
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-2xl);
+      box-shadow: var(--shadow-md);
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #FEFDFB 0%, #F9F7F3 100%);
+    }
+
+    .school-mockup-content { text-align: center; }
+
+    .school-mockup-content h3 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h5);
+      color: var(--color-primary-navy);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .school-mockup-content p {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-body-sm);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    /* Pricing section */
+    .pricing-section {
+      padding: var(--spacing-4xl) var(--spacing-lg);
+      background: linear-gradient(135deg, #FEFDFB 0%, #F9F7F3 100%);
+    }
+
+    .pricing-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pricing-header {
+      text-align: center;
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .pricing-header h2 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h2);
+      margin-bottom: var(--spacing-md);
+      color: var(--color-primary-navy);
+    }
+
+    .pricing-tagline {
+      font-size: var(--font-size-body-lg);
+      color: var(--color-pop-teal);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--spacing-2xl);
+    }
+
+    .pricing-card {
+      background: white;
+      border: 2px solid var(--color-border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-2xl);
+      text-align: center;
+      transition: all var(--transition-base);
+    }
+
+    .pricing-card:nth-child(1) {
+      border-color: var(--color-pop-green);
+      border-top: 5px solid var(--color-pop-green);
+    }
+
+    .pricing-card:nth-child(2) {
+      border-color: var(--color-pop-teal);
+      border-top: 5px solid var(--color-pop-teal);
+      transform: scale(1.02);
+    }
+
+    .pricing-card:nth-child(3) {
+      border-color: var(--color-pop-purple);
+      border-top: 5px solid var(--color-pop-purple);
+    }
+
+    .pricing-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .pricing-card:nth-child(2):hover {
+      transform: scale(1.02) translateY(-4px);
+    }
+
+    .pricing-label {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h5);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-primary-navy);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .pricing-price {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-primary-navy);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .pricing-period {
+      font-size: var(--font-size-body-md);
+      color: var(--color-text-muted);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .pricing-features {
+      list-style: none;
+      padding: 0;
+      margin: var(--spacing-xl) 0;
+      text-align: left;
+    }
+
+    .pricing-features li {
+      padding: var(--spacing-md) 0;
+      border-bottom: 1px solid var(--color-border-light);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-body-md);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .pricing-features li:last-child { border-bottom: none; }
+
+    .pricing-note {
+      font-size: var(--font-size-body-sm);
+      color: var(--color-text-muted);
+      font-style: italic;
+      margin-top: var(--spacing-lg);
+    }
+
+    .btn {
+      padding: var(--spacing-md) var(--spacing-xl);
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--transition-standard);
+      cursor: pointer;
+      border: none;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+    }
+
+    .btn-cta {
+      background: var(--color-pop-teal);
+      color: white;
+    }
+
+    .btn-cta:hover {
+      background: #0099aa;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 180, 204, 0.25);
+    }
+
+    .btn-secondary {
+      background: var(--color-primary-navy);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-primary-dark-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(20, 33, 61, 0.25);
+    }
+
+    .btn-gold {
+      background: #D4A537;
+      color: white;
+    }
+
+    .btn-gold:hover {
+      background: #c1932d;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(212, 165, 55, 0.25);
+    }
+
+    /* CTA section */
+    .cta-section {
+      padding: 48px var(--spacing-lg);
+      background: linear-gradient(135deg, #E8DCC9 0%, #F9F7F3 100%);
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h2);
+      margin-bottom: var(--spacing-xl);
+      color: var(--color-primary-navy);
+    }
+
+    .cta-button-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-lg);
+      flex-wrap: wrap;
+    }
+
+    /* Footer override */
+    footer {
+      background-color: #DDD3C6 !important;
+      padding-top: 0 !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .school-builder-container { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 767px) {
+      .hero-section { padding: var(--spacing-3xl) var(--spacing-lg); }
+      .hero-section h1 { font-size: 2rem; }
+      .features-section { padding: var(--spacing-3xl) var(--spacing-lg); }
+      .feature-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .pricing-card:nth-child(2) { transform: scale(1); }
+      .pricing-price { font-size: 2.5rem; }
+    }
+  </style>
+
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Auth Library -->
+  <script src="/js/shared/auth.js"></script>
+</head>
+<body>
+  <!-- Rainbow Gradient Bar -->
+  <div class="rainbow-bar"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <a href="/" class="logo">
+        <img src="/assets/images/SDlogo.png" alt="Strategic District" height="48">
+        <span>Strategic District</span>
+      </a>
+      <nav class="main-nav">
+        <a href="/what-we-offer/" class="active">What We Offer</a>
+        <a href="/how-it-works/">How It Works</a>
+        <a href="/sample-plan/">Strategic Plans</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div id="auth-buttons"></div>
+        <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="mobile-nav">
+      <a href="/what-we-offer/">What We Offer</a>
+      <a href="/how-it-works/">How It Works</a>
+      <a href="/sample-plan/">Strategic Plans</a>
+      <a href="/contact/">Contact</a>
+      <a href="/login/">Sign In</a>
+      <a href="/signup/" class="header-signup-btn">Get Started</a>
+    </div>
+  </header>
+
+  <div class="section-divider"></div>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>One Platform. Complete Strategic Plans.</h1>
+      <p>Guided planning framework that transforms district vision into actionable strategy. Research-backed. District-tested. Ready to deploy.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- District Builder Features Section - All 12 boxes in one grid -->
+  <section class="features-section">
+    <div class="features-container">
+      <div class="section-heading">
+        <h2>District Strategic Plan Builder</h2>
+        <p>A complete toolkit for district strategic planning</p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </div>
+          <h3>District Profile</h3>
+          <p>Search from 60+ districts, auto-fill your data. Instant context on your district's demographics, performance, and profile.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          </div>
+          <h3>Vision and Mission Builder</h3>
+          <p>Curated templates plus custom writing. Build compelling vision and mission statements that inspire your community.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </div>
+          <h3>Core Values Selection</h3>
+          <p>Define the principles that guide your district. Choose from vetted values or create your own to match your culture.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+          </div>
+          <h3>Competencies Framework</h3>
+          <p>Build a coherent framework of skills and competencies. Align from classroom to career to community impact.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          </div>
+          <h3>Strategic Domains</h3>
+          <p>Nine research-backed domains structure your planning. Ensure nothing falls through the cracks. Complete by design.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <h3>Strategic Goal Setting</h3>
+          <p>Set measurable goals with severity analysis. Understand impact and urgency. Build goals that drive real change.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          </div>
+          <h3>Goal Forecasting</h3>
+          <p>Conservative, moderate, and aggressive projections. Understand the impact of your strategy. Model different scenarios.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          </div>
+          <h3>Central Office Alignment</h3>
+          <p>Connect goals to 22 departments. Ensure every function aligns to strategy. Break down silos across your organization.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
+          </div>
+          <h3>Action Initiatives</h3>
+          <p>Domain-specific strategies and initiatives. Research-backed approaches tailored to your strategic priorities.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          </div>
+          <h3>Implementation Calendar</h3>
+          <p>Customizable start dates and timeline views. Quarter-by-quarter planning. Track milestones and ownership.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          </div>
+          <h3>Review and Export</h3>
+          <p>Three professional export formats. PDF, Word, and web-ready reports. Share with your board and community.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 12 3 12 0v-5"></path></svg>
+          </div>
+          <h3>Portrait of a Graduate</h3>
+          <p>Define the knowledge, skills, and dispositions that matter. Align everything to the vision of student success.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- School Builder Section -->
+  <section class="school-builder-section">
+    <div class="school-builder-container">
+      <div class="school-builder-text">
+        <h2>School Strategic Plan Builder</h2>
+        <p>Build school-level plans with our Strategic School builder that aligns to your district strategy. Let our guided workflow help you produce comprehensive School Improvement Plans tailored to each school's unique context.</p>
+
+        <ul class="school-checkmarks">
+          <li>Guided step-by-step planning process (automatically aligns to district plans)</li>
+          <li>School-specific data and context</li>
+          <li>Automated linkage to district strategic goals</li>
+          <li>School Improvement Plan generation</li>
+          <li>Professional PDF and web reports</li>
+          <li>Ready for state submission and accountability</li>
+        </ul>
+      </div>
+
+      <div class="school-mockup">
+        <div class="school-mockup-content">
+          <h3>School Improvement Plan</h3>
+          <p>Professional 10-30 page report</p>
+          <div style="background: white; border: 1px solid var(--color-border-light); border-radius: var(--radius-md); padding: var(--spacing-lg); text-align: left; font-size: 0.75rem; color: var(--color-text-muted); line-height: 1.4;">
+            <div style="font-weight: 600; margin-bottom: 8px;">School Improvement Plan 2026-2027</div>
+            <div style="margin-bottom: 8px;">School Profile and Context</div>
+            <div style="margin-bottom: 8px;">Alignment to District Goals</div>
+            <div style="margin-bottom: 8px;">School-Level Data Summary</div>
+            <div style="margin-bottom: 8px;">Strategic Initiatives and Actions</div>
+            <div style="margin-bottom: 8px;">Implementation Timeline</div>
+            <div>Accountability and Progress Monitoring</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Pricing Section -->
+  <section class="pricing-section" id="pricing">
+    <div class="pricing-container">
+      <div class="pricing-header">
+        <h2>Simple, Transparent Pricing</h2>
+        <div class="pricing-tagline">Always get access to upgrades and new tools. Never pay more.</div>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Free Tier -->
+        <div class="pricing-card">
+          <div class="pricing-label">Free Tier</div>
+          <div class="pricing-price">$0</div>
+          <div class="pricing-period">Forever free</div>
+
+          <ul class="pricing-features">
+            <li>Steps 1-6 of the planning builder</li>
+            <li>Staging area to save your work</li>
+            <li>No export or templates</li>
+            <li>No Central Office Alignment</li>
+            <li>No Strategic School</li>
+          </ul>
+
+          <p class="pricing-note">Start building your plan for free. Upgrade to Enterprise for full access, exports, and Strategic School.</p>
+
+          <a href="/signup/" class="btn btn-cta" style="margin-top: var(--spacing-lg); width: 100%; display: inline-block;">Start Free</a>
+        </div>
+
+        <!-- Enterprise Tier -->
+        <div class="pricing-card">
+          <div class="pricing-label">Enterprise</div>
+          <div class="pricing-price">$7,000</div>
+          <div class="pricing-period">per year</div>
+
+          <ul class="pricing-features">
+            <li>Unlimited district plans</li>
+            <li>Unlimited school plans</li>
+            <li>Strategic School</li>
+            <li>All export formats</li>
+            <li>Priority support</li>
+            <li>API access</li>
+            <li>Advanced analytics</li>
+            <li>Central Office Alignment</li>
+          </ul>
+
+          <a href="/signup/" class="btn btn-cta" style="margin-top: var(--spacing-lg); width: 100%; display: inline-block;">Get Started</a>
+        </div>
+
+        <!-- Multi-Year Plans -->
+        <div class="pricing-card">
+          <div class="pricing-label">Multi-Year Plans</div>
+          <div class="pricing-price">Best Value</div>
+          <div class="pricing-period">Lock in savings</div>
+
+          <ul class="pricing-features">
+            <li>2-year: $6,000/year</li>
+            <li>3-year: $5,000/year</li>
+            <li>All Enterprise features included</li>
+            <li>Edit your plan throughout its life</li>
+            <li>Price locked in for full term</li>
+            <li>Access to all upgrades</li>
+          </ul>
+
+          <a href="/signup/" class="btn btn-cta" style="margin-top: var(--spacing-lg); width: 100%; display: inline-block;">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2>Ready to Build Your Strategic Plan?</h2>
+    <div class="cta-button-wrapper">
+      <a href="/signup/" class="btn btn-cta">Start Free</a>
+      <a href="/sample-plan/" class="btn btn-gold">View Sample Plans</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+    <div class="footer-content" style="padding-top: 24px;">
+      <div class="footer-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+        <div class="footer-column">
+          <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+            <img src="/assets/images/SDlogo.png" alt="Strategic District" style="height: 112px; width: auto;">
+            <div style="font-weight: 700; color: #000000; font-size: 2rem; text-transform: uppercase; letter-spacing: 1px;">STRATEGIC DISTRICT</div>
+          </div>
+          
+        </div>
+        <div class="footer-column" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Explore</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/what-we-offer/" style="color: var(--color-primary-brown);">What We Offer</a></li>
+              <li><a href="/how-it-works/" style="color: var(--color-primary-brown);">How It Works</a></li>
+              <li><a href="/sample-plan/" style="color: var(--color-primary-brown);">Strategic Plans</a></li>
+              <li><a href="/builder/" style="color: var(--color-primary-brown);">Start Building</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Customer Service</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/contact/" style="color: var(--color-primary-brown);">Contact</a></li>
+              <li><a href="/login/" style="color: var(--color-primary-brown);">Sign In</a></li>
+              <li><a href="/signup/" style="color: var(--color-primary-brown);">Sign Up</a></li>
+              <li><a href="#privacy" style="color: var(--color-primary-brown);">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div style="height: 1px; background: rgba(94, 80, 63, 0.2); margin: 12px 0;"></div>
+      <div class="footer-bottom">
+        <div class="footer-copyright" style="color: var(--color-primary-brown);">
+          Professional strategic planning for PK-12 public education, charters, and private schools. &nbsp;|&nbsp; Powered by <a href="https://starkanalytica.com" style="color: var(--color-primary-navy); text-decoration: none; font-weight: 500;">Stark Analytica LLC</a> &nbsp;|&nbsp; &copy; 2026 Strategic District. All rights reserved.
+        </div>
+      </div>
+    </div>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+  </footer>
+
+  <script src="/js/shared/header.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+{
+  "target": "school-builder-goals",
+  "timestamp": "2026-03-31T06:01:48.341Z",
+  "passed": 14,
+  "failed": 0,
+  "total": 14,
+  "builderType": "hierarchical",
+  "results": [
+    {
+      "test": "HTML contains: goalsContainer",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "JS uses goalsContainer for hierarchical builder",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function exists: renderGoalAreaPlans",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function exists: addGoalArea",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function exists: addProblemStatement",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function exists: addGoal",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function exists: addAPO",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function exists: addStrategy",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Function exists: saveGoalField",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "planState.goalAreaPlans structure used for goals",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Problem statements in goal structure",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Modal display logic present",
+      "passed": true,
+      "details": "Looking for show/hide functionality"
+    },
+    {
+      "test": "Event handlers for modal interaction present",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Data storage/retrieval logic present",
+      "passed": true,
+      "details": ""
+    }
+  ]
+}

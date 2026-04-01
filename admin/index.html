@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Strategic District</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/shared/auth.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --pop-green: #6ECF6E;
+      --pop-teal: #00B4CC;
+      --pop-gold: #D4A537;
+      --pop-coral: #E07A5F;
+      --pop-purple: #6B4C9A;
+      --earth-navy: #22333B;
+      --earth-cream: #EAE0D5;
+      --earth-tan: #C6AC8F;
+      --earth-brown: #5E503F;
+      --earth-dark-blue: #14213D;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--earth-cream);
+      color: var(--earth-navy);
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Source Serif Pro', serif;
+    }
+
+    /* Rainbow bar at top */
+    .rainbow-bar {
+      height: 6px;
+      background: linear-gradient(90deg, var(--pop-green) 0%, var(--pop-teal) 20%, var(--pop-gold) 40%, var(--pop-coral) 60%, var(--pop-purple) 80%, var(--pop-green) 100%);
+    }
+
+    /* Top navigation */
+    .navbar {
+      background-color: var(--earth-navy);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .navbar button {
+      background-color: var(--pop-coral);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+    }
+
+    .navbar button:hover {
+      background-color: #d56a4f;
+    }
+
+    /* Main container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Loading and error states */
+    .loading, .error {
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .loading {
+      background-color: #f0f0f0;
+      color: var(--earth-navy);
+    }
+
+    .error {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid var(--pop-green);
+    }
+
+    .stat-card.teal {
+      border-left-color: var(--pop-teal);
+    }
+
+    .stat-card.gold {
+      border-left-color: var(--pop-gold);
+    }
+
+    .stat-card.coral {
+      border-left-color: var(--pop-coral);
+    }
+
+    .stat-card.purple {
+      border-left-color: var(--pop-purple);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--earth-brown);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--earth-navy);
+    }
+
+    /* Search and controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--pop-teal);
+      box-shadow: 0 0 0 3px rgba(0, 180, 204, 0.1);
+    }
+
+    /* Table */
+    .table-wrapper {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background-color: var(--earth-navy);
+      color: white;
+    }
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th:hover {
+      background-color: #1a262f;
+    }
+
+    th.sortable::after {
+      content: ' \2195';
+      opacity: 0.5;
+    }
+
+    th.sort-asc::after {
+      content: ' \2191';
+      opacity: 1;
+    }
+
+    th.sort-desc::after {
+      content: ' \2193';
+      opacity: 1;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tbody tr:hover {
+      background-color: #f0f0f0;
+    }
+
+    td {
+      padding: 1rem;
+      font-size: 0.95rem;
+    }
+
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    button.btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    button.btn-primary {
+      background-color: var(--pop-teal);
+      color: white;
+    }
+
+    button.btn-primary:hover {
+      background-color: #0099b3;
+    }
+
+    button.btn-secondary {
+      background-color: var(--pop-gold);
+      color: white;
+    }
+
+    button.btn-secondary:hover {
+      background-color: #c49530;
+    }
+
+    button.btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--earth-cream);
+      padding-bottom: 1rem;
+    }
+
+    .modal-header h2 {
+      font-size: 1.5rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--earth-brown);
+    }
+
+    .modal-close:hover {
+      color: var(--earth-navy);
+    }
+
+    .plans-list {
+      margin-top: 1rem;
+    }
+
+    .plan-item {
+      background-color: #f9f9f9;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      border-left: 3px solid var(--pop-teal);
+    }
+
+    .plan-item.finalized {
+      border-left-color: var(--pop-green);
+    }
+
+    .plan-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .plan-meta {
+      font-size: 0.85rem;
+      color: var(--earth-brown);
+      margin-top: 0.5rem;
+    }
+
+    .plan-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+    }
+
+    .plan-status.draft {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .plan-status.finalized {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    /* Tier badge */
+    .tier-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .tier-free {
+      background-color: #e0e0e0;
+      color: var(--earth-navy);
+    }
+
+    .tier-enterprise {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: var(--earth-navy);
+      color: var(--earth-cream);
+      padding: 2rem;
+      margin-top: 4rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .navbar {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-value {
+        font-size: 1.75rem;
+      }
+
+      th, td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      button.btn {
+        width: 100%;
+      }
+
+      table {
+        font-size: 0.8rem;
+      }
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 2rem;
+      color: var(--earth-brown);
+    }
+  </style>
+</head>
+<body>
+  <div class="rainbow-bar"></div>
+
+  <div class="navbar">
+    <h1>Admin Dashboard</h1>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+  <div class="container">
+    <!-- Auth check and loading state -->
+    <div id="authCheck" class="loading">
+      Checking authentication...
+    </div>
+
+    <!-- Main dashboard (hidden until auth verified) -->
+    <div id="dashboard" style="display: none;">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Users</div>
+          <div class="stat-value" id="totalUsers">0</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-label">Free Tier</div>
+          <div class="stat-value" id="freeUsers">0</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Enterprise Tier</div>
+          <div class="stat-value" id="enterpriseUsers">0</div>
+        </div>
+        <div class="stat-card coral">
+          <div class="stat-label">Total Plans</div>
+          <div class="stat-value" id="totalPlans">0</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-label">Plans Finalized</div>
+          <div class="stat-value" id="finalizedPlans">0</div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search by name, email, or district...">
+        </div>
+      </div>
+
+      <!-- Users Table -->
+      <div class="table-wrapper">
+        <table id="usersTable">
+          <thead>
+            <tr>
+              <th class="sortable" data-column="full_name">Name</th>
+              <th class="sortable" data-column="email">Email</th>
+              <th class="sortable" data-column="district_name">District</th>
+              <th class="sortable" data-column="plan_tier">Tier</th>
+              <th class="sortable" data-column="plans_count">Plans Created</th>
+              <th class="sortable" data-column="created_at">Signup Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <tr>
+              <td colspan="7" class="loading">Loading users...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for viewing plans -->
+  <div id="plansModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalUserName">User Plans</h2>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div id="plansContent">
+        <div class="loading">Loading plans...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2026 Strategic District. Admin Dashboard.</p>
+  </div>
+
+  <script>
+    var SUPABASE_URL = 'https://mrdyxownxnyzjubvpwrk.supabase.co';
+    var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1yZHl4b3dueG55emp1YnZwd3JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MzYwODksImV4cCI6MjA4OTIxMjA4OX0.4TQomjn_4hu-5TrcyGi90wyv1HxxGKmEP1mu682hJHM';
+
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    var currentUser = null;
+    var allUsers = [];
+    var filteredUsers = [];
+    var currentSort = {
+      column: 'created_at',
+      direction: 'desc'
+    };
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', function() {
+      checkAuth();
+    });
+
+    function checkAuth() {
+      supabase.auth.getSession().then(function(result) {
+        var session = result.data.session;
+
+        if (!session) {
+          window.location.href = '/auth/login.html';
+          return;
+        }
+
+        currentUser = session.user;
+        checkAdminRole();
+      }).catch(function(error) {
+        console.error('Auth error:', error);
+        window.location.href = '/auth/login.html';
+      });
+    }
+
+    function checkAdminRole() {
+      supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', currentUser.id)
+        .single()
+        .then(function(result) {
+          var profile = result.data;
+
+          if (!profile || profile.role !== 'admin') {
+            showAuthError('You do not have admin access.');
+            return;
+          }
+
+          loadDashboard();
+        })
+        .catch(function(error) {
+          console.error('Role check error:', error);
+          showAuthError('Error checking permissions.');
+        });
+    }
+
+    function showAuthError(message) {
+      document.getElementById('authCheck').innerHTML = '<div class="error">' + message + ' <a href="/auth/login.html">Return to Login</a></div>';
+    }
+
+    function loadDashboard() {
+      document.getElementById('authCheck').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+
+      loadUsers();
+      setupEventListeners();
+    }
+
+    function loadUsers() {
+      supabase
+        .from('profiles')
+        .select('*')
+        .then(function(result) {
+          allUsers = result.data || [];
+
+          // Get plan counts for each user
+          return supabase.from('saved_plans').select('user_id, is_finalized');
+        })
+        .then(function(result) {
+          var plans = result.data || [];
+          var planCounts = {};
+          var finalizedCounts = {};
+
+          plans.forEach(function(plan) {
+            planCounts[plan.user_id] = (planCounts[plan.user_id] || 0) + 1;
+            if (plan.is_finalized) {
+              finalizedCounts[plan.user_id] = (finalizedCounts[plan.user_id] || 0) + 1;
+            }
+          });
+
+          allUsers = allUsers.map(function(user) {
+            user.plans_count = planCounts[user.id] || 0;
+            user.finalized_count = finalizedCounts[user.id] || 0;
+            return user;
+          });
+
+          updateStats();
+          filterAndSortUsers();
+          renderTable();
+        })
+        .catch(function(error) {
+          console.error('Error loading data:', error);
+          document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="7" class="error">Error loading users. Please try again.</td></tr>';
+        });
+    }
+
+    function updateStats() {
+      var totalUsers = allUsers.length;
+      var freeUsers = allUsers.filter(function(u) { return u.plan_tier === 'free'; }).length;
+      var enterpriseUsers = allUsers.filter(function(u) { return u.plan_tier === 'enterprise'; }).length;
+
+      var totalPlans = 0;
+      var finalizedPlans = 0;
+
+      allUsers.forEach(function(user) {
+        totalPlans += user.plans_count || 0;
+        finalizedPlans += user.finalized_count || 0;
+      });
+
+      document.getElementById('totalUsers').textContent = totalUsers;
+      document.getElementById('freeUsers').textContent = freeUsers;
+      document.getElementById('enterpriseUsers').textContent = enterpriseUsers;
+      document.getElementById('totalPlans').textContent = totalPlans;
+      document.getElementById('finalizedPlans').textContent = finalizedPlans;
+    }
+
+    function setupEventListeners() {
+      document.getElementById('searchInput').addEventListener('keyup', function() {
+        filterAndSortUsers();
+        renderTable();
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        supabase.auth.signOut().then(function() {
+          window.location.href = '/auth/login.html';
+        });
+      });
+
+      document.getElementById('modalClose').addEventListener('click', function() {
+        document.getElementById('plansModal').classList.remove('active');
+      });
+
+      document.getElementById('plansModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('active');
+        }
+      });
+
+      // Column headers
+      var headers = document.querySelectorAll('th.sortable');
+      headers.forEach(function(header) {
+        header.addEventListener('click', function() {
+          var column = this.getAttribute('data-column');
+          if (currentSort.column === column) {
+            currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+          } else {
+            currentSort.column = column;
+            currentSort.direction = 'asc';
+          }
+          updateSortIndicators();
+          filterAndSortUsers();
+          renderTable();
+        });
+      });
+    }
+
+    function updateSortIndicators() {
+      var headers = document.querySelectorAll('th.sortable');
+      headers.forEach(function(header) {
+        header.classList.remove('sort-asc', 'sort-desc');
+        if (header.getAttribute('data-column') === currentSort.column) {
+          header.classList.add('sort-' + currentSort.direction);
+        }
+      });
+    }
+
+    function filterAndSortUsers() {
+      var searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+      filteredUsers = allUsers.filter(function(user) {
+        var full_name = (user.full_name || '').toLowerCase();
+        var email = (user.email || '').toLowerCase();
+        var district_name = (user.district_name || '').toLowerCase();
+
+        return full_name.includes(searchTerm) || email.includes(searchTerm) || district_name.includes(searchTerm);
+      });
+
+      filteredUsers.sort(function(a, b) {
+        var aVal = a[currentSort.column];
+        var bVal = b[currentSort.column];
+
+        if (aVal === null || aVal === undefined) aVal = '';
+        if (bVal === null || bVal === undefined) bVal = '';
+
+        if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = bVal.toLowerCase();
+        }
+
+        if (aVal < bVal) return currentSort.direction === 'asc' ? -1 : 1;
+        if (aVal > bVal) return currentSort.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    function renderTable() {
+      var tbody = document.getElementById('usersTableBody');
+
+      if (filteredUsers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="no-results">No users found.</td></tr>';
+        return;
+      }
+
+      var html = '';
+      filteredUsers.forEach(function(user) {
+        var signupDate = new Date(user.created_at).toLocaleDateString();
+        var tierClass = user.plan_tier === 'enterprise' ? 'tier-enterprise' : 'tier-free';
+        var tierLabel = user.plan_tier === 'enterprise' ? 'Enterprise' : 'Free';
+
+        html += '<tr>';
+        html += '<td>' + (user.full_name || 'N/A') + '</td>';
+        html += '<td>' + (user.email || 'N/A') + '</td>';
+        html += '<td>' + (user.district_name || 'N/A') + '</td>';
+        html += '<td><span class="tier-badge ' + tierClass + '">' + tierLabel + '</span></td>';
+        html += '<td>' + (user.plans_count || 0) + '</td>';
+        html += '<td>' + signupDate + '</td>';
+        html += '<td>';
+        html += '<div class="action-buttons">';
+        if (user.plan_tier !== 'enterprise') {
+          html += '<button class="btn btn-primary" onclick="upgradeUser(\'' + user.id + '\', \'' + user.full_name + '\')">Upgrade</button>';
+        } else {
+          html += '<button class="btn btn-primary" disabled>Already Enterprise</button>';
+        }
+        html += '<button class="btn btn-secondary" onclick="viewPlans(\'' + user.id + '\', \'' + user.full_name + '\')">View Plans</button>';
+        html += '</div>';
+        html += '</td>';
+        html += '</tr>';
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    function upgradeUser(userId, userName) {
+      if (!confirm('Upgrade ' + userName + ' to Enterprise tier?')) {
+        return;
+      }
+
+      supabase
+        .rpc('upgrade_user_to_enterprise', { target_user_id: userId })
+        .then(function(result) {
+          if (result.error) {
+            console.error('Upgrade error:', result.error);
+            alert('Error upgrading user: ' + result.error.message);
+            return;
+          }
+          alert('User upgraded to Enterprise successfully! They will need to log out and back in to see the change.');
+          loadUsers();
+        })
+        .catch(function(error) {
+          console.error('Upgrade error:', error);
+          alert('Error upgrading user. Please try again.');
+        });
+    }
+
+    function viewPlans(userId, userName) {
+      document.getElementById('modalUserName').textContent = 'Plans for ' + userName;
+      document.getElementById('plansModal').classList.add('active');
+
+      supabase
+        .from('saved_plans')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .then(function(result) {
+          var plans = result.data || [];
+
+          if (plans.length === 0) {
+            document.getElementById('plansContent').innerHTML = '<p class="no-results">No plans created yet.</p>';
+            return;
+          }
+
+          var html = '<div class="plans-list">';
+          plans.forEach(function(plan) {
+            var createdDate = new Date(plan.created_at).toLocaleDateString();
+            var updatedDate = new Date(plan.updated_at).toLocaleDateString();
+            var statusClass = plan.is_finalized ? 'finalized' : 'draft';
+            var statusLabel = plan.is_finalized ? 'Finalized' : 'Draft';
+
+            html += '<div class="plan-item ' + statusClass + '">';
+            html += '<div class="plan-name">' + (plan.plan_name || 'Untitled Plan') + '</div>';
+            html += '<div class="plan-meta">Type: ' + (plan.plan_type || 'N/A') + '</div>';
+            html += '<span class="plan-status ' + statusClass + '">' + statusLabel + '</span>';
+            html += '<div class="plan-meta">Created: ' + createdDate + ' | Updated: ' + updatedDate + '</div>';
+            html += '</div>';
+          });
+          html += '</div>';
+
+          document.getElementById('plansContent').innerHTML = html;
+        })
+        .catch(function(error) {
+          console.error('Error loading plans:', error);
+          document.getElementById('plansContent').innerHTML = '<div class="error">Error loading plans.</div>';
+        });
+    }
+  </script>
+</body>
+</html>

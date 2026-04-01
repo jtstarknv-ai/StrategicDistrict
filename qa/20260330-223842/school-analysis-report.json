@@ -1,0 +1,119 @@
+{
+  "target": "school-builder",
+  "timestamp": "2026-03-30T22:40:02.214818",
+  "missingIds": [
+    {
+      "id": "goalMetric",
+      "referencedIn": "school.js",
+      "line": 1888
+    },
+    {
+      "id": "goalTarget",
+      "referencedIn": "school.js",
+      "line": 1889
+    },
+    {
+      "id": "goalNeed",
+      "referencedIn": "school.js",
+      "line": 1885
+    },
+    {
+      "id": "goalRootCause",
+      "referencedIn": "school.js",
+      "line": 1886
+    },
+    {
+      "id": "goalStatement",
+      "referencedIn": "school.js",
+      "line": 1887
+    },
+    {
+      "id": "goalAreaAddModal",
+      "referencedIn": "school.js",
+      "line": 1261
+    },
+    {
+      "id": "goalBuilderModal",
+      "referencedIn": "school.js",
+      "line": 1881
+    },
+    {
+      "id": "goalDate",
+      "referencedIn": "school.js",
+      "line": 1890
+    }
+  ],
+  "missingHandlers": [],
+  "missingExports": [],
+  "syntaxErrors": [],
+  "duplicateFunctions": [],
+  "stepCompleteness": [
+    {
+      "step": 1,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 2,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 3,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 4,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 5,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 6,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 7,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 8,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 9,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 10,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 11,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    },
+    {
+      "step": 12,
+      "hasContentDiv": true,
+      "hasSidebarEntry": true
+    }
+  ],
+  "crossFileIssues": [],
+  "summary": {
+    "totalIssues": 8,
+    "criticalIssues": 8,
+    "totalFunctions": 127,
+    "totalIds": 83
+  }
+}

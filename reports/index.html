@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategic District - Strategic Plan Report</title>
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #3c3c3c;
+      background: #f5f5f5;
+    }
+
+    .report-container {
+      background: white;
+    }
+
+    .report-header {
+      background: linear-gradient(135deg, #001219 0%, #005F73 100%);
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+      border-bottom: 6px solid #0A9396;
+    }
+
+    .report-header h1 {
+      margin: 0;
+      font-size: 42px;
+      font-weight: bold;
+      letter-spacing: -0.5px;
+    }
+
+    .report-header p:first-of-type {
+      margin: 12px 0 0 0;
+      font-size: 28px;
+      font-weight: 300;
+      color: #E9D8A6;
+    }
+
+    .report-header p:last-of-type {
+      margin: 20px 0 0 0;
+      font-size: 16px;
+      color: #94D2BD;
+    }
+
+    .report-nav {
+      background: #3c3c3c;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid #0A9396;
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .report-nav a {
+      color: white;
+      padding: 12px 18px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      border-right: 1px solid #787878;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .report-nav a:hover {
+      background: #0A9396;
+    }
+
+    .report-nav a:last-child {
+      border-right: none;
+    }
+
+    .report-main {
+      max-width: 100%;
+    }
+
+    .action-bar {
+      background: white;
+      padding: 20px 40px;
+      border-bottom: 1px solid #dcdcdc;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      position: sticky;
+      top: 50px;
+      z-index: 99;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-pdf {
+      background: #0A9396;
+      color: white;
+    }
+
+    .btn-pdf:hover {
+      background: #005F73;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(10, 147, 150, 0.3);
+    }
+
+    .btn-print {
+      background: #787878;
+      color: white;
+    }
+
+    .btn-print:hover {
+      background: #3c3c3c;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(120, 120, 120, 0.3);
+    }
+
+    section {
+      padding: 60px 40px;
+      background: white;
+      border-bottom: 1px solid #dcdcdc;
+    }
+
+    section > div {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      color: #005F73;
+      font-size: 28px;
+      margin: 0 0 30px 0;
+      padding-bottom: 12px;
+      border-bottom: 3px solid #0A9396;
+    }
+
+    h3 {
+      color: #0A9396;
+      font-size: 20px;
+      margin: 0 0 16px 0;
+      font-weight: 700;
+    }
+
+    h4 {
+      color: #005F73;
+      font-size: 18px;
+      margin: 0 0 8px 0;
+      font-weight: 700;
+    }
+
+    .vision-mission-box {
+      background: #94D2BD;
+      border-left: 5px solid #005F73;
+      padding: 20px;
+      border-radius: 4px;
+      margin-bottom: 30px;
+    }
+
+    .vision-mission-box p {
+      margin: 0;
+      color: #0A0908;
+      font-size: 16px;
+      line-height: 1.8;
+      font-weight: 500;
+    }
+
+    .value-card {
+      background: white;
+      border: 2px solid #94D2BD;
+      border-radius: 6px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .value-card:hover {
+      border-color: #0A9396;
+      box-shadow: 0 4px 12px rgba(10, 147, 150, 0.15);
+    }
+
+    .value-card h4 {
+      color: #0A9396;
+      margin-bottom: 10px;
+    }
+
+    .value-card p {
+      color: #3c3c3c;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .competency-item {
+      background: white;
+      border-left: 4px solid #0A9396;
+      padding: 20px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .competency-item h4 {
+      color: #005F73;
+      margin-bottom: 8px;
+    }
+
+    .competency-item .desc {
+      color: #787878;
+      font-size: 14px;
+      margin: 0 0 12px 0;
+      font-style: italic;
+    }
+
+    .competency-item ul {
+      margin: 0;
+      padding-left: 20px;
+      list-style-type: circle;
+    }
+
+    .competency-item li {
+      margin-bottom: 8px;
+      color: #3c3c3c;
+      font-size: 14px;
+    }
+
+    .foundation-box {
+      background: white;
+      border: 2px solid #dcdcdc;
+      border-radius: 6px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .foundation-box h4 {
+      color: #005F73;
+      margin-bottom: 6px;
+    }
+
+    .foundation-category {
+      color: #CA6702;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+      text-transform: uppercase;
+    }
+
+    .foundation-box ul {
+      margin: 0;
+      padding-left: 20px;
+      list-style-type: disc;
+    }
+
+    .foundation-box li {
+      margin-bottom: 12px;
+      color: #3c3c3c;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .goal-box {
+      background: white;
+      border-left: 5px solid #0A9396;
+      border-radius: 4px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .goal-box h4 {
+      color: #005F73;
+      margin-bottom: 8px;
+    }
+
+    .goal-description {
+      color: #787878;
+      font-size: 14px;
+      margin: 0 0 16px 0;
+    }
+
+    .measures-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    .measures-table thead tr {
+      background: #0A9396;
+      color: white;
+    }
+
+    .measures-table th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .measures-table td {
+      padding: 12px;
+      border-bottom: 1px solid #dcdcdc;
+      color: #3c3c3c;
+      font-size: 14px;
+    }
+
+    .measures-table tbody tr:nth-child(even) {
+      background: #f5f5f5;
+    }
+
+    .initiative-card {
+      background: white;
+      border: 1px solid #dcdcdc;
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .initiative-timeline {
+      background: #0A9396;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .initiative-timeline.year-2 {
+      background: #005F73;
+    }
+
+    .initiative-timeline.year-later {
+      background: #787878;
+    }
+
+    .initiative-content h4 {
+      color: #005F73;
+      margin-bottom: 4px;
+    }
+
+    .initiative-supports {
+      color: #787878;
+      font-size: 12px;
+      margin: 0 0 8px 0;
+    }
+
+    .initiative-desc {
+      color: #3c3c3c;
+      font-size: 14px;
+      margin: 0 0 12px 0;
+      line-height: 1.6;
+    }
+
+    .initiative-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .initiative-meta div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .initiative-meta strong {
+      color: #005F73;
+    }
+
+    .initiative-meta span {
+      color: #3c3c3c;
+    }
+
+    .timeline-phase {
+      background: white;
+      border-top: 4px solid #0A9396;
+      border-radius: 4px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .timeline-phase.phase-2 {
+      border-top-color: #005F73;
+    }
+
+    .timeline-phase.phase-3 {
+      border-top-color: #787878;
+    }
+
+    .timeline-phase h4 {
+      color: #005F73;
+      margin-bottom: 16px;
+    }
+
+    .timeline-phase ul {
+      margin: 0;
+      padding-left: 20px;
+      list-style-type: disc;
+    }
+
+    .timeline-phase li {
+      color: #3c3c3c;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .key-data-box {
+      background: #E9D8A6;
+      border-left: 5px solid #CA6702;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 4px;
+    }
+
+    .key-data-box p {
+      margin: 0;
+      color: #0A0908;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .key-data-box p:first-child {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    footer {
+      background: #001219;
+      color: white;
+      padding: 40px;
+      text-align: center;
+      border-top: 3px solid #0A9396;
+    }
+
+    footer p {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+    }
+
+    footer p:last-child {
+      margin: 0;
+      font-size: 12px;
+      color: #94D2BD;
+    }
+
+    @media (max-width: 768px) {
+      section {
+        padding: 40px 20px;
+      }
+
+      .report-header {
+        padding: 40px 20px;
+      }
+
+      .report-header h1 {
+        font-size: 28px;
+      }
+
+      .report-header p:first-of-type {
+        font-size: 20px;
+      }
+
+      .action-bar {
+        padding: 15px 20px;
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .initiative-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .initiative-card {
+        flex-direction: column;
+      }
+
+      .initiative-timeline {
+        width: 100%;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      .measures-table {
+        font-size: 12px;
+      }
+
+      .measures-table th,
+      .measures-table td {
+        padding: 8px;
+      }
+    }
+
+    @media print {
+      .action-bar,
+      .report-nav {
+        display: none;
+      }
+
+      section {
+        page-break-inside: avoid;
+        padding: 30px;
+        border-bottom: none;
+      }
+
+      h2 {
+        page-break-before: always;
+        page-break-after: avoid;
+      }
+
+      .initiative-card,
+      .goal-box,
+      .foundation-box {
+        page-break-inside: avoid;
+      }
+
+      body {
+        background: white;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="report-container" id="report-container"></div>
+
+  <script type="module">
+    import { ReportGenerator } from '../builder/js/modules/report-generator.js';
+    import { PDFGenerator } from '../builder/js/modules/pdf-generator.js';
+
+    // Load plan data from localStorage or use sample data
+    let planData = null;
+    try {
+      const stored = localStorage.getItem('strategicPlan');
+      if (stored) {
+        planData = JSON.parse(stored);
+      }
+    } catch (e) {
+      console.warn('Failed to load plan from localStorage, using sample data');
+    }
+
+    // Fallback to sample data
+    if (!planData) {
+      try {
+        const response = await fetch('../data/sample-plan.json');
+        planData = await response.json();
+      } catch (e) {
+        console.error('Failed to load sample plan:', e);
+        document.body.innerHTML = '<p style="padding: 40px; color: red;">Failed to load strategic plan data.</p>';
+      }
+    }
+
+    if (planData) {
+      // Generate and render HTML report
+      const reportGen = new ReportGenerator(planData);
+      const reportHTML = reportGen.generateHTML();
+      
+      // Insert action bar and report content
+      const container = document.getElementById('report-container');
+      container.innerHTML = `
+        <div class="action-bar">
+          <button class="btn btn-print" onclick="window.print()">
+            <span>Print</span>
+          </button>
+          <button class="btn btn-pdf" id="pdf-btn">
+            <span>Download PDF</span>
+          </button>
+        </div>
+        ${reportHTML}
+      `;
+
+      // PDF generation on button click
+      document.getElementById('pdf-btn').addEventListener('click', async () => {
+        const btn = document.getElementById('pdf-btn');
+        btn.disabled = true;
+        btn.textContent = 'Generating PDF...';
+
+        try {
+          const pdfGen = new PDFGenerator(planData);
+          await pdfGen.generate();
+          btn.disabled = false;
+          btn.innerHTML = '<span>Download PDF</span>';
+        } catch (error) {
+          console.error('PDF generation failed:', error);
+          alert('Failed to generate PDF. Please check console for details.');
+          btn.disabled = false;
+          btn.innerHTML = '<span>Download PDF</span>';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

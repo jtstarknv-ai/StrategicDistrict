@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage Redesign Mockup | Strategic District</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========== INLINED DESIGN TOKENS (from variables.css) ========== */
+    :root {
+      --color-primary-black: #0A0908;
+      --color-primary-navy: #22333B;
+      --color-primary-cream: #EAE0D5;
+      --color-primary-tan: #C6AC8F;
+      --color-primary-brown: #5E503F;
+      --color-primary-dark-blue: #14213D;
+      --color-pop-green: #6ECF6E;
+      --color-pop-teal: #00B4CC;
+      --color-pop-gold: #D4A537;
+      --color-pop-coral: #E07A5F;
+      --color-pop-purple: #6B4C9A;
+      --color-border-light: #E8E2D7;
+      --color-background: #FFFFFF;
+      --font-serif: 'Source Serif Pro', serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      --spacing-2xl: 2.5rem;
+      --spacing-3xl: 3rem;
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --transition-standard: 0.3s ease;
+      --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow-sm: 0 1px 3px 0 rgba(10,9,8,0.1), 0 1px 2px 0 rgba(10,9,8,0.06);
+    }
+    /* ========== INLINED RESETS (from base.css) ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-sans); color: var(--color-primary-black); background: var(--color-background); min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; }
+
+    /* ========== INLINED HEADER (from header.css) ========== */
+    .rainbow-bar { height: 6px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A); width: 100%; }
+    header { position: sticky; top: 0; z-index: 100; background: white; border-bottom: 1px solid var(--color-border-light); box-shadow: 0 1px 3px rgba(10,9,8,0.05); }
+    header.scroll-shadow { box-shadow: 0 4px 12px rgba(10,9,8,0.15); }
+    .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1440px; margin: 0 auto; padding: var(--spacing-md) var(--spacing-3xl); gap: var(--spacing-lg); }
+    .logo { display: flex; align-items: center; gap: var(--spacing-sm); text-decoration: none; color: var(--color-primary-navy); }
+    .logo img { height: 48px; width: auto; }
+    .logo span { font-size: 1.25rem; font-weight: 700; }
+    .main-nav { display: flex; gap: var(--spacing-lg); }
+    .main-nav a { font-size: 0.9375rem; font-weight: 500; color: var(--color-primary-brown); transition: color 0.2s; }
+    .main-nav a:hover { color: var(--color-primary-navy); }
+    .header-actions { display: flex; align-items: center; gap: var(--spacing-md); }
+    .hamburger { display: none; }
+    #auth-buttons { display: flex; gap: 8px; }
+
+    /* ========== INLINED FOOTER (minimal) ========== */
+    .footer-content { max-width: 1440px; margin: 0 auto; padding: 0 var(--spacing-3xl) var(--spacing-lg); }
+    .footer-bottom { text-align: center; padding: var(--spacing-sm) 0; }
+    .footer-copyright { font-size: 0.8125rem; }
+  </style>
+  <style>
+    /* ============================================================
+       HOMEPAGE MOCKUP — PROPOSED CHANGES
+       Changes marked with 🔄 comments for easy identification
+       ============================================================ */
+
+    body { padding-top: 0; }
+    header { margin-top: 6px; }
+    .header-content { padding-top: 8px; padding-bottom: 8px; }
+    .logo img { height: 48px; width: auto; }
+    .logo span { font-size: 1.25rem; font-weight: 700; }
+
+    /* ============================================================
+       🔄 CHANGE 1: Scroll-triggered entrance animations
+       Elements fade/slide in as user scrolls. Uses IntersectionObserver.
+       No library needed — pure CSS + vanilla JS.
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    /* Stagger children */
+    .stagger > * { transition-delay: calc(var(--i, 0) * 120ms); }
+
+    /* ============================================================
+       HERO — kept mostly the same, hero is already strong
+       ============================================================ */
+    .hero {
+      padding: var(--spacing-xl) var(--spacing-md);
+      background: linear-gradient(135deg, var(--color-primary-cream) 0%, rgba(198, 172, 143, 0.15) 100%);
+      min-height: 680px;
+      display: flex;
+      align-items: center;
+    }
+    .hero-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-xl);
+      align-items: center;
+    }
+    .hero-content h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2.25rem, 6vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--color-primary-navy);
+      margin-bottom: var(--spacing-lg);
+    }
+    .hero-content p {
+      font-family: var(--font-sans);
+      font-size: 1.125rem;
+      line-height: 1.7;
+      color: var(--color-primary-brown);
+      margin-bottom: var(--spacing-xl);
+      max-width: 520px;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
+    }
+    .hero-ctas a {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+      border: 2px solid transparent;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+    }
+    .btn-hero-primary {
+      background: var(--color-pop-teal);
+      color: white;
+      border-color: var(--color-pop-teal);
+    }
+    .btn-hero-primary:hover {
+      background: #0099aa;
+      border-color: #0099aa;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 180, 204, 0.25);
+    }
+    .btn-hero-secondary {
+      background: var(--color-primary-navy);
+      color: white;
+      border: 2px solid var(--color-primary-navy);
+    }
+    .btn-hero-secondary:hover {
+      background: var(--color-primary-dark-blue);
+      color: white;
+      border-color: var(--color-primary-dark-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(20, 33, 61, 0.25);
+    }
+
+    /* Hero scroll showcase (unchanged) */
+    @keyframes scrollUp { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+    @keyframes scrollDown { 0% { transform: translateY(-50%); } 100% { transform: translateY(0); } }
+    .hero-scroll-showcase {
+      display: flex; gap: 16px; height: 520px; overflow: hidden;
+      border-radius: var(--radius-lg);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    .hero-scroll-col { display: flex; flex-direction: column; gap: 16px; width: 50%; }
+    .hero-scroll-inner { display: flex; flex-direction: column; gap: 16px; }
+    .hero-scroll-col.col-up .hero-scroll-inner { animation: scrollUp 30s linear infinite; }
+    .hero-scroll-col.col-down .hero-scroll-inner { animation: scrollDown 30s linear infinite; }
+    .hero-scroll-card {
+      border-radius: var(--radius-md); overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(198, 172, 143, 0.15);
+      flex-shrink: 0;
+    }
+    .hero-scroll-card img { width: 100%; display: block; }
+
+    /* Slim section divider */
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+      width: 100%; margin: 20px 0; padding: 0;
+    }
+    header + .section-divider { margin: 0; }
+
+    /* ============================================================
+       🔄 CHANGE 2: Social proof / trust bar (NEW)
+       Animated counting numbers. Makes us look established.
+       ============================================================ */
+    .trust-bar {
+      background: var(--color-primary-navy);
+      padding: 32px 20px;
+      overflow: hidden;
+    }
+    .trust-bar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .trust-stat {
+      text-align: center;
+      min-width: 140px;
+    }
+    .trust-stat .number {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--color-pop-gold);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .trust-stat .label {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      color: rgba(234, 224, 213, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 500;
+    }
+
+    /* ============================================================
+       🔄 CHANGE 3: "Who We Serve" — glassmorphism icon cards
+       Replacing inline-styled section with proper CSS + glassy icons
+       ============================================================ */
+    .audience-band {
+      background: white;
+      padding: 40px 20px;
+    }
+    .audience-band-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .audience-band-title {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: var(--color-primary-brown);
+      margin: 0 0 32px 0;
+      font-weight: 600;
+    }
+    .audience-cards {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .audience-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 32px;
+      border-radius: var(--radius-lg);
+      background: rgba(234, 224, 213, 0.3);
+      border: 1px solid rgba(198, 172, 143, 0.2);
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      min-width: 200px;
+    }
+    .audience-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+      background: rgba(234, 224, 213, 0.5);
+    }
+    .audience-card .card-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+    }
+    .audience-card .card-sub {
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      color: var(--color-primary-brown);
+    }
+
+    /* ============================================================
+       Problem/Solution — kept, but with glassmorphism solution icons
+       ============================================================ */
+    .problem-solution {
+      padding: 48px var(--spacing-md);
+      background: #F7F5F2;
+    }
+    .problem-solution-container { max-width: 1200px; margin: 0 auto; }
+    .section-title { text-align: center; margin-bottom: var(--spacing-xl); }
+    .section-title h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.875rem, 5vw, 2.75rem);
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin: 0;
+    }
+    .problem-solution-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-xl);
+    }
+    .problem-column h3, .solution-column h3 {
+      font-family: var(--font-serif); font-size: 1.5rem;
+      font-weight: 700; color: var(--color-primary-navy);
+      margin-bottom: var(--spacing-lg);
+    }
+    .problem-list { list-style: none; padding: 0; margin: 0; }
+    .problem-list li {
+      padding: var(--spacing-md) var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
+      background: rgba(224, 122, 95, 0.08);
+      border-left: 4px solid var(--color-pop-coral);
+      border-radius: var(--radius-sm);
+      color: var(--color-primary-brown);
+      font-size: 1rem; font-weight: 500;
+    }
+    .solution-cards { display: flex; flex-direction: column; gap: var(--spacing-md); }
+    .solution-card {
+      padding: var(--spacing-lg);
+      background: white;
+      border-radius: var(--radius-md);
+      border-left: 5px solid var(--color-pop-teal);
+      display: flex; align-items: flex-start; gap: var(--spacing-md);
+      transition: all 0.3s ease;
+    }
+    .solution-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .solution-card.gold { border-left-color: var(--color-pop-gold); }
+    .solution-card.coral { border-left-color: var(--color-pop-coral); }
+    .solution-card.green { border-left-color: var(--color-pop-green); }
+    .solution-card.purple { border-left-color: var(--color-pop-purple); }
+    .solution-content { flex: 1; }
+    .solution-content strong {
+      display: block; color: var(--color-primary-navy);
+      font-size: 1.0625rem; margin-bottom: 4px; font-weight: 600;
+    }
+    .solution-content span {
+      display: block; color: var(--color-primary-brown);
+      font-size: 0.9375rem; line-height: 1.5;
+    }
+
+    /* ============================================================
+       🔄 CHANGE 4: Feature cards with glassmorphism SVG icons
+       Replacing Unicode characters with proper SVG icons
+       ============================================================ */
+    .features { padding: 48px var(--spacing-md); background: white; }
+    .features-container { max-width: 1200px; margin: 0 auto; }
+    .feature-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-lg); margin-top: var(--spacing-xl);
+    }
+    .feature-card {
+      background: #F4EFE8;
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      border-top: 5px solid var(--color-pop-teal);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex; flex-direction: column;
+    }
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+    }
+    .feature-card.gold { border-top-color: var(--color-pop-gold); }
+    .feature-card.coral { border-top-color: var(--color-pop-coral); }
+    .feature-card.green { border-top-color: var(--color-pop-green); }
+
+    /* 🔄 NEW: Glassmorphism icon container for feature cards */
+    .feature-icon-glass {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: var(--spacing-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-icon-glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      opacity: 0.12;
+    }
+    .feature-card.teal .feature-icon-glass { background: rgba(0, 180, 204, 0.12); }
+    .feature-card.teal .feature-icon-glass::before { background: linear-gradient(135deg, rgba(0, 180, 204, 0.3), transparent); }
+    .feature-card.gold .feature-icon-glass { background: rgba(212, 165, 55, 0.12); }
+    .feature-card.gold .feature-icon-glass::before { background: linear-gradient(135deg, rgba(212, 165, 55, 0.3), transparent); }
+    .feature-card.coral .feature-icon-glass { background: rgba(224, 122, 95, 0.12); }
+    .feature-card.coral .feature-icon-glass::before { background: linear-gradient(135deg, rgba(224, 122, 95, 0.3), transparent); }
+    .feature-card.green .feature-icon-glass { background: rgba(110, 207, 110, 0.12); }
+    .feature-card.green .feature-icon-glass::before { background: linear-gradient(135deg, rgba(110, 207, 110, 0.3), transparent); }
+
+    .feature-card h3 {
+      font-family: var(--font-serif); font-size: 1.1875rem;
+      font-weight: 700; color: var(--color-primary-navy);
+      margin: 0 0 var(--spacing-sm) 0;
+    }
+    .feature-card p {
+      color: var(--color-primary-brown); font-size: 0.9375rem;
+      line-height: 1.6; margin: 0; flex-grow: 1;
+    }
+
+    /* ============================================================
+       How It Works — enhanced with connecting line
+       ============================================================ */
+    .how-it-works {
+      padding: 48px var(--spacing-md);
+      background: linear-gradient(135deg, var(--color-primary-cream) 0%, rgba(198, 172, 143, 0.08) 100%);
+    }
+    .how-it-works-container { max-width: 1200px; margin: 0 auto; }
+    .how-it-works-subtitle {
+      text-align: center; color: var(--color-primary-brown);
+      font-size: 1.0625rem; max-width: 700px;
+      margin: -12px auto var(--spacing-xl); line-height: 1.6;
+    }
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-lg); margin-top: var(--spacing-xl);
+      position: relative;
+    }
+    /* 🔄 NEW: Connecting line between steps */
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(16.67% + 28px);
+      right: calc(16.67% + 28px);
+      height: 3px;
+      background: linear-gradient(to right, var(--color-pop-teal), var(--color-pop-gold), var(--color-pop-coral));
+      border-radius: 2px;
+      z-index: 0;
+    }
+    .step { text-align: center; position: relative; z-index: 1; }
+    .step-number {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--color-pop-teal);
+      color: white; font-size: 1.5rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto var(--spacing-lg);
+      box-shadow: 0 4px 12px rgba(0, 180, 204, 0.3);
+      position: relative;
+    }
+    .step:nth-child(2) .step-number { background: var(--color-pop-gold); box-shadow: 0 4px 12px rgba(212, 165, 55, 0.3); }
+    .step:nth-child(3) .step-number { background: var(--color-pop-coral); box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3); }
+    .step h3 {
+      font-family: var(--font-serif); font-size: 1.25rem;
+      font-weight: 700; color: var(--color-primary-navy); margin: 0 0 var(--spacing-sm) 0;
+    }
+    .step p {
+      color: var(--color-primary-brown); font-size: 1rem;
+      line-height: 1.6; margin: 0 0 var(--spacing-md) 0;
+    }
+
+    /* ============================================================
+       🔄 CHANGE 5: "Product Suite" section (NEW)
+       Shows the three tools as a connected ecosystem
+       ============================================================ */
+    .product-suite {
+      padding: 56px 20px;
+      background: white;
+    }
+    .product-suite-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .suite-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .suite-card {
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      border: 1px solid rgba(198, 172, 143, 0.2);
+    }
+    .suite-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .suite-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    }
+    .suite-card.district {
+      background: linear-gradient(135deg, rgba(0, 180, 204, 0.04), rgba(0, 180, 204, 0.01));
+    }
+    .suite-card.district::before { background: var(--color-pop-teal); }
+    .suite-card.dashboard {
+      background: linear-gradient(135deg, rgba(110, 207, 110, 0.04), rgba(110, 207, 110, 0.01));
+    }
+    .suite-card.dashboard::before { background: var(--color-pop-green); }
+    .suite-card.school {
+      background: linear-gradient(135deg, rgba(224, 122, 95, 0.04), rgba(224, 122, 95, 0.01));
+    }
+    .suite-card.school::before { background: var(--color-pop-coral); }
+
+    .suite-card-icon {
+      width: 64px; height: 64px;
+      margin-bottom: 20px;
+    }
+    .suite-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin: 0 0 8px 0;
+    }
+    .suite-card .suite-tag {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      margin-bottom: 12px;
+    }
+    .suite-card.district .suite-tag { background: rgba(0, 180, 204, 0.12); color: #008899; }
+    .suite-card.dashboard .suite-tag { background: rgba(110, 207, 110, 0.12); color: #3a8a3a; }
+    .suite-card.school .suite-tag { background: rgba(224, 122, 95, 0.12); color: #c4604a; }
+    .suite-card p {
+      color: var(--color-primary-brown);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .suite-card .suite-features {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(198, 172, 143, 0.15);
+    }
+    .suite-card .suite-features li {
+      font-size: 0.875rem;
+      color: var(--color-primary-brown);
+      padding: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .suite-card .suite-features li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .suite-card.district .suite-features li::before { background: var(--color-pop-teal); }
+    .suite-card.dashboard .suite-features li::before { background: var(--color-pop-green); }
+    .suite-card.school .suite-features li::before { background: var(--color-pop-coral); }
+
+    /* ============================================================
+       Sample Plan Teaser — enhanced browser mockup
+       ============================================================ */
+    .sample-teaser { padding: 48px var(--spacing-md); background: #F7F5F2; }
+    .sample-container {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-xl); align-items: center;
+    }
+    .sample-content h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.875rem, 5vw, 2.5rem);
+      font-weight: 700; color: var(--color-primary-navy);
+      margin: 0 0 var(--spacing-lg) 0;
+    }
+    .sample-content p {
+      color: var(--color-primary-brown);
+      font-size: 1.0625rem; line-height: 1.7;
+      margin: 0 0 var(--spacing-md) 0;
+    }
+    .sample-cta {
+      display: inline-block; background: #D4A537; color: white;
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-radius: var(--radius-md); text-decoration: none;
+      font-weight: 600; transition: all 0.3s ease;
+      border: none; cursor: pointer;
+      font-family: var(--font-sans); font-size: 1rem;
+    }
+    .sample-cta:hover {
+      background: #c1932d; transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(212, 165, 55, 0.25);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    .browser-mockup {
+      background: white; border-radius: var(--radius-lg);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.12);
+      overflow: hidden; animation: float 6s ease-in-out infinite;
+    }
+    .browser-header {
+      background: #f5f5f5; padding: 12px 16px;
+      border-bottom: 1px solid #e8e8e8;
+      display: flex; gap: 8px;
+    }
+    .browser-dot { width: 12px; height: 12px; border-radius: 50%; background: #ddd; }
+    .browser-dot:nth-child(1) { background: #ff5f57; }
+    .browser-dot:nth-child(2) { background: #febd2e; }
+    .browser-dot:nth-child(3) { background: #28c940; }
+
+    /* ============================================================
+       🔄 CHANGE 6: Stronger CTA section with glassmorphism accent
+       ============================================================ */
+    .cta-section {
+      padding: 64px var(--spacing-md);
+      background: var(--color-primary-navy);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(0, 180, 204, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 50%, rgba(212, 165, 55, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .cta-section-container { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+    .cta-section h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700; color: white;
+      margin: 0 0 var(--spacing-md) 0;
+    }
+    .cta-section p {
+      color: rgba(234, 224, 213, 0.85);
+      font-size: 1.125rem; line-height: 1.7;
+      margin: 0 0 var(--spacing-lg) 0;
+      max-width: 700px; margin-left: auto; margin-right: auto;
+    }
+    .cta-btn {
+      display: inline-block; background: var(--color-pop-gold);
+      color: white; padding: 16px 40px;
+      border-radius: var(--radius-md); text-decoration: none;
+      font-weight: 700; transition: all 0.3s ease;
+      border: none; cursor: pointer;
+      font-family: var(--font-sans); font-size: 1.0625rem;
+    }
+    .cta-btn:hover {
+      background: #c1932d; transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(212, 165, 55, 0.35);
+    }
+
+    /* Footer fix */
+    footer { background-color: #DDD3C6 !important; padding-top: 0 !important; }
+
+    /* ============================================================
+       🔄 CHANGE 7: Mockup annotation badges
+       These yellow callouts explain what changed — for review only
+       ============================================================ */
+    .mockup-badge {
+      display: inline-block;
+      background: #FFF3CD;
+      border: 2px solid #D4A537;
+      color: #7a5f00;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-container { grid-template-columns: 1fr; }
+      .hero-scroll-showcase { display: none; }
+      .problem-solution-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .sample-container { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid::before { display: none; }
+      .suite-cards { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
+      .trust-bar-inner { gap: 16px; }
+      .hero-ctas { flex-direction: column; }
+      .hero-ctas a { width: 100%; text-align: center; }
+    }
+    @media (max-width: 768px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .audience-cards { flex-direction: column; align-items: center; }
+      .section-title h2 { font-size: 1.75rem; }
+    }
+  </style>
+
+  <!-- External deps removed for standalone mockup -->
+</head>
+<body>
+  <!-- Colorful Gradient Bar -->
+  <div class="rainbow-bar"></div>
+
+  <!-- Header (unchanged) -->
+  <header>
+    <div class="header-content">
+      <a href="./" class="logo">
+        <img src="assets/images/SDlogo.png" alt="Strategic District" height="48">
+        <span>Strategic District</span>
+      </a>
+      <nav class="main-nav">
+        <a href="./what-we-offer/">What We Offer</a>
+        <a href="./how-it-works/">How It Works</a>
+        <a href="./sample-plan/">Strategic Plans</a>
+        <a href="./contact/">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div id="auth-buttons"></div>
+        <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="section-divider" style="margin: 0;"></div>
+
+  <!-- Hero Section (unchanged — it's already strong) -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <h1>Build Your District's Strategic Plan</h1>
+        <p>Strategic planning shouldn't take 18 months and $200,000. Our guided, research-based framework helps you build a professional plan in weeks, not months.</p>
+        <p style="font-size: 0.95rem; color: var(--color-primary-brown); margin-bottom: var(--spacing-lg);"><strong>Get started free:</strong> Steps 1–7 included. Upgrade to enterprise for access to the full strategic plan builder and Strategic School!</p>
+        <div class="hero-ctas">
+          <a href="./signup/" class="btn-hero-primary">Get Started Free</a>
+          <a href="./how-it-works/" class="btn-hero-secondary">See How It Works</a>
+        </div>
+      </div>
+      <div class="hero-animation">
+        <div class="hero-scroll-showcase">
+          <div class="hero-scroll-col col-up">
+            <div class="hero-scroll-inner">
+              <div class="hero-scroll-card"><img src="assets/images/homepage01.png" alt="Vision, Mission & Core Values"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage03.png" alt="Action Initiatives"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage06.png" alt="Implementation Timeline"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage08.png" alt="District Profile"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage01.png" alt="Vision, Mission & Core Values"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage03.png" alt="Action Initiatives"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage06.png" alt="Implementation Timeline"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage08.png" alt="District Profile"></div>
+            </div>
+          </div>
+          <div class="hero-scroll-col col-down">
+            <div class="hero-scroll-inner">
+              <div class="hero-scroll-card"><img src="assets/images/homepage02.png" alt="Data Tables & Strategic Goals"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage05.png" alt="Accountability & Governance"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage07.png" alt="Goals and Measures"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage04.png" alt="Department Alignment Matrix"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage02.png" alt="Data Tables & Strategic Goals"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage05.png" alt="Accountability & Governance"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage07.png" alt="Goals and Measures"></div>
+              <div class="hero-scroll-card"><img src="assets/images/homepage04.png" alt="Department Alignment Matrix"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       🔄 CHANGE 2: SOCIAL PROOF / TRUST BAR (NEW)
+       Navy background, gold numbers, counts up on scroll.
+       Makes the product feel established and trustworthy.
+       ============================================================ -->
+  <div class="section-divider" style="margin: 0;"></div>
+  <section class="trust-bar reveal">
+    <span class="mockup-badge">New: Social Proof Bar</span>
+    <div class="trust-bar-inner">
+      <div class="trust-stat">
+        <div class="number" data-target="14">0</div>
+        <div class="label">Steps to a Plan</div>
+      </div>
+      <div class="trust-stat">
+        <div class="number" data-target="100" data-suffix="%">0%</div>
+        <div class="label">Research-Based</div>
+      </div>
+      <div class="trust-stat">
+        <div class="number" data-target="0" data-prefix="$">$0</div>
+        <div class="label">To Start Building</div>
+      </div>
+      <div class="trust-stat">
+        <div class="number" data-target="3">0</div>
+        <div class="label">Connected Tools</div>
+      </div>
+      <div class="trust-stat">
+        <div class="number" data-target="200" data-prefix="$" data-suffix="K+">$0K+</div>
+        <div class="label">Saved vs. Consultants</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider" style="margin: 0;"></div>
+
+  <!-- ============================================================
+       🔄 CHANGE 3: WHO WE SERVE — Glassmorphism icon cards
+       Clean cards with glassy SVG icons replacing the inline mess
+       ============================================================ -->
+  <section class="audience-band reveal">
+    <div class="audience-band-inner">
+      <span class="mockup-badge">Redesigned: Who We Serve</span>
+      <p class="audience-band-title">Built for the districts and schools shaping the future</p>
+      <div class="audience-cards stagger">
+        <div class="audience-card" style="--i: 0">
+          <!-- Glassmorphism school icon -->
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+            <rect x="4" y="4" width="48" height="48" rx="14" fill="url(#tealGlass)" fill-opacity="0.1"/>
+            <rect x="4" y="4" width="48" height="48" rx="14" stroke="#00B4CC" stroke-opacity="0.2" stroke-width="1"/>
+            <path d="M28 14L14 22v4l14 8 14-8v-4L28 14z" fill="#00B4CC" fill-opacity="0.15" stroke="#00B4CC" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M18 26v8c0 2 4 5 10 5s10-3 10-5v-8" stroke="#00B4CC" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="42" y1="22" x2="42" y2="34" stroke="#00B4CC" stroke-width="1.5" stroke-linecap="round"/>
+            <defs><linearGradient id="tealGlass" x1="4" y1="4" x2="52" y2="52"><stop stop-color="#00B4CC" stop-opacity="0.3"/><stop offset="1" stop-color="#00B4CC" stop-opacity="0.05"/></linearGradient></defs>
+          </svg>
+          <div class="card-title">PK-12 Public Education</div>
+          <div class="card-sub">Districts of every size</div>
+        </div>
+        <div class="audience-card" style="--i: 1">
+          <!-- Glassmorphism house icon -->
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+            <rect x="4" y="4" width="48" height="48" rx="14" fill="url(#goldGlass)" fill-opacity="0.1"/>
+            <rect x="4" y="4" width="48" height="48" rx="14" stroke="#D4A537" stroke-opacity="0.2" stroke-width="1"/>
+            <path d="M16 26l12-10 12 10v14a2 2 0 0 1-2 2H18a2 2 0 0 1-2-2V26z" fill="#D4A537" fill-opacity="0.12" stroke="#D4A537" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M24 42V32h8v10" stroke="#D4A537" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs><linearGradient id="goldGlass" x1="4" y1="4" x2="52" y2="52"><stop stop-color="#D4A537" stop-opacity="0.3"/><stop offset="1" stop-color="#D4A537" stop-opacity="0.05"/></linearGradient></defs>
+          </svg>
+          <div class="card-title">Private Education</div>
+          <div class="card-sub">Independent & faith-based schools</div>
+        </div>
+        <div class="audience-card" style="--i: 2">
+          <!-- Glassmorphism layers icon -->
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+            <rect x="4" y="4" width="48" height="48" rx="14" fill="url(#purpleGlass)" fill-opacity="0.1"/>
+            <rect x="4" y="4" width="48" height="48" rx="14" stroke="#6B4C9A" stroke-opacity="0.2" stroke-width="1"/>
+            <path d="M28 16L14 24l14 8 14-8-14-8z" fill="#6B4C9A" fill-opacity="0.15" stroke="#6B4C9A" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M14 32l14 8 14-8" stroke="#6B4C9A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 38l14 8 14-8" stroke="#6B4C9A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.5"/>
+            <defs><linearGradient id="purpleGlass" x1="4" y1="4" x2="52" y2="52"><stop stop-color="#6B4C9A" stop-opacity="0.3"/><stop offset="1" stop-color="#6B4C9A" stop-opacity="0.05"/></linearGradient></defs>
+          </svg>
+          <div class="card-title">Charter Schools</div>
+          <div class="card-sub">Networks & standalone charters</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Problem/Solution Section (lightly enhanced with hover effects) -->
+  <section class="problem-solution">
+    <div class="problem-solution-container">
+      <div class="section-title reveal">
+        <h2>The Old Way vs. The Strategic District Way</h2>
+      </div>
+      <div class="problem-solution-grid">
+        <div class="problem-column reveal-left">
+          <h3>The Old Way</h3>
+          <ul class="problem-list">
+            <li>Costs $200K+ in consultant fees</li>
+            <li>Takes 12-18 months before anyone sees a plan</li>
+            <li>Sits on shelves collecting dust</li>
+            <li>Disconnected from what schools actually need</li>
+            <li>Central office and schools working in silos</li>
+          </ul>
+        </div>
+        <div class="solution-column reveal-right">
+          <h3>The Strategic District Way</h3>
+          <div class="solution-cards">
+            <div class="solution-card gold">
+              <!-- 🔄 Glassmorphism icon replacing checkmark -->
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="flex-shrink: 0">
+                <rect x="2" y="2" width="32" height="32" rx="8" fill="#D4A537" fill-opacity="0.12"/>
+                <rect x="2" y="2" width="32" height="32" rx="8" stroke="#D4A537" stroke-opacity="0.2"/>
+                <path d="M12 18l4 4 8-8" stroke="#D4A537" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="solution-content">
+                <strong>Free to start, built to scale</strong>
+                <span>No hidden fees. Begin building your plan today at no cost.</span>
+              </div>
+            </div>
+            <div class="solution-card coral">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="flex-shrink: 0">
+                <rect x="2" y="2" width="32" height="32" rx="8" fill="#E07A5F" fill-opacity="0.12"/>
+                <rect x="2" y="2" width="32" height="32" rx="8" stroke="#E07A5F" stroke-opacity="0.2"/>
+                <path d="M12 18l4 4 8-8" stroke="#E07A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="solution-content">
+                <strong>Done in weeks, not years</strong>
+                <span>A guided framework that respects your time and your team's capacity.</span>
+              </div>
+            </div>
+            <div class="solution-card green">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="flex-shrink: 0">
+                <rect x="2" y="2" width="32" height="32" rx="8" fill="#6ECF6E" fill-opacity="0.12"/>
+                <rect x="2" y="2" width="32" height="32" rx="8" stroke="#6ECF6E" stroke-opacity="0.2"/>
+                <path d="M12 18l4 4 8-8" stroke="#6ECF6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="solution-content">
+                <strong>Aligned from central office to every school</strong>
+                <span>Your district plan drives department support. Strategic School connects it directly to buildings.</span>
+              </div>
+            </div>
+            <div class="solution-card purple">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="flex-shrink: 0">
+                <rect x="2" y="2" width="32" height="32" rx="8" fill="#6B4C9A" fill-opacity="0.12"/>
+                <rect x="2" y="2" width="32" height="32" rx="8" stroke="#6B4C9A" stroke-opacity="0.2"/>
+                <path d="M12 18l4 4 8-8" stroke="#6B4C9A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="solution-content">
+                <strong>Research-based and action-oriented</strong>
+                <span>Grounded in what actually works. Built to drive real change, not sit in a binder.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ============================================================
+       🔄 CHANGE 4: Feature cards with glassmorphism SVG icons
+       ============================================================ -->
+  <section class="features">
+    <div class="features-container">
+      <div class="section-title reveal">
+        <span class="mockup-badge">Updated: Glassmorphism Feature Icons</span>
+        <h2>Everything You Need</h2>
+      </div>
+      <div class="feature-grid stagger">
+        <div class="feature-card teal reveal" style="--i: 0">
+          <div class="feature-icon-glass">
+            <!-- Research / book icon -->
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M6 6c2-2 6-2 10 0 4-2 8-2 10 0v18c-2-1-6-1-10 1-4-2-8-2-10-1V6z" fill="#00B4CC" fill-opacity="0.15" stroke="#00B4CC" stroke-width="1.5" stroke-linejoin="round"/>
+              <line x1="16" y1="6" x2="16" y2="24" stroke="#00B4CC" stroke-width="1.5" stroke-opacity="0.4"/>
+            </svg>
+          </div>
+          <h3>Research-Based Framework</h3>
+          <p>Built on evidence from leading districts and education research. No guessing. No reinventing the wheel.</p>
+        </div>
+        <div class="feature-card gold reveal" style="--i: 1">
+          <div class="feature-icon-glass">
+            <!-- Steps / wizard icon -->
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect x="4" y="20" width="7" height="8" rx="1.5" fill="#D4A537" fill-opacity="0.2" stroke="#D4A537" stroke-width="1.5"/>
+              <rect x="12.5" y="14" width="7" height="14" rx="1.5" fill="#D4A537" fill-opacity="0.15" stroke="#D4A537" stroke-width="1.5"/>
+              <rect x="21" y="6" width="7" height="22" rx="1.5" fill="#D4A537" fill-opacity="0.1" stroke="#D4A537" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <h3>Guided Step-by-Step Builder</h3>
+          <p>Our tool walks you through each phase. Clear instructions, helpful prompts, and best practice examples.</p>
+        </div>
+        <div class="feature-card coral reveal" style="--i: 2">
+          <div class="feature-icon-glass">
+            <!-- Export / document icon -->
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M8 4h10l8 8v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="#E07A5F" fill-opacity="0.12" stroke="#E07A5F" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M18 4v8h8" stroke="#E07A5F" stroke-width="1.5" stroke-linejoin="round"/>
+              <line x1="10" y1="18" x2="22" y2="18" stroke="#E07A5F" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.5"/>
+              <line x1="10" y1="22" x2="18" y2="22" stroke="#E07A5F" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.5"/>
+            </svg>
+          </div>
+          <h3>Professional Reports and Exports</h3>
+          <p>Export to Word, PDF, or share directly. Board-ready documents your team can use right away.</p>
+        </div>
+        <div class="feature-card green reveal" style="--i: 3">
+          <div class="feature-icon-glass">
+            <!-- School / building icon -->
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M4 28V14l12-8 12 8v14" fill="#6ECF6E" fill-opacity="0.1" stroke="#6ECF6E" stroke-width="1.5" stroke-linejoin="round"/>
+              <rect x="13" y="20" width="6" height="8" rx="1" stroke="#6ECF6E" stroke-width="1.5"/>
+              <circle cx="16" cy="15" r="2.5" stroke="#6ECF6E" stroke-width="1.5" stroke-opacity="0.6"/>
+            </svg>
+          </div>
+          <h3>Built for Districts and Schools</h3>
+          <p>Designed by people who understand K-12 leadership. District-level strategy with school-level alignment through Strategic School.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- How It Works (enhanced with connecting line between steps) -->
+  <section class="how-it-works">
+    <div class="how-it-works-container">
+      <div class="section-title reveal">
+        <span class="mockup-badge">Enhanced: Connecting Line</span>
+        <h2>How It Works</h2>
+      </div>
+      <p class="how-it-works-subtitle reveal">Strategic planning is a team effort. Our builder gives your leadership team the structure to work through each phase, then bring the right stakeholders into the conversation at the right time.</p>
+      <div class="steps-grid stagger">
+        <div class="step reveal" style="--i: 0">
+          <div class="step-number">1</div>
+          <h3>Define Your Context</h3>
+          <p>Answer guided questions about your district's demographics, challenges, vision, and priorities. This is your starting point for meaningful stakeholder conversations.</p>
+        </div>
+        <div class="step reveal" style="--i: 1">
+          <div class="step-number">2</div>
+          <h3>Build With Your Team</h3>
+          <p>Choose strategies and initiatives from research-based options. Customize everything to your needs. Then meet with stakeholders to refine and get buy-in on the plan.</p>
+        </div>
+        <div class="step reveal" style="--i: 2">
+          <div class="step-number">3</div>
+          <h3>Generate and Share</h3>
+          <p>Get a professional, complete strategic plan document ready to share with your board, community, and school leaders. Then align schools with Strategic School.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ============================================================
+       🔄 CHANGE 5: PRODUCT SUITE SECTION (NEW)
+       Shows all three tools as a connected ecosystem.
+       This replaces needing a separate "what we offer" pitch.
+       ============================================================ -->
+  <section class="product-suite reveal">
+    <div class="product-suite-inner">
+      <div class="section-title">
+        <span class="mockup-badge">New: Product Suite Section</span>
+        <h2>Three Tools. One Vision.</h2>
+      </div>
+      <p style="text-align: center; color: var(--color-primary-brown); font-size: 1.0625rem; max-width: 700px; margin: -8px auto 0; line-height: 1.6;">From the district's strategic plan to every school's improvement plan, with a live dashboard connecting them. That's the Strategic District ecosystem.</p>
+      <div class="suite-cards stagger">
+        <div class="suite-card district reveal" style="--i: 0">
+          <!-- Glassmorphism teal plan builder icon -->
+          <svg class="suite-card-icon" viewBox="0 0 64 64" fill="none">
+            <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#suiteT)" fill-opacity="0.08"/>
+            <rect x="4" y="4" width="56" height="56" rx="16" stroke="#00B4CC" stroke-opacity="0.15"/>
+            <path d="M20 18h24a2 2 0 0 1 2 2v24a2 2 0 0 1-2 2H20a2 2 0 0 1-2-2V20a2 2 0 0 1 2-2z" fill="#00B4CC" fill-opacity="0.1" stroke="#00B4CC" stroke-width="1.5"/>
+            <line x1="24" y1="26" x2="40" y2="26" stroke="#00B4CC" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="24" y1="32" x2="36" y2="32" stroke="#00B4CC" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.6"/>
+            <line x1="24" y1="38" x2="32" y2="38" stroke="#00B4CC" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.4"/>
+            <defs><linearGradient id="suiteT" x1="4" y1="4" x2="60" y2="60"><stop stop-color="#00B4CC"/><stop offset="1" stop-color="#00B4CC" stop-opacity="0.1"/></linearGradient></defs>
+          </svg>
+          <span class="suite-tag">District Plan Builder</span>
+          <h3>Strategic District</h3>
+          <p>Build your district's full strategic plan with a guided, 14-step framework. Vision to implementation timeline, all in one place.</p>
+          <ul class="suite-features" style="list-style: none; padding: 0; margin: 16px 0 0;">
+            <li>14-step guided builder</li>
+            <li>Budget alignment and feasibility scoring</li>
+            <li>Board-ready Word and PDF exports</li>
+            <li>AI-powered recommendations</li>
+          </ul>
+        </div>
+        <div class="suite-card dashboard reveal" style="--i: 1">
+          <svg class="suite-card-icon" viewBox="0 0 64 64" fill="none">
+            <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#suiteG)" fill-opacity="0.08"/>
+            <rect x="4" y="4" width="56" height="56" rx="16" stroke="#6ECF6E" stroke-opacity="0.15"/>
+            <rect x="18" y="34" width="6" height="10" rx="1" fill="#6ECF6E" fill-opacity="0.3" stroke="#6ECF6E" stroke-width="1"/>
+            <rect x="26" y="28" width="6" height="16" rx="1" fill="#6ECF6E" fill-opacity="0.25" stroke="#6ECF6E" stroke-width="1"/>
+            <rect x="34" y="22" width="6" height="22" rx="1" fill="#6ECF6E" fill-opacity="0.2" stroke="#6ECF6E" stroke-width="1"/>
+            <rect x="42" y="18" width="6" height="26" rx="1" fill="#6ECF6E" fill-opacity="0.15" stroke="#6ECF6E" stroke-width="1"/>
+            <defs><linearGradient id="suiteG" x1="4" y1="4" x2="60" y2="60"><stop stop-color="#6ECF6E"/><stop offset="1" stop-color="#6ECF6E" stop-opacity="0.1"/></linearGradient></defs>
+          </svg>
+          <span class="suite-tag">Progress Dashboard</span>
+          <h3>Live Progress Tracking</h3>
+          <p>See your plan come to life. Track goal progress, strategy implementation, and school alignment in real time.</p>
+          <ul class="suite-features" style="list-style: none; padding: 0; margin: 16px 0 0;">
+            <li>Real-time goal tracking</li>
+            <li>District-to-school alignment view</li>
+            <li>Visual progress indicators</li>
+            <li>Stakeholder-ready reports</li>
+          </ul>
+        </div>
+        <div class="suite-card school reveal" style="--i: 2">
+          <svg class="suite-card-icon" viewBox="0 0 64 64" fill="none">
+            <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#suiteC)" fill-opacity="0.08"/>
+            <rect x="4" y="4" width="56" height="56" rx="16" stroke="#E07A5F" stroke-opacity="0.15"/>
+            <path d="M32 16L14 28v4l18 10 18-10v-4L32 16z" fill="#E07A5F" fill-opacity="0.12" stroke="#E07A5F" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M20 32v9c0 2 5 5 12 5s12-3 12-5v-9" stroke="#E07A5F" stroke-width="1.5" stroke-linecap="round"/>
+            <defs><linearGradient id="suiteC" x1="4" y1="4" x2="60" y2="60"><stop stop-color="#E07A5F"/><stop offset="1" stop-color="#E07A5F" stop-opacity="0.1"/></linearGradient></defs>
+          </svg>
+          <span class="suite-tag">School Improvement</span>
+          <h3>Strategic School</h3>
+          <p>Every school builds its own improvement plan, directly aligned to the district's strategic plan. Central office and buildings finally on the same page.</p>
+          <ul class="suite-features" style="list-style: none; padding: 0; margin: 16px 0 0;">
+            <li>School-level improvement plans</li>
+            <li>Auto-aligned to district goals</li>
+            <li>Action plans and strategy tracking</li>
+            <li>Principal-friendly interface</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Strategic Plans Teaser (unchanged, already good) -->
+  <section class="sample-teaser">
+    <div class="sample-container">
+      <div class="sample-content reveal-left">
+        <h2>See What You'll Build</h2>
+        <p>Every plan generated by Strategic District is professional, actionable, and ready to present to your board.</p>
+        <p>View our sample interactive and PDF plans to see what your strategic plan will look like. Fully customizable to your district's context and priorities.</p>
+        <a href="./sample-plan/" class="sample-cta">View Strategic Plans</a>
+      </div>
+      <div class="browser-mockup reveal-right">
+        <div class="browser-header">
+          <div class="browser-dot"></div>
+          <div class="browser-dot"></div>
+          <div class="browser-dot"></div>
+        </div>
+        <div class="browser-content" style="padding: 0; overflow: hidden;">
+          <img src="assets/images/Showcase.png" alt="Strategic District Showcase Dashboard" style="width: 100%; height: auto; display: block;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider" style="margin: 0;"></div>
+
+  <!-- ============================================================
+       🔄 CHANGE 6: CTA section — navy background, gold button
+       More impactful than the soft gray version.
+       ============================================================ -->
+  <section class="cta-section reveal">
+    <div class="cta-section-container">
+      <span class="mockup-badge" style="border-color: rgba(212, 165, 55, 0.5); background: rgba(255, 243, 205, 0.15); color: rgba(255, 243, 205, 0.9);">Redesigned: CTA Section</span>
+      <h2>Ready to Transform Your District?</h2>
+      <p>Stop wasting time and money on traditional planning. Build your strategic plan in weeks with our proven framework. Every dollar saved goes back to teachers and kids.</p>
+      <a href="./signup/" class="cta-btn">Get Started Free</a>
+    </div>
+  </section>
+
+  <!-- Footer (unchanged) -->
+  <footer>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+    <div class="footer-content" style="padding-top: 24px;">
+      <div class="footer-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+        <div class="footer-column">
+          <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+            <img src="assets/images/SDlogo.png" alt="Strategic District" style="height: 112px; width: auto;">
+            <div style="font-weight: 700; color: #000000; font-size: 2rem; text-transform: uppercase; letter-spacing: 1px;">STRATEGIC DISTRICT</div>
+          </div>
+        </div>
+        <div class="footer-column" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Explore</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="./what-we-offer/" style="color: var(--color-primary-brown);">What We Offer</a></li>
+              <li><a href="./how-it-works/" style="color: var(--color-primary-brown);">How It Works</a></li>
+              <li><a href="./sample-plan/" style="color: var(--color-primary-brown);">Strategic Plans</a></li>
+              <li><a href="./builder/" style="color: var(--color-primary-brown);">Start Building</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Customer Service</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="./contact/" style="color: var(--color-primary-brown);">Contact</a></li>
+              <li><a href="./login/" style="color: var(--color-primary-brown);">Sign In</a></li>
+              <li><a href="./signup/" style="color: var(--color-primary-brown);">Sign Up</a></li>
+              <li><a href="#privacy" style="color: var(--color-primary-brown);">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div style="height: 1px; background: rgba(94, 80, 63, 0.2); margin: 12px 0;"></div>
+      <div class="footer-bottom">
+        <div class="footer-copyright" style="color: var(--color-primary-brown);">
+          Professional strategic planning for PK-12 public education, charters, and private schools. &nbsp;|&nbsp; Powered by <a href="https://starkanalytica.com" style="color: var(--color-primary-navy); text-decoration: none; font-weight: 500;">Stark Analytica LLC</a> &nbsp;|&nbsp; &copy; 2026 Strategic District. All rights reserved.
+        </div>
+      </div>
+    </div>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+  </footer>
+
+  <!-- Scripts (header.js removed for standalone mockup) -->
+  <script>
+    // Header scroll shadow
+    var header = document.querySelector('header');
+    window.addEventListener('scroll', function() {
+      header.classList[window.scrollY > 0 ? 'add' : 'remove']('scroll-shadow');
+    });
+
+    // Pause scroll animation on hover
+    document.querySelectorAll('.hero-scroll-col').forEach(function(col) {
+      col.addEventListener('mouseenter', function() {
+        col.querySelector('.hero-scroll-inner').style.animationPlayState = 'paused';
+      });
+      col.addEventListener('mouseleave', function() {
+        col.querySelector('.hero-scroll-inner').style.animationPlayState = 'running';
+      });
+    });
+
+    // ============================================================
+    // 🔄 CHANGE 1: Scroll-reveal animations (IntersectionObserver)
+    // Zero dependencies, smooth entrance effects
+    // ============================================================
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(function(el) {
+      observer.observe(el);
+    });
+
+    // ============================================================
+    // 🔄 CHANGE 2: Animated number counter for trust bar
+    // ============================================================
+    var countObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var nums = entry.target.querySelectorAll('.number[data-target]');
+          nums.forEach(function(el) {
+            var target = parseInt(el.getAttribute('data-target'));
+            var prefix = el.getAttribute('data-prefix') || '';
+            var suffix = el.getAttribute('data-suffix') || '';
+            var duration = 1500;
+            var start = performance.now();
+            function tick(now) {
+              var progress = Math.min((now - start) / duration, 1);
+              var eased = 1 - Math.pow(1 - progress, 3);
+              var current = Math.round(target * eased);
+              el.textContent = prefix + current + suffix;
+              if (progress < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+          });
+          countObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    var trustBar = document.querySelector('.trust-bar');
+    if (trustBar) countObserver.observe(trustBar);
+  </script>
+</body>
+</html>

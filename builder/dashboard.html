@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Dashboard | Strategic District Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <style>
+        /* ===== RESET & ROOT ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #22333B;
+            --cream: #EAE0D5;
+            --tan: #C6AC8F;
+            --brown: #5E503F;
+            --teal: #00B4CC;
+            --gold: #D4A537;
+            --green: #6ECF6E;
+            --coral: #E07A5F;
+            --purple: #6B4C9A;
+            --dark-blue: #14213D;
+            --light-gray: #F5F3F0;
+            --border-gray: #E8E4DF;
+            --gradient: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+            --bg: #F9F7F3;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--navy);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 { font-family: 'Source Serif Pro', serif; }
+        a { color: var(--teal); text-decoration: none; transition: color 0.2s ease; }
+        a:hover { color: var(--navy); }
+
+        /* ===== GRADIENT BAR ===== */
+        .gradient-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+            z-index: 1000;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(94, 80, 63, 0.1);
+            position: sticky;
+            top: 4px;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-family: 'Source Serif Pro', serif;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before { display: none; }
+
+        .district-badge {
+            font-size: 0.7rem;
+            color: var(--brown);
+            background: rgba(212, 165, 55, 0.1);
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 0.5rem;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-link {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--brown);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .nav-link:hover {
+            color: var(--navy);
+            background: rgba(0, 180, 204, 0.06);
+        }
+
+        .nav-link.active {
+            color: var(--navy);
+            background: rgba(0, 180, 204, 0.08);
+            font-weight: 600;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .btn-ghost {
+            font-size: 0.8rem;
+            padding: 0.45rem 0.9rem;
+            border: 1px solid rgba(94, 80, 63, 0.15);
+            background: transparent;
+            color: var(--brown);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .btn-ghost:hover {
+            background: white;
+            border-color: var(--brown);
+            box-shadow: 0 2px 8px rgba(10, 9, 8, 0.06);
+        }
+
+        .btn-primary {
+            font-size: 0.8rem;
+            padding: 0.45rem 1rem;
+            background: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--brown);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 51, 59, 0.2);
+        }
+
+        /* ===== DASHBOARD HERO ===== */
+        .dash-hero {
+            background: var(--navy);
+            padding: 2.5rem 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dash-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 180, 204, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .dash-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: 10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 165, 55, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .dash-hero-inner {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dash-hero-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .dash-hero-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.35rem;
+        }
+
+        .dash-hero-subtitle {
+            font-size: 0.9rem;
+            color: rgba(234, 224, 213, 0.7);
+        }
+
+        .dash-hero-meta {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .meta-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: rgba(234, 224, 213, 0.6);
+            font-weight: 500;
+        }
+
+        .meta-pill strong { color: var(--cream); }
+
+        /* ===== KPI STRIP ===== */
+        .kpi-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .kpi-icon-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .kpi-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kpi-trend {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .trend-up { background: rgba(110, 207, 110, 0.15); color: var(--green); }
+        .trend-down { background: rgba(224, 122, 95, 0.15); color: var(--coral); }
+        .trend-neutral { background: rgba(212, 165, 55, 0.15); color: var(--gold); }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            font-family: 'Source Serif Pro', serif;
+            line-height: 1.1;
+            margin-bottom: 0.2rem;
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: rgba(234, 224, 213, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-sparkline {
+            margin-top: 0.75rem;
+            height: 32px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        main {
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ===== SECTION STYLING ===== */
+        .section { margin-bottom: 2rem; }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-count {
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(0, 180, 204, 0.1);
+            color: var(--teal);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 0.35rem;
+            background: white;
+            padding: 0.3rem;
+            border-radius: 10px;
+            border: 1px solid rgba(94, 80, 63, 0.1);
+        }
+
+        .filter-pill {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.9rem;
+            border: none;
+            background: transparent;
+            color: var(--brown);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .filter-pill:hover { background: rgba(0, 180, 204, 0.06); }
+        .filter-pill.active { background: var(--navy); color: white; }
+
+        /* ===== GLASS CARD ===== */
+        .glass-card {
+            background: white;
+            border: 1px solid rgba(94, 80, 63, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(10, 9, 8, 0.04), 0 4px 12px rgba(10, 9, 8, 0.02);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 4px 16px rgba(10, 9, 8, 0.06), 0 8px 24px rgba(10, 9, 8, 0.04);
+            transform: translateY(-2px);
+        }
+
+        /* ===== GOALS ===== */
+        .goals-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .goal-card {
+            display: grid;
+            grid-template-columns: 4px 1fr auto;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        .goal-accent { border-radius: 16px 0 0 16px; }
+        .goal-accent.on-track { background: var(--green); }
+        .goal-accent.at-risk { background: var(--gold); }
+        .goal-accent.off-track { background: var(--coral); }
+        .goal-accent.exceeded { background: var(--purple); }
+
+        .goal-body {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .goal-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .goal-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--navy);
+            line-height: 1.4;
+        }
+
+        .goal-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        .badge-domain { background: rgba(0, 180, 204, 0.1); color: var(--teal); }
+        .badge-on-track { background: rgba(110, 207, 110, 0.12); color: #3da03d; }
+        .badge-at-risk { background: rgba(212, 165, 55, 0.12); color: #b8892a; }
+        .badge-off-track { background: rgba(224, 122, 95, 0.12); color: #c4583a; }
+        .badge-exceeded { background: rgba(107, 76, 154, 0.12); color: var(--purple); }
+
+        .goal-metrics-row {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .goal-metric {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .goal-metric-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: var(--brown);
+        }
+
+        .goal-metric-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy);
+            font-family: 'Source Serif Pro', serif;
+        }
+
+        .goal-progress-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--brown);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(94, 80, 63, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fill-green { background: linear-gradient(90deg, var(--green), #4db84d); }
+        .fill-gold { background: linear-gradient(90deg, var(--gold), #c49a2f); }
+        .fill-coral { background: linear-gradient(90deg, var(--coral), #d06545); }
+        .fill-teal { background: linear-gradient(90deg, var(--teal), #009bb0); }
+        .fill-purple { background: linear-gradient(90deg, var(--purple), #5a3d87); }
+
+        .goal-chart-area {
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px solid rgba(94, 80, 63, 0.06);
+        }
+
+        .goal-mini-chart { width: 100px; height: 80px; }
+
+        /* ===== INITIATIVES ===== */
+        .initiatives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .initiative-card .glass-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .init-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .init-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--navy);
+            line-height: 1.4;
+        }
+
+        .init-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 0.3rem;
+        }
+
+        .dot-not-started { background: var(--border-gray); }
+        .dot-in-progress { background: var(--teal); box-shadow: 0 0 8px rgba(0, 180, 204, 0.3); }
+        .dot-complete { background: var(--green); box-shadow: 0 0 8px rgba(110, 207, 110, 0.3); }
+
+        .init-tags {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .init-tag {
+            font-size: 0.68rem;
+            font-weight: 500;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(0, 180, 204, 0.08);
+            color: var(--teal);
+        }
+
+        .init-tag.owner {
+            background: rgba(107, 76, 154, 0.08);
+            color: var(--purple);
+        }
+
+        .init-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .init-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: #888;
+        }
+
+        .init-detail-row strong {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        /* ===== BUDGET ===== */
+        .budget-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .budget-main-stat { text-align: center; padding: 1rem 0; }
+
+        .budget-big-number {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--navy);
+            font-family: 'Source Serif Pro', serif;
+        }
+
+        .budget-big-label {
+            font-size: 0.8rem;
+            color: var(--brown);
+            font-weight: 500;
+        }
+
+        .budget-breakdown { margin-top: 1.25rem; }
+
+        .budget-bar {
+            display: flex;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .budget-bar-segment { transition: width 0.6s ease; }
+
+        .budget-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .budget-legend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .budget-legend-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .budget-legend-label { color: #666; }
+        .budget-legend-value { font-weight: 600; color: var(--navy); }
+
+        .chart-label-upper {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--brown);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 1rem;
+        }
+
+        /* ===== QUARTERLY ===== */
+        .quarter-nav {
+            display: flex;
+            gap: 0;
+            margin-bottom: 1.25rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid rgba(94, 80, 63, 0.1);
+            overflow: hidden;
+        }
+
+        .quarter-btn {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--brown);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .quarter-btn:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 25%;
+            height: 50%;
+            width: 1px;
+            background: rgba(94, 80, 63, 0.1);
+        }
+
+        .quarter-btn:hover { background: rgba(0, 180, 204, 0.04); }
+
+        .quarter-btn.active {
+            background: var(--navy);
+            color: white;
+            font-weight: 600;
+        }
+
+        .quarter-btn.active::after { display: none; }
+
+        .checkin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        .checkin-card { padding: 1.25rem; }
+
+        .checkin-goal-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .checkin-input-group { margin-bottom: 0.75rem; }
+
+        .checkin-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--brown);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.35rem;
+            display: block;
+        }
+
+        .checkin-input {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid rgba(94, 80, 63, 0.15);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--navy);
+            transition: all 0.2s ease;
+            background: rgba(249, 247, 243, 0.5);
+        }
+
+        .checkin-input:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(0, 180, 204, 0.08);
+            background: white;
+        }
+
+        textarea.checkin-input {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .save-checkin-btn {
+            padding: 0.7rem 1.5rem;
+            background: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .save-checkin-btn:hover {
+            background: var(--teal);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(0, 180, 204, 0.25);
+        }
+
+        /* ===== EQUITY ===== */
+        .equity-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1rem;
+        }
+
+        .equity-goal-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(94, 80, 63, 0.08);
+        }
+
+        .equity-header-row {
+            display: grid;
+            grid-template-columns: 120px 1fr repeat(3, 60px);
+            gap: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(94, 80, 63, 0.1);
+            margin-bottom: 0.25rem;
+        }
+
+        .equity-header-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: var(--brown);
+            text-align: center;
+        }
+
+        .equity-header-label:first-child { text-align: left; }
+
+        .equity-row {
+            display: grid;
+            grid-template-columns: 120px 1fr repeat(3, 60px);
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(94, 80, 63, 0.04);
+            font-size: 0.82rem;
+        }
+
+        .equity-row:last-child { border-bottom: none; }
+
+        .equity-group-name { font-weight: 600; color: var(--navy); }
+
+        .equity-bar-cell { padding: 0 0.5rem; }
+
+        .equity-mini-bar {
+            height: 4px;
+            background: rgba(94, 80, 63, 0.08);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .equity-mini-fill { height: 100%; border-radius: 2px; }
+
+        .equity-val {
+            text-align: center;
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 0.8rem;
+        }
+
+        /* ===== DRIFT ===== */
+        .drift-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .drift-card {
+            display: grid;
+            grid-template-columns: 4px 1fr auto;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        .drift-accent { border-radius: 16px 0 0 16px; }
+        .drift-accent.severe { background: var(--coral); }
+        .drift-accent.moderate { background: var(--gold); }
+
+        .drift-body { padding: 1rem 1.25rem; }
+
+        .drift-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 0.3rem;
+        }
+
+        .drift-description {
+            font-size: 0.82rem;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        .drift-action-area {
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            border-left: 1px solid rgba(94, 80, 63, 0.06);
+        }
+
+        .drift-metric { text-align: center; }
+
+        .drift-metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Source Serif Pro', serif;
+        }
+
+        .drift-metric-value.behind { color: var(--coral); }
+        .drift-metric-value.ahead { color: var(--green); }
+        .drift-metric-label { font-size: 0.7rem; color: #999; }
+
+        /* ===== EMPTY STATES ===== */
+        .empty-state {
+            padding: 3rem 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .empty-state-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .empty-state-text {
+            font-size: 0.85rem;
+            color: #999;
+            max-width: 320px;
+        }
+
+        .empty-state-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--teal);
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(0, 180, 204, 0.2);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+
+        .empty-state-link:hover { background: rgba(0, 180, 204, 0.06); }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            padding: 0.85rem 1.25rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: toastIn 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .toast.success { background: rgba(34, 51, 59, 0.95); }
+        .toast.error { background: rgba(224, 122, 95, 0.95); }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-8px) scale(0.95); }
+        }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger .reveal {
+            transition-delay: calc(var(--i, 0) * 80ms);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+            .budget-layout { grid-template-columns: 1fr; }
+            .equity-layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .header-container { flex-wrap: wrap; padding: 0.75rem 1rem; }
+            .nav-center { display: none; }
+            .kpi-strip { grid-template-columns: 1fr; }
+            .dash-hero { padding: 1.5rem 1rem 1rem; }
+            .dash-hero-title { font-size: 1.5rem; }
+            .dash-hero-top { flex-direction: column; gap: 1rem; }
+            main { padding: 1.25rem; }
+            .goal-card { grid-template-columns: 4px 1fr; }
+            .goal-chart-area { display: none; }
+            .initiatives-grid { grid-template-columns: 1fr; }
+            .checkin-grid { grid-template-columns: 1fr; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .equity-layout { grid-template-columns: 1fr; }
+            .equity-header-row, .equity-row { grid-template-columns: 100px 1fr repeat(3, 50px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bar"></div>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo">
+                    <svg width="22" height="22" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="20" fill="url(#sdG)" fill-opacity="0.08"/><circle cx="36" cy="36" r="20" stroke="url(#sdG)" stroke-width="1.5" stroke-opacity="0.2"/><text x="36" y="42" text-anchor="middle" font-family="Source Serif Pro, serif" font-weight="700" font-size="20" fill="#22333B">SD</text><defs><linearGradient id="sdG" x1="16" y1="16" x2="56" y2="56"><stop stop-color="#00B4CC"/><stop offset="0.5" stop-color="#D4A537"/><stop offset="1" stop-color="#6B4C9A"/></linearGradient></defs></svg>
+                    Strategic District Plan
+                </div>
+                <div class="district-badge" id="districtBadge">Loading...</div>
+            </div>
+
+            <nav class="nav-center">
+                <a href="./index.html" class="nav-link">
+                    <svg width="15" height="15" viewBox="0 0 48 48" fill="none"><rect x="10" y="20" width="9" height="16" rx="2" fill="#00B4CC" fill-opacity="0.75"/><rect x="20" y="14" width="9" height="22" rx="2" fill="#00B4CC" fill-opacity="0.5"/><rect x="30" y="8" width="9" height="28" rx="2" fill="#00B4CC" fill-opacity="0.35"/></svg>
+                    District Strategic Plan
+                </a>
+                <a href="#" class="nav-link active">
+                    <svg width="15" height="15" viewBox="0 0 48 48" fill="none"><polyline points="8,34 16,26 24,30 32,16 40,12" stroke="#6ECF6E" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="32" cy="16" r="3" fill="#6ECF6E" fill-opacity="0.8"/></svg>
+                    Progress Dashboard
+                </a>
+                <a href="../strategic-school/index.html" class="nav-link">
+                    <svg width="15" height="15" viewBox="0 0 48 48" fill="none"><rect x="14" y="24" width="20" height="14" rx="2" fill="#E07A5F" fill-opacity="0.6"/><polygon points="24,12 12,26 36,26" fill="#E07A5F" fill-opacity="0.4"/><rect x="21" y="30" width="6" height="8" rx="1" fill="#EAE0D5" fill-opacity="0.9"/></svg>
+                    Strategic School
+                </a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="btn-ghost" onclick="exportPDF()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    PDF
+                </button>
+                <button class="btn-ghost" onclick="exportCSV()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    CSV
+                </button>
+                <button class="btn-primary" onclick="signOut()">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== DASHBOARD HERO WITH KPIs ===== -->
+    <div class="dash-hero">
+        <div class="dash-hero-inner">
+            <div class="dash-hero-top">
+                <div>
+                    <h1 class="dash-hero-title">Progress Dashboard</h1>
+                    <p class="dash-hero-subtitle">Monitoring your strategic plan health and implementation progress</p>
+                </div>
+                <div class="dash-hero-meta">
+                    <div class="meta-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(234,224,213,0.5)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <strong id="heroSchoolYear">2025-26</strong>
+                    </div>
+                    <div class="meta-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(234,224,213,0.5)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Updated <strong id="heroLastUpdated">—</strong>
+                    </div>
+                    <div class="meta-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(234,224,213,0.5)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <strong id="heroCompletion">0%</strong> complete
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-strip" id="kpiStrip"></div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+        <!-- Strategic Goals -->
+        <div class="section reveal" id="goalsSection">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="16" fill="rgba(0,180,204,0.08)" stroke="rgba(0,180,204,0.2)" stroke-width="1.5"/><circle cx="24" cy="24" r="10" fill="rgba(0,180,204,0.12)" stroke="rgba(0,180,204,0.3)" stroke-width="1"/><circle cx="24" cy="24" r="4" fill="#00B4CC"/></svg>
+                    Strategic Goals
+                    <span class="section-count" id="goalsCount">0 goals</span>
+                </h2>
+                <div class="filter-pills" id="goalsFilter">
+                    <button class="filter-pill active" data-filter="all">All</button>
+                    <button class="filter-pill" data-filter="on-track">On Track</button>
+                    <button class="filter-pill" data-filter="at-risk">At Risk</button>
+                    <button class="filter-pill" data-filter="off-track">Off Track</button>
+                </div>
+            </div>
+            <div class="goals-grid stagger" id="goalsList"></div>
+        </div>
+
+        <!-- Initiatives -->
+        <div class="section reveal" id="initiativesSection">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="32" height="32" rx="8" fill="rgba(107,76,154,0.08)" stroke="rgba(107,76,154,0.2)" stroke-width="1.5"/><path d="M18 24l4 4 8-8" stroke="#6B4C9A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    Initiatives
+                    <span class="section-count" id="initiativesCount">0 initiatives</span>
+                </h2>
+                <div class="filter-pills" id="initiativesFilter">
+                    <button class="filter-pill active" data-filter="all">All</button>
+                    <button class="filter-pill" data-filter="not-started">Not Started</button>
+                    <button class="filter-pill" data-filter="in-progress">In Progress</button>
+                    <button class="filter-pill" data-filter="complete">Complete</button>
+                </div>
+            </div>
+            <div class="initiatives-grid stagger" id="initiativesGrid"></div>
+        </div>
+
+        <!-- Budget & Funding -->
+        <div class="section reveal" id="budgetSection">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="16" fill="rgba(212,165,55,0.08)" stroke="rgba(212,165,55,0.2)" stroke-width="1.5"/><text x="24" y="29" text-anchor="middle" font-family="Source Serif Pro, serif" font-weight="700" font-size="18" fill="#D4A537">$</text></svg>
+                    Budget & Funding
+                </h2>
+            </div>
+            <div id="budgetGrid"></div>
+        </div>
+
+        <!-- Quarterly Check-In -->
+        <div class="section reveal" id="quarterlySection">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><rect x="8" y="6" width="32" height="36" rx="6" fill="rgba(0,180,204,0.08)" stroke="rgba(0,180,204,0.2)" stroke-width="1.5"/><line x1="16" y1="16" x2="32" y2="16" stroke="rgba(0,180,204,0.3)" stroke-width="1.5"/><line x1="16" y1="22" x2="28" y2="22" stroke="rgba(0,180,204,0.25)" stroke-width="1.5"/><line x1="16" y1="28" x2="30" y2="28" stroke="rgba(0,180,204,0.2)" stroke-width="1.5"/></svg>
+                    Quarterly Check-In
+                </h2>
+            </div>
+            <div class="quarter-nav" id="quarterTabs"></div>
+            <div id="checkinContainer"></div>
+            <div id="checkinSaveArea" style="margin-top: 1.25rem;"></div>
+        </div>
+
+        <!-- Equity Analysis -->
+        <div class="section reveal" id="equitySection">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="16" cy="24" r="8" fill="rgba(224,122,95,0.08)" stroke="rgba(224,122,95,0.2)" stroke-width="1.5"/><circle cx="32" cy="24" r="8" fill="rgba(0,180,204,0.08)" stroke="rgba(0,180,204,0.2)" stroke-width="1.5"/><path d="M24 18v12" stroke="rgba(107,76,154,0.3)" stroke-width="1.5" stroke-dasharray="2 2"/></svg>
+                    Equity Analysis
+                </h2>
+            </div>
+            <div id="equityGrid"></div>
+        </div>
+
+        <!-- Drift Detection -->
+        <div class="section reveal" id="driftSection">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><path d="M24 8L40 38H8L24 8Z" fill="rgba(224,122,95,0.08)" stroke="rgba(224,122,95,0.25)" stroke-width="1.5" stroke-linejoin="round"/><line x1="24" y1="18" x2="24" y2="28" stroke="#E07A5F" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="33" r="1.5" fill="#E07A5F"/></svg>
+                    Progress Drift Detection
+                </h2>
+            </div>
+            <div id="driftAlerts"></div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ===== STATE =====
+        var planState = null;
+        var currentQuarter = 'Q1';
+        var currentGoalFilter = 'all';
+        var currentInitiativeFilter = 'all';
+        var chartInstances = {};
+
+        // ===== INIT =====
+        function initDashboard() {
+            var stored = localStorage.getItem('planState');
+            planState = stored ? JSON.parse(stored) : getEmptyPlanState();
+
+            renderHero();
+            renderKPICards();
+            renderGoals();
+            renderInitiatives();
+            renderBudgetDashboard();
+            renderQuarterlyCheckIn();
+            renderEquityDashboard();
+            renderDriftDetection();
+            initFilters();
+            initScrollReveal();
+        }
+
+        function getEmptyPlanState() {
+            return {
+                planName: 'New Plan',
+                districtName: 'District Name',
+                schoolYear: '2025-26',
+                lastModified: new Date().toISOString(),
+                goals: [],
+                initiatives: [],
+                budgetSetup: { totalBudget: 0, fundingSources: [] },
+                quarterlyCheckIns: { Q1: {}, Q2: {}, Q3: {}, Q4: {} }
+            };
+        }
+
+        // ===== TOAST SYSTEM =====
+        function showToast(message, type) {
+            var container = document.getElementById('toastContainer');
+            var toast = document.createElement('div');
+            toast.className = 'toast ' + (type || 'success');
+            var icon = type === 'error'
+                ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'
+                : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>';
+            toast.innerHTML = icon + message;
+            container.appendChild(toast);
+            setTimeout(function() {
+                toast.style.animation = 'toastOut 0.3s ease forwards';
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 3000);
+        }
+
+        // ===== HERO =====
+        function renderHero() {
+            document.getElementById('districtBadge').textContent = planState.districtName || 'District Name';
+            document.getElementById('heroSchoolYear').textContent = planState.schoolYear || '2025-26';
+
+            if (planState.lastModified) {
+                var d = new Date(planState.lastModified);
+                var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                document.getElementById('heroLastUpdated').textContent = months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+            }
+
+            var completion = calculateCompletionPercentage();
+            document.getElementById('heroCompletion').textContent = completion + '%';
+        }
+
+        // ===== KPI CARDS =====
+        function renderKPICards() {
+            var container = document.getElementById('kpiStrip');
+            container.innerHTML = '';
+
+            var healthScore = calculatePlanHealthScore();
+            var goalsProgress = calculateGoalsProgress();
+            var budgetUtil = calculateBudgetUtilization();
+            var implStatus = calculateImplementationStatus();
+
+            var kpis = [
+                {
+                    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6ECF6E" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+                    iconBg: 'rgba(110, 207, 110, 0.15)',
+                    value: healthScore,
+                    label: 'Plan Health Score',
+                    trend: healthScore > 50 ? 'up' : (healthScore > 30 ? 'neutral' : 'down'),
+                    trendText: healthScore > 50 ? 'Good' : (healthScore > 30 ? 'Fair' : 'Needs work'),
+                    sparkId: 'sparkHealth',
+                    sparkColor: 'rgb(110, 207, 110)'
+                },
+                {
+                    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00B4CC" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>',
+                    iconBg: 'rgba(0, 180, 204, 0.15)',
+                    value: goalsProgress.percentage + '%',
+                    label: 'Goals On Track',
+                    trend: goalsProgress.percentage > 50 ? 'up' : 'neutral',
+                    trendText: goalsProgress.fraction + ' on track',
+                    sparkId: 'sparkGoals',
+                    sparkColor: 'rgb(0, 180, 204)'
+                },
+                {
+                    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A537" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>',
+                    iconBg: 'rgba(212, 165, 55, 0.15)',
+                    value: budgetUtil + '%',
+                    label: 'Budget Utilized',
+                    trend: 'neutral',
+                    trendText: budgetUtil > 0 ? 'Allocated' : 'Not set',
+                    sparkId: 'sparkBudget',
+                    sparkColor: 'rgb(212, 165, 55)'
+                },
+                {
+                    icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B4C9A" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+                    iconBg: 'rgba(107, 76, 154, 0.15)',
+                    value: implStatus + '%',
+                    label: 'Implementation Rate',
+                    trend: implStatus > 40 ? 'up' : (implStatus > 20 ? 'neutral' : 'down'),
+                    trendText: implStatus > 40 ? 'On pace' : 'Building',
+                    sparkId: 'sparkImpl',
+                    sparkColor: 'rgb(107, 76, 154)'
+                }
+            ];
+
+            kpis.forEach(function(kpi) {
+                var trendClass = 'trend-' + kpi.trend;
+                var trendIcon = kpi.trend === 'up'
+                    ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"/></svg>'
+                    : (kpi.trend === 'down'
+                        ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>'
+                        : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>');
+
+                var html = '<div class="kpi-card">';
+                html += '<div class="kpi-icon-row">';
+                html += '<div class="kpi-icon" style="background: ' + kpi.iconBg + ';">' + kpi.icon + '</div>';
+                html += '<span class="kpi-trend ' + trendClass + '">' + trendIcon + ' ' + kpi.trendText + '</span>';
+                html += '</div>';
+                html += '<div class="kpi-value">' + kpi.value + '</div>';
+                html += '<div class="kpi-label">' + kpi.label + '</div>';
+                html += '<div class="kpi-sparkline"><canvas id="' + kpi.sparkId + '"></canvas></div>';
+                html += '</div>';
+                container.insertAdjacentHTML('beforeend', html);
+            });
+
+            setTimeout(function() {
+                kpis.forEach(function(kpi) {
+                    var val = parseInt(kpi.value) || 0;
+                    var data = generateSparkData(val, 8);
+                    drawSparkline(kpi.sparkId, data, kpi.sparkColor);
+                });
+            }, 100);
+        }
+
+        function generateSparkData(endVal, points) {
+            var data = [];
+            var startVal = Math.max(0, endVal - Math.floor(Math.random() * 30 + 10));
+            for (var i = 0; i < points; i++) {
+                var progress = i / (points - 1);
+                var val = startVal + (endVal - startVal) * progress;
+                val += (Math.random() - 0.5) * 8;
+                data.push(Math.max(0, Math.round(val)));
+            }
+            data[data.length - 1] = endVal;
+            return data;
+        }
+
+        function drawSparkline(canvasId, data, color) {
+            var canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+
+            chartInstances[canvasId] = new Chart(canvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: data.map(function() { return ''; }),
+                    datasets: [{
+                        data: data,
+                        borderColor: color,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: color,
+                        fill: true,
+                        backgroundColor: function(context) {
+                            var chart = context.chart;
+                            var gradient = chart.ctx.createLinearGradient(0, 0, 0, 32);
+                            gradient.addColorStop(0, color.replace(')', ', 0.2)').replace('rgb', 'rgba'));
+                            gradient.addColorStop(1, color.replace(')', ', 0)').replace('rgb', 'rgba'));
+                            return gradient;
+                        },
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: { x: { display: false }, y: { display: false } },
+                    elements: { line: { borderCapStyle: 'round' } }
+                }
+            });
+        }
+
+        // ===== CALCULATIONS =====
+        function calculateCompletionPercentage() {
+            var totalSteps = 14;
+            var completed = 0;
+            if (planState.districtName && planState.districtName !== 'District Name') completed++;
+            if (planState.vision || planState.mission) completed++;
+            if (planState.coreValues && planState.coreValues.length > 0) completed++;
+            if (planState.competencies && Object.keys(planState.competencies).length > 0) completed++;
+            if (planState.strategicDomains && planState.strategicDomains.length > 0) completed++;
+            if (planState.goals && planState.goals.length > 0) completed += 2;
+            if (planState.selectedDepartments && planState.selectedDepartments.length > 0) completed++;
+            if (planState.initiatives && planState.initiatives.length > 0) completed++;
+            if (planState.budgetSetup && planState.budgetSetup.totalBudget) completed++;
+            if (planState.budgetSetup && planState.budgetSetup.fundingSources && planState.budgetSetup.fundingSources.length > 0) completed++;
+            if (planState.calendar && Object.keys(planState.calendar).length > 0) completed++;
+            if (planState.postPlanAnalysis && Object.keys(planState.postPlanAnalysis).length > 0) completed++;
+            if (planState.finalized) completed++;
+            return Math.round((completed / totalSteps) * 100);
+        }
+
+        function calculatePlanHealthScore() {
+            var stepsScore = calculateCompletionPercentage();
+            var goalsScore = (planState.goals && planState.goals.length > 0) ? Math.min(100, planState.goals.length * 20) : 0;
+            var initScore = (planState.initiatives && planState.initiatives.length > 0) ? Math.min(100, planState.initiatives.length * 25) : 0;
+            var budgetScore = (planState.budgetSetup && planState.budgetSetup.totalBudget) ? 100 : 0;
+            var stakeholderScore = (planState.stakeholderConveningPlan && Object.keys(planState.stakeholderConveningPlan).length > 0) ? 80 : 40;
+            return Math.round(stepsScore * 0.3 + goalsScore * 0.2 + initScore * 0.2 + budgetScore * 0.15 + stakeholderScore * 0.15);
+        }
+
+        function calculateGoalsProgress() {
+            if (!planState.goals || planState.goals.length === 0) return { fraction: '0 of 0', percentage: 0 };
+            var onTrack = planState.goals.filter(function(g) { return g.status === 'on-track'; }).length;
+            return { fraction: onTrack + ' of ' + planState.goals.length, percentage: Math.round((onTrack / planState.goals.length) * 100) };
+        }
+
+        function calculateBudgetUtilization() {
+            if (!planState.budgetSetup || !planState.budgetSetup.totalBudget) return 0;
+            var allocated = 0;
+            if (planState.initiatives) planState.initiatives.forEach(function(i) { allocated += (i.budgetAllocated || 0); });
+            return Math.round((allocated / planState.budgetSetup.totalBudget) * 100);
+        }
+
+        function calculateImplementationStatus() {
+            if (!planState.initiatives || planState.initiatives.length === 0) return 0;
+            var total = 0;
+            planState.initiatives.forEach(function(i) { total += (i.percentComplete || 0); });
+            return Math.round(total / planState.initiatives.length);
+        }
+
+        function calculateGoalProgress(goal) {
+            if (!goal.baseline || !goal.target || !goal.currentValue) return 0;
+            var base = parseFloat(goal.baseline), curr = parseFloat(goal.currentValue), targ = parseFloat(goal.target);
+            if (base === targ) return 0;
+            return Math.min(Math.round(Math.abs((curr - base) / (targ - base)) * 100), 100);
+        }
+
+        function formatNumber(n) {
+            return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // ===== GOALS =====
+        function renderGoals() {
+            var container = document.getElementById('goalsList');
+            container.innerHTML = '';
+
+            if (!planState.goals || planState.goals.length === 0) {
+                document.getElementById('goalsCount').textContent = '0 goals';
+                container.innerHTML = '<div class="glass-card empty-state"><svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="16" fill="rgba(0,180,204,0.06)" stroke="rgba(0,180,204,0.15)" stroke-width="1.5"/><circle cx="24" cy="24" r="10" fill="rgba(0,180,204,0.08)" stroke="rgba(0,180,204,0.2)" stroke-width="1"/><circle cx="24" cy="24" r="4" fill="rgba(0,180,204,0.3)"/></svg><div class="empty-state-title">No Goals Yet</div><div class="empty-state-text">Complete Step 7 in the builder to define your strategic goals.</div><a href="./index.html" class="empty-state-link">Go to Builder</a></div>';
+                return;
+            }
+
+            document.getElementById('goalsCount').textContent = planState.goals.length + ' goal' + (planState.goals.length !== 1 ? 's' : '');
+
+            var filtered = planState.goals.filter(function(g) {
+                if (currentGoalFilter === 'all') return true;
+                return g.status === currentGoalFilter;
+            });
+
+            filtered.forEach(function(goal, idx) {
+                var progress = calculateGoalProgress(goal);
+                var status = goal.status || 'on-track';
+                var statusDisplay = status.toUpperCase().replace('-', ' ');
+                var fillClass = status === 'on-track' ? 'fill-green' : (status === 'at-risk' ? 'fill-gold' : (status === 'exceeded' ? 'fill-purple' : 'fill-coral'));
+                var chartColor = status === 'on-track' ? 'rgba(110,207,110,0.7)' : (status === 'at-risk' ? 'rgba(212,165,55,0.7)' : (status === 'exceeded' ? 'rgba(107,76,154,0.7)' : 'rgba(224,122,95,0.7)'));
+
+                var html = '<div class="goal-card glass-card reveal" style="--i:' + idx + '; padding: 0;">';
+                html += '<div class="goal-accent ' + status + '"></div>';
+                html += '<div class="goal-body">';
+                html += '<div class="goal-top-row">';
+                html += '<div class="goal-name">' + (goal.goalText || 'Untitled Goal') + '</div>';
+                html += '<div class="goal-badges">';
+                if (goal.strategicDomain) html += '<span class="badge badge-domain">' + goal.strategicDomain + '</span>';
+                html += '<span class="badge badge-' + status + '">' + statusDisplay + '</span>';
+                html += '</div></div>';
+
+                html += '<div class="goal-metrics-row">';
+                html += '<div class="goal-metric"><div class="goal-metric-label">Baseline</div><div class="goal-metric-value">' + (goal.baseline || '—') + '</div></div>';
+                html += '<div class="goal-metric"><div class="goal-metric-label">Current</div><div class="goal-metric-value">' + (goal.currentValue || '—') + '</div></div>';
+                html += '<div class="goal-metric"><div class="goal-metric-label">Target</div><div class="goal-metric-value">' + (goal.target || '—') + '</div></div>';
+                html += '<div class="goal-progress-area">';
+                html += '<div class="progress-header"><span>Progress</span><span style="font-weight:600;color:var(--navy);">' + progress + '%</span></div>';
+                html += '<div class="progress-bar"><div class="progress-fill ' + fillClass + '" style="width:' + progress + '%;"></div></div>';
+                html += '</div></div></div>';
+
+                html += '<div class="goal-chart-area"><div class="goal-mini-chart"><canvas id="goalChart' + idx + '"></canvas></div></div>';
+                html += '</div>';
+                container.insertAdjacentHTML('beforeend', html);
+
+                setTimeout(function() {
+                    var b = parseFloat(goal.baseline) || 0, c = parseFloat(goal.currentValue) || 0, t = parseFloat(goal.target) || 0;
+                    if (b || c || t) drawGoalMiniChart('goalChart' + idx, b, c, t, chartColor);
+                }, 150);
+            });
+
+            initScrollReveal();
+        }
+
+        function drawGoalMiniChart(canvasId, baseline, current, target, color) {
+            var canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+
+            chartInstances[canvasId] = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Base', 'Now', 'Goal'],
+                    datasets: [{ data: [baseline, current, target], backgroundColor: ['rgba(94,80,63,0.12)', color, 'rgba(94,80,63,0.06)'], borderColor: ['rgba(94,80,63,0.2)', color, 'rgba(94,80,63,0.15)'], borderWidth: 1, borderRadius: 3, barPercentage: 0.7 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: { x: { display: false }, y: { display: false } }
+                }
+            });
+        }
+
+        // ===== INITIATIVES =====
+        function renderInitiatives() {
+            var container = document.getElementById('initiativesGrid');
+            container.innerHTML = '';
+
+            if (!planState.initiatives || planState.initiatives.length === 0) {
+                document.getElementById('initiativesCount').textContent = '0 initiatives';
+                container.innerHTML = '<div class="glass-card empty-state" style="grid-column:1/-1;"><svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="32" height="32" rx="8" fill="rgba(107,76,154,0.06)" stroke="rgba(107,76,154,0.15)" stroke-width="1.5"/><path d="M18 24l4 4 8-8" stroke="rgba(107,76,154,0.3)" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg><div class="empty-state-title">No Initiatives Yet</div><div class="empty-state-text">Complete Step 10 in the builder to define implementation initiatives.</div><a href="./index.html" class="empty-state-link">Go to Builder</a></div>';
+                return;
+            }
+
+            document.getElementById('initiativesCount').textContent = planState.initiatives.length + ' initiative' + (planState.initiatives.length !== 1 ? 's' : '');
+
+            var filtered = planState.initiatives.filter(function(i) {
+                if (currentInitiativeFilter === 'all') return true;
+                return i.status === currentInitiativeFilter;
+            });
+
+            filtered.forEach(function(init, idx) {
+                var status = init.status || 'not-started';
+                var dotClass = status === 'complete' ? 'dot-complete' : (status === 'in-progress' ? 'dot-in-progress' : 'dot-not-started');
+                var fillClass = status === 'complete' ? 'fill-green' : (status === 'in-progress' ? 'fill-teal' : 'fill-coral');
+                var pct = init.percentComplete || 0;
+
+                var html = '<div class="initiative-card reveal" style="--i:' + idx + '"><div class="glass-card">';
+                html += '<div class="init-header"><div class="init-name">' + (init.name || 'Untitled Initiative') + '</div>';
+                html += '<div class="init-status-dot ' + dotClass + '"></div></div>';
+
+                var tags = [];
+                if (init.linkedGoal) tags.push({ text: 'Goal: ' + init.linkedGoal, cls: '' });
+                if (init.owner) tags.push({ text: init.owner, cls: ' owner' });
+
+                if (tags.length > 0) {
+                    html += '<div class="init-tags">';
+                    tags.forEach(function(t) { html += '<span class="init-tag' + t.cls + '">' + t.text + '</span>'; });
+                    html += '</div>';
+                }
+
+                html += '<div class="progress-bar" style="margin-bottom:0.75rem;"><div class="progress-fill ' + fillClass + '" style="width:' + pct + '%;"></div></div>';
+                html += '<div class="init-details">';
+                html += '<div class="init-detail-row"><span>Progress</span><strong>' + pct + '%</strong></div>';
+                html += '<div class="init-detail-row"><span>Budget</span><strong>$' + formatNumber(init.budgetAllocated || 0) + '</strong></div>';
+                if (init.timeline) html += '<div class="init-detail-row"><span>Timeline</span><strong>' + init.timeline + '</strong></div>';
+                html += '</div></div></div>';
+                container.insertAdjacentHTML('beforeend', html);
+            });
+
+            initScrollReveal();
+        }
+
+        // ===== BUDGET =====
+        function renderBudgetDashboard() {
+            var container = document.getElementById('budgetGrid');
+            container.innerHTML = '';
+
+            if (!planState.budgetSetup || !planState.budgetSetup.totalBudget) {
+                container.innerHTML = '<div class="glass-card empty-state"><svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="16" fill="rgba(212,165,55,0.06)" stroke="rgba(212,165,55,0.15)" stroke-width="1.5"/><text x="24" y="29" text-anchor="middle" font-family="Source Serif Pro, serif" font-weight="700" font-size="18" fill="rgba(212,165,55,0.3)">$</text></svg><div class="empty-state-title">No Budget Data</div><div class="empty-state-text">Complete Step 2 (Budget & Funding Sources) in the builder to see budget information.</div><a href="./index.html" class="empty-state-link">Go to Builder</a></div>';
+                return;
+            }
+
+            var total = planState.budgetSetup.totalBudget || 0;
+            var allocated = 0, spent = 0;
+            if (planState.initiatives) {
+                planState.initiatives.forEach(function(i) {
+                    allocated += (i.budgetAllocated || 0);
+                    spent += (i.budgetSpent || 0);
+                });
+            }
+            var remaining = Math.max(0, total - spent);
+            var spentPct = total > 0 ? Math.round((spent / total) * 100) : 0;
+            var committedPct = total > 0 ? Math.round(((allocated - spent) / total) * 100) : 0;
+            var remainPct = Math.max(0, 100 - spentPct - Math.max(0, committedPct));
+
+            var html = '<div class="budget-layout">';
+
+            html += '<div class="glass-card">';
+            html += '<div class="budget-main-stat"><div class="budget-big-number">$' + formatNumber(total) + '</div><div class="budget-big-label">Total Budget</div></div>';
+            html += '<div class="budget-breakdown">';
+            html += '<div class="budget-bar">';
+            html += '<div class="budget-bar-segment" style="width:' + spentPct + '%;background:var(--teal);"></div>';
+            html += '<div class="budget-bar-segment" style="width:' + Math.max(0, committedPct) + '%;background:var(--gold);"></div>';
+            html += '<div class="budget-bar-segment" style="width:' + remainPct + '%;background:rgba(94,80,63,0.1);"></div>';
+            html += '</div>';
+            html += '<div class="budget-legend">';
+            html += '<div class="budget-legend-item"><div class="budget-legend-left"><div class="legend-dot" style="background:var(--teal);"></div><span class="budget-legend-label">Spent</span></div><span class="budget-legend-value">$' + formatNumber(spent) + '</span></div>';
+            html += '<div class="budget-legend-item"><div class="budget-legend-left"><div class="legend-dot" style="background:var(--gold);"></div><span class="budget-legend-label">Committed</span></div><span class="budget-legend-value">$' + formatNumber(Math.max(0, allocated - spent)) + '</span></div>';
+            html += '<div class="budget-legend-item"><div class="budget-legend-left"><div class="legend-dot" style="background:rgba(94,80,63,0.15);"></div><span class="budget-legend-label">Remaining</span></div><span class="budget-legend-value">$' + formatNumber(remaining) + '</span></div>';
+            html += '</div></div></div>';
+
+            html += '<div class="glass-card"><div class="chart-label-upper">Funding Sources</div>';
+            if (planState.budgetSetup.fundingSources && planState.budgetSetup.fundingSources.length > 0) {
+                html += '<div style="height:200px;"><canvas id="fundingChart"></canvas></div>';
+            } else {
+                html += '<div style="color:#999;font-size:0.85rem;text-align:center;padding:2rem;">No funding sources defined yet.</div>';
+            }
+            html += '</div>';
+
+            html += '<div class="glass-card"><div class="chart-label-upper">Spend by Initiative</div>';
+            if (planState.initiatives && planState.initiatives.length > 0) {
+                html += '<div style="height:200px;"><canvas id="spendChart"></canvas></div>';
+            } else {
+                html += '<div style="color:#999;font-size:0.85rem;text-align:center;padding:2rem;">No initiatives to display.</div>';
+            }
+            html += '</div>';
+
+            html += '</div>';
+            container.innerHTML = html;
+
+            setTimeout(function() {
+                if (planState.budgetSetup.fundingSources && planState.budgetSetup.fundingSources.length > 0) drawFundingChart();
+                if (planState.initiatives && planState.initiatives.length > 0) drawSpendChart();
+            }, 100);
+        }
+
+        function drawFundingChart() {
+            var canvas = document.getElementById('fundingChart');
+            if (!canvas) return;
+            if (chartInstances.funding) chartInstances.funding.destroy();
+
+            var sources = planState.budgetSetup.fundingSources;
+            var colors = ['#00B4CC', '#22333B', '#D4A537', '#6ECF6E', '#6B4C9A', '#E07A5F', '#C6AC8F'];
+
+            chartInstances.funding = new Chart(canvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: sources.map(function(s) { return s.name || 'Source'; }),
+                    datasets: [{ data: sources.map(function(s) { return s.amount || 0; }), backgroundColor: colors.slice(0, sources.length), borderWidth: 0, hoverOffset: 6 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '65%',
+                    plugins: { legend: { position: 'right', labels: { boxWidth: 8, boxHeight: 8, borderRadius: 4, useBorderRadius: true, padding: 12, font: { size: 11, family: 'Inter' }, color: '#5E503F' } } }
+                }
+            });
+        }
+
+        function drawSpendChart() {
+            var canvas = document.getElementById('spendChart');
+            if (!canvas) return;
+            if (chartInstances.spend) chartInstances.spend.destroy();
+
+            var inits = planState.initiatives.slice(0, 8);
+
+            chartInstances.spend = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: inits.map(function(i) { var n = i.name || 'Initiative'; return n.length > 20 ? n.substring(0, 18) + '...' : n; }),
+                    datasets: [
+                        { label: 'Budget', data: inits.map(function(i) { return i.budgetAllocated || 0; }), backgroundColor: 'rgba(0,180,204,0.15)', borderColor: 'rgba(0,180,204,0.4)', borderWidth: 1, borderRadius: 4 },
+                        { label: 'Spent', data: inits.map(function(i) { return i.budgetSpent || 0; }), backgroundColor: 'rgba(0,180,204,0.7)', borderColor: '#00B4CC', borderWidth: 1, borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                    plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 8, boxHeight: 8, borderRadius: 4, useBorderRadius: true, padding: 12, font: { size: 11, family: 'Inter' }, color: '#5E503F' } } },
+                    scales: {
+                        x: { grid: { color: 'rgba(94,80,63,0.06)' }, ticks: { callback: function(v) { return '$' + (v/1000) + 'k'; }, font: { size: 10 }, color: '#999' } },
+                        y: { grid: { display: false }, ticks: { font: { size: 10, family: 'Inter' }, color: '#5E503F' } }
+                    }
+                }
+            });
+        }
+
+        // ===== QUARTERLY CHECK-IN =====
+        function renderQuarterlyCheckIn() {
+            var tabs = document.getElementById('quarterTabs');
+            tabs.innerHTML = '';
+            var quarters = [
+                { key: 'Q1', label: 'Q1 <span style="font-size:0.7rem;opacity:0.6;">Jul-Sep</span>' },
+                { key: 'Q2', label: 'Q2 <span style="font-size:0.7rem;opacity:0.6;">Oct-Dec</span>' },
+                { key: 'Q3', label: 'Q3 <span style="font-size:0.7rem;opacity:0.6;">Jan-Mar</span>' },
+                { key: 'Q4', label: 'Q4 <span style="font-size:0.7rem;opacity:0.6;">Apr-Jun</span>' }
+            ];
+
+            quarters.forEach(function(q) {
+                var btn = document.createElement('button');
+                btn.className = 'quarter-btn' + (q.key === currentQuarter ? ' active' : '');
+                btn.innerHTML = q.label;
+                btn.onclick = function() {
+                    currentQuarter = q.key;
+                    tabs.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
+                    btn.classList.add('active');
+                    renderQuarterCheckin();
+                };
+                tabs.appendChild(btn);
+            });
+
+            renderQuarterCheckin();
+        }
+
+        function renderQuarterCheckin() {
+            var container = document.getElementById('checkinContainer');
+            var saveArea = document.getElementById('checkinSaveArea');
+            container.innerHTML = '';
+            saveArea.innerHTML = '';
+
+            if (!planState.goals || planState.goals.length === 0) {
+                container.innerHTML = '<div class="glass-card empty-state"><svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="6" width="32" height="36" rx="6" fill="rgba(0,180,204,0.06)" stroke="rgba(0,180,204,0.15)" stroke-width="1.5"/><line x1="16" y1="16" x2="32" y2="16" stroke="rgba(0,180,204,0.2)" stroke-width="1.5"/><line x1="16" y1="22" x2="28" y2="22" stroke="rgba(0,180,204,0.15)" stroke-width="1.5"/></svg><div class="empty-state-title">No Goals to Track</div><div class="empty-state-text">Define strategic goals first to track quarterly progress.</div></div>';
+                return;
+            }
+
+            var existingCheckin = planState.quarterlyCheckIns && planState.quarterlyCheckIns[currentQuarter] ? planState.quarterlyCheckIns[currentQuarter] : {};
+            var goalProgress = existingCheckin.goalProgress || {};
+
+            var html = '<div class="checkin-grid stagger">';
+            planState.goals.forEach(function(goal, idx) {
+                var existing = goalProgress[idx] || {};
+                html += '<div class="glass-card checkin-card reveal" style="--i:' + idx + '">';
+                html += '<div class="checkin-goal-name">' + (goal.goalText || 'Goal ' + (idx + 1)) + '</div>';
+                html += '<div class="checkin-input-group"><label class="checkin-label">Current Value</label>';
+                html += '<input type="number" class="checkin-input" placeholder="e.g. 84.7" id="goal_' + idx + '_value" value="' + (existing.currentValue || '') + '"></div>';
+                html += '<div class="checkin-input-group"><label class="checkin-label">Qualitative Update</label>';
+                html += '<textarea class="checkin-input" placeholder="Describe progress, barriers, and next steps..." id="goal_' + idx + '_narrative">' + (existing.narrative || '') + '</textarea></div>';
+                html += '</div>';
+            });
+            html += '</div>';
+            container.innerHTML = html;
+
+            saveArea.innerHTML = '<button class="save-checkin-btn" onclick="saveQuarterlyCheckIn()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save ' + currentQuarter + ' Check-In</button>';
+
+            initScrollReveal();
+        }
+
+        function saveQuarterlyCheckIn() {
+            if (!planState.quarterlyCheckIns) planState.quarterlyCheckIns = {};
+            if (!planState.quarterlyCheckIns[currentQuarter]) planState.quarterlyCheckIns[currentQuarter] = {};
+            planState.quarterlyCheckIns[currentQuarter].date = new Date().toISOString();
+            planState.quarterlyCheckIns[currentQuarter].goalProgress = {};
+
+            planState.goals.forEach(function(goal, idx) {
+                var valEl = document.getElementById('goal_' + idx + '_value');
+                var narEl = document.getElementById('goal_' + idx + '_narrative');
+                planState.quarterlyCheckIns[currentQuarter].goalProgress[idx] = {
+                    currentValue: valEl ? valEl.value : '',
+                    narrative: narEl ? narEl.value : ''
+                };
+            });
+
+            planState.lastModified = new Date().toISOString();
+            localStorage.setItem('planState', JSON.stringify(planState));
+            showToast(currentQuarter + ' check-in saved successfully', 'success');
+            renderHero();
+        }
+
+        // ===== EQUITY =====
+        function renderEquityDashboard() {
+            var container = document.getElementById('equityGrid');
+            container.innerHTML = '';
+
+            var hasEquity = planState.goals && planState.goals.some(function(g) { return g.subgroups; });
+            if (!hasEquity) {
+                container.innerHTML = '<div class="glass-card empty-state"><svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="16" cy="24" r="8" fill="rgba(224,122,95,0.06)" stroke="rgba(224,122,95,0.15)" stroke-width="1.5"/><circle cx="32" cy="24" r="8" fill="rgba(0,180,204,0.06)" stroke="rgba(0,180,204,0.15)" stroke-width="1.5"/></svg><div class="empty-state-title">No Equity Data</div><div class="empty-state-text">Add subgroup data to your goals to see equity analysis.</div></div>';
+                return;
+            }
+
+            var html = '<div class="equity-layout">';
+            planState.goals.forEach(function(goal) {
+                if (!goal.subgroups) return;
+
+                html += '<div class="glass-card">';
+                html += '<div class="equity-goal-title">' + (goal.goalText || 'Goal') + '</div>';
+                html += '<div class="equity-header-row"><div class="equity-header-label">Subgroup</div><div class="equity-header-label">Progress</div><div class="equity-header-label">Base</div><div class="equity-header-label">Current</div><div class="equity-header-label">Target</div></div>';
+
+                for (var subgroup in goal.subgroups) {
+                    var d = goal.subgroups[subgroup];
+                    var base = parseFloat(d.baseline) || 0, curr = parseFloat(d.current) || 0, targ = parseFloat(d.target) || 1;
+                    var prog = Math.min(100, Math.round(Math.abs((curr - base) / (targ - base)) * 100));
+                    var fillClass = prog > 50 ? 'fill-green' : (prog > 25 ? 'fill-gold' : 'fill-coral');
+
+                    html += '<div class="equity-row">';
+                    html += '<div class="equity-group-name">' + subgroup + '</div>';
+                    html += '<div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill ' + fillClass + '" style="width:' + prog + '%;"></div></div></div>';
+                    html += '<div class="equity-val">' + (d.baseline || '—') + '</div>';
+                    html += '<div class="equity-val">' + (d.current || '—') + '</div>';
+                    html += '<div class="equity-val">' + (d.target || '—') + '</div>';
+                    html += '</div>';
+                }
+
+                html += '</div>';
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // ===== DRIFT DETECTION =====
+        function renderDriftDetection() {
+            var container = document.getElementById('driftAlerts');
+            container.innerHTML = '';
+
+            if (!planState.goals || planState.goals.length === 0) {
+                container.innerHTML = '<div class="glass-card empty-state"><svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M24 8L40 38H8L24 8Z" fill="rgba(224,122,95,0.06)" stroke="rgba(224,122,95,0.15)" stroke-width="1.5" stroke-linejoin="round"/><line x1="24" y1="18" x2="24" y2="28" stroke="rgba(224,122,95,0.2)" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="33" r="1.5" fill="rgba(224,122,95,0.2)"/></svg><div class="empty-state-title">No Data for Drift Analysis</div><div class="empty-state-text">Add goals and quarterly check-ins to track progress drift.</div></div>';
+                return;
+            }
+
+            var drifted = [];
+            planState.goals.forEach(function(goal) {
+                if (!goal.baseline || !goal.target || !goal.currentValue) return;
+                var base = parseFloat(goal.baseline), curr = parseFloat(goal.currentValue), targ = parseFloat(goal.target);
+                var expected = base + ((targ - base) * 0.25);
+                var drift = expected - curr;
+                var driftPct = Math.abs(drift / (targ - base)) * 100;
+                if (driftPct > 10) {
+                    drifted.push({ goal: goal, drift: drift, driftPct: driftPct, expected: expected, actual: curr });
+                }
+            });
+
+            if (drifted.length === 0) {
+                container.innerHTML = '<div class="glass-card" style="padding:2rem;text-align:center;"><div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:#999;"><svg width="32" height="32" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="16" fill="rgba(110,207,110,0.08)" stroke="rgba(110,207,110,0.2)" stroke-width="1.5"/><path d="M16 24l5 5 11-11" stroke="#6ECF6E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span style="font-size:0.9rem;font-weight:500;">All goals tracking on plan</span></div></div>';
+                return;
+            }
+
+            var html = '<div class="drift-grid">';
+            drifted.forEach(function(item) {
+                var severity = item.driftPct > 25 ? 'severe' : 'moderate';
+                var driftLabel = item.drift > 0 ? 'behind plan' : 'ahead of plan';
+                var driftValue = item.drift > 0
+                    ? '-' + Math.round(Math.abs(item.drift * 10) / 10)
+                    : '+' + Math.round(Math.abs(item.drift * 10) / 10);
+
+                html += '<div class="drift-card glass-card" style="padding:0;">';
+                html += '<div class="drift-accent ' + severity + '"></div>';
+                html += '<div class="drift-body">';
+                html += '<div class="drift-title">' + (item.goal.goalText || 'Goal') + ': ' + (severity === 'severe' ? 'Significantly' : 'Slightly') + ' Behind Plan</div>';
+                html += '<div class="drift-description">Expected ' + Math.round(item.expected * 10) / 10 + ' by this quarter based on trajectory. Actual is ' + Math.round(item.actual * 10) / 10 + '. Drift of ' + Math.round(item.driftPct) + '% from plan. Consider review meeting with team.</div>';
+                html += '</div>';
+                html += '<div class="drift-action-area"><div class="drift-metric">';
+                html += '<div class="drift-metric-value behind">' + driftValue + '</div>';
+                html += '<div class="drift-metric-label">' + driftLabel + '</div>';
+                html += '</div></div></div>';
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // ===== FILTERS =====
+        function initFilters() {
+            var goalsFilter = document.getElementById('goalsFilter');
+            if (goalsFilter) {
+                goalsFilter.querySelectorAll('.filter-pill').forEach(function(pill) {
+                    pill.addEventListener('click', function() {
+                        goalsFilter.querySelectorAll('.filter-pill').forEach(function(p) { p.classList.remove('active'); });
+                        pill.classList.add('active');
+                        currentGoalFilter = pill.getAttribute('data-filter');
+                        renderGoals();
+                    });
+                });
+            }
+
+            var initFilter = document.getElementById('initiativesFilter');
+            if (initFilter) {
+                initFilter.querySelectorAll('.filter-pill').forEach(function(pill) {
+                    pill.addEventListener('click', function() {
+                        initFilter.querySelectorAll('.filter-pill').forEach(function(p) { p.classList.remove('active'); });
+                        pill.classList.add('active');
+                        currentInitiativeFilter = pill.getAttribute('data-filter');
+                        renderInitiatives();
+                    });
+                });
+            }
+        }
+
+        // ===== SCROLL REVEAL =====
+        function initScrollReveal() {
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+            document.querySelectorAll('.reveal:not(.visible)').forEach(function(el) {
+                observer.observe(el);
+            });
+        }
+
+        // ===== EXPORTS =====
+        function exportPDF() {
+            showToast('PDF export coming soon. Download your plan as PDF from the main builder.', 'success');
+        }
+
+        function exportCSV() {
+            if (!planState.goals || planState.goals.length === 0) {
+                showToast('No data to export.', 'error');
+                return;
+            }
+
+            var csv = 'Goal,Domain,Baseline,Current,Target,Status\n';
+            planState.goals.forEach(function(goal) {
+                csv += '"' + (goal.goalText || '') + '","' + (goal.strategicDomain || '') + '",' + (goal.baseline || '') + ',' + (goal.currentValue || '') + ',' + (goal.target || '') + ',"' + (goal.status || 'on-track') + '"\n';
+            });
+
+            var link = document.createElement('a');
+            link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+            link.download = 'plan_goals_' + new Date().getTime() + '.csv';
+            link.click();
+            showToast('CSV exported successfully', 'success');
+        }
+
+        function signOut() {
+            if (confirm('Sign out from your account?')) {
+                localStorage.removeItem('planState');
+                window.location.href = '../index.html';
+            }
+        }
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

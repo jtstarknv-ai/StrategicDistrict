@@ -1,0 +1,2164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Dashboard — Reimagined | Strategic District Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        /* ===== RESET & ROOT ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #22333B;
+            --cream: #EAE0D5;
+            --tan: #C6AC8F;
+            --brown: #5E503F;
+            --teal: #00B4CC;
+            --gold: #D4A537;
+            --green: #6ECF6E;
+            --coral: #E07A5F;
+            --purple: #6B4C9A;
+            --dark-blue: #14213D;
+            --light-gray: #F5F3F0;
+            --border-gray: #E8E4DF;
+            --gradient: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+            --bg: #F9F7F3;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--navy);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 { font-family: 'Source Serif Pro', serif; }
+        a { color: var(--teal); text-decoration: none; transition: color 0.2s ease; }
+        a:hover { color: var(--navy); }
+
+        /* ===== GRADIENT BAR ===== */
+        .gradient-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+            z-index: 1000;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(94, 80, 63, 0.1);
+            position: sticky;
+            top: 4px;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-family: 'Source Serif Pro', serif;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .district-badge {
+            font-size: 0.7rem;
+            color: var(--brown);
+            background: rgba(212, 165, 55, 0.1);
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 0.5rem;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-link {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--brown);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .nav-link:hover {
+            color: var(--navy);
+            background: rgba(0, 180, 204, 0.06);
+        }
+
+        .nav-link.active {
+            color: var(--navy);
+            background: rgba(0, 180, 204, 0.08);
+            font-weight: 600;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .btn-ghost {
+            font-size: 0.8rem;
+            padding: 0.45rem 0.9rem;
+            border: 1px solid rgba(94, 80, 63, 0.15);
+            background: transparent;
+            color: var(--brown);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .btn-ghost:hover {
+            background: white;
+            border-color: var(--brown);
+            box-shadow: 0 2px 8px rgba(10, 9, 8, 0.06);
+        }
+
+        .btn-primary {
+            font-size: 0.8rem;
+            padding: 0.45rem 1rem;
+            background: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--brown);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 51, 59, 0.2);
+        }
+
+        /* ===== DASHBOARD HERO ===== */
+        .dash-hero {
+            background: var(--navy);
+            padding: 2.5rem 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dash-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 180, 204, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .dash-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: 10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 165, 55, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .dash-hero-inner {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dash-hero-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .dash-hero-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.35rem;
+        }
+
+        .dash-hero-subtitle {
+            font-size: 0.9rem;
+            color: rgba(234, 224, 213, 0.7);
+        }
+
+        .dash-hero-meta {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .meta-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: rgba(234, 224, 213, 0.6);
+            font-weight: 500;
+        }
+
+        .meta-pill strong {
+            color: var(--cream);
+        }
+
+        /* ===== KPI STRIP ===== */
+        .kpi-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .kpi-icon-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .kpi-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kpi-trend {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .trend-up {
+            background: rgba(110, 207, 110, 0.15);
+            color: var(--green);
+        }
+
+        .trend-down {
+            background: rgba(224, 122, 95, 0.15);
+            color: var(--coral);
+        }
+
+        .trend-neutral {
+            background: rgba(212, 165, 55, 0.15);
+            color: var(--gold);
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            font-family: 'Source Serif Pro', serif;
+            line-height: 1.1;
+            margin-bottom: 0.2rem;
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: rgba(234, 224, 213, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-sparkline {
+            margin-top: 0.75rem;
+            height: 32px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        main {
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ===== SECTION STYLING ===== */
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-count {
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(0, 180, 204, 0.1);
+            color: var(--teal);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 0.35rem;
+            background: white;
+            padding: 0.3rem;
+            border-radius: 10px;
+            border: 1px solid rgba(94, 80, 63, 0.1);
+        }
+
+        .filter-pill {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.9rem;
+            border: none;
+            background: transparent;
+            color: var(--brown);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .filter-pill:hover {
+            background: rgba(0, 180, 204, 0.06);
+        }
+
+        .filter-pill.active {
+            background: var(--navy);
+            color: white;
+        }
+
+        /* ===== GLASS CARD ===== */
+        .glass-card {
+            background: white;
+            border: 1px solid rgba(94, 80, 63, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(10, 9, 8, 0.04), 0 4px 12px rgba(10, 9, 8, 0.02);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 4px 16px rgba(10, 9, 8, 0.06), 0 8px 24px rgba(10, 9, 8, 0.04);
+            transform: translateY(-2px);
+        }
+
+        /* ===== GOALS CARDS ===== */
+        .goals-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .goal-card {
+            display: grid;
+            grid-template-columns: 4px 1fr auto;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        .goal-accent {
+            border-radius: 16px 0 0 16px;
+        }
+
+        .goal-accent.on-track { background: var(--green); }
+        .goal-accent.at-risk { background: var(--gold); }
+        .goal-accent.off-track { background: var(--coral); }
+        .goal-accent.exceeded { background: var(--purple); }
+
+        .goal-body {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .goal-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .goal-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--navy);
+            line-height: 1.4;
+        }
+
+        .goal-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        .badge-domain {
+            background: rgba(0, 180, 204, 0.1);
+            color: var(--teal);
+        }
+
+        .badge-on-track {
+            background: rgba(110, 207, 110, 0.12);
+            color: #3da03d;
+        }
+
+        .badge-at-risk {
+            background: rgba(212, 165, 55, 0.12);
+            color: #b8892a;
+        }
+
+        .badge-off-track {
+            background: rgba(224, 122, 95, 0.12);
+            color: #c4583a;
+        }
+
+        .badge-exceeded {
+            background: rgba(107, 76, 154, 0.12);
+            color: var(--purple);
+        }
+
+        .goal-metrics-row {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .goal-metric {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .goal-metric-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: var(--brown);
+        }
+
+        .goal-metric-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy);
+            font-family: 'Source Serif Pro', serif;
+        }
+
+        .goal-progress-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--brown);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(94, 80, 63, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fill-green { background: linear-gradient(90deg, var(--green), #4db84d); }
+        .fill-gold { background: linear-gradient(90deg, var(--gold), #c49a2f); }
+        .fill-coral { background: linear-gradient(90deg, var(--coral), #d06545); }
+        .fill-teal { background: linear-gradient(90deg, var(--teal), #009bb0); }
+        .fill-purple { background: linear-gradient(90deg, var(--purple), #5a3d87); }
+
+        .goal-chart-area {
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px solid rgba(94, 80, 63, 0.06);
+        }
+
+        .goal-mini-chart {
+            width: 100px;
+            height: 80px;
+        }
+
+        /* ===== INITIATIVES ===== */
+        .initiatives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .initiative-card .glass-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .init-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .init-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--navy);
+            line-height: 1.4;
+        }
+
+        .init-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 0.3rem;
+        }
+
+        .dot-not-started { background: var(--border-gray); }
+        .dot-in-progress { background: var(--teal); box-shadow: 0 0 8px rgba(0, 180, 204, 0.3); }
+        .dot-complete { background: var(--green); box-shadow: 0 0 8px rgba(110, 207, 110, 0.3); }
+
+        .init-tags {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .init-tag {
+            font-size: 0.68rem;
+            font-weight: 500;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(0, 180, 204, 0.08);
+            color: var(--teal);
+        }
+
+        .init-tag.owner {
+            background: rgba(107, 76, 154, 0.08);
+            color: var(--purple);
+        }
+
+        .init-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .init-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: #888;
+        }
+
+        .init-detail-row strong {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        /* ===== BUDGET SECTION ===== */
+        .budget-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .budget-main-stat {
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .budget-big-number {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--navy);
+            font-family: 'Source Serif Pro', serif;
+        }
+
+        .budget-big-label {
+            font-size: 0.8rem;
+            color: var(--brown);
+            font-weight: 500;
+        }
+
+        .budget-breakdown {
+            margin-top: 1.25rem;
+        }
+
+        .budget-bar {
+            display: flex;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .budget-bar-segment {
+            transition: width 0.6s ease;
+        }
+
+        .budget-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .budget-legend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .budget-legend-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .budget-legend-label { color: #666; }
+        .budget-legend-value { font-weight: 600; color: var(--navy); }
+
+        /* ===== QUARTERLY CHECKIN ===== */
+        .quarter-nav {
+            display: flex;
+            gap: 0;
+            margin-bottom: 1.25rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid rgba(94, 80, 63, 0.1);
+            overflow: hidden;
+        }
+
+        .quarter-btn {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--brown);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .quarter-btn:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 25%;
+            height: 50%;
+            width: 1px;
+            background: rgba(94, 80, 63, 0.1);
+        }
+
+        .quarter-btn:hover { background: rgba(0, 180, 204, 0.04); }
+
+        .quarter-btn.active {
+            background: var(--navy);
+            color: white;
+            font-weight: 600;
+        }
+
+        .quarter-btn.active::after { display: none; }
+
+        .checkin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        .checkin-card {
+            padding: 1.25rem;
+        }
+
+        .checkin-goal-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .checkin-input-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .checkin-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--brown);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.35rem;
+            display: block;
+        }
+
+        .checkin-input {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid rgba(94, 80, 63, 0.15);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--navy);
+            transition: all 0.2s ease;
+            background: rgba(249, 247, 243, 0.5);
+        }
+
+        .checkin-input:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(0, 180, 204, 0.08);
+            background: white;
+        }
+
+        textarea.checkin-input {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .save-checkin-btn {
+            padding: 0.7rem 1.5rem;
+            background: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .save-checkin-btn:hover {
+            background: var(--teal);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(0, 180, 204, 0.25);
+        }
+
+        /* ===== EQUITY ===== */
+        .equity-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .equity-goal-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(94, 80, 63, 0.08);
+        }
+
+        .equity-row {
+            display: grid;
+            grid-template-columns: 120px 1fr repeat(3, 60px);
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(94, 80, 63, 0.04);
+            font-size: 0.82rem;
+        }
+
+        .equity-row:last-child { border-bottom: none; }
+
+        .equity-group-name {
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .equity-bar-cell {
+            padding: 0 0.5rem;
+        }
+
+        .equity-mini-bar {
+            height: 4px;
+            background: rgba(94, 80, 63, 0.08);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .equity-mini-fill {
+            height: 100%;
+            border-radius: 2px;
+        }
+
+        .equity-val {
+            text-align: center;
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 0.8rem;
+        }
+
+        .equity-header-row {
+            display: grid;
+            grid-template-columns: 120px 1fr repeat(3, 60px);
+            gap: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(94, 80, 63, 0.1);
+            margin-bottom: 0.25rem;
+        }
+
+        .equity-header-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: var(--brown);
+            text-align: center;
+        }
+
+        .equity-header-label:first-child { text-align: left; }
+
+        /* ===== DRIFT DETECTION ===== */
+        .drift-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .drift-card {
+            display: grid;
+            grid-template-columns: 4px 1fr auto;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        .drift-accent {
+            border-radius: 16px 0 0 16px;
+        }
+
+        .drift-accent.severe { background: var(--coral); }
+        .drift-accent.moderate { background: var(--gold); }
+
+        .drift-body {
+            padding: 1rem 1.25rem;
+        }
+
+        .drift-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 0.3rem;
+        }
+
+        .drift-description {
+            font-size: 0.82rem;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        .drift-action-area {
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            border-left: 1px solid rgba(94, 80, 63, 0.06);
+        }
+
+        .drift-metric {
+            text-align: center;
+        }
+
+        .drift-metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Source Serif Pro', serif;
+        }
+
+        .drift-metric-value.behind { color: var(--coral); }
+        .drift-metric-value.ahead { color: var(--green); }
+
+        .drift-metric-label {
+            font-size: 0.7rem;
+            color: #999;
+        }
+
+        .drift-ok {
+            padding: 2rem;
+            text-align: center;
+            color: #999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== EMPTY STATES ===== */
+        .empty-state {
+            padding: 3rem 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .empty-state-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .empty-state-text {
+            font-size: 0.85rem;
+            color: #999;
+            max-width: 320px;
+        }
+
+        .empty-state-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--teal);
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(0, 180, 204, 0.2);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .empty-state-link:hover {
+            background: rgba(0, 180, 204, 0.06);
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            padding: 0.85rem 1.25rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: toastIn 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .toast.success { background: rgba(34, 51, 59, 0.95); }
+        .toast.error { background: rgba(224, 122, 95, 0.95); }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-8px) scale(0.95); }
+        }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger .reveal {
+            transition-delay: calc(var(--i, 0) * 80ms);
+        }
+
+        /* ===== CHART CONTAINERS ===== */
+        .chart-container {
+            position: relative;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+            .budget-layout { grid-template-columns: 1fr; }
+            .equity-layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .header-container { flex-wrap: wrap; padding: 0.75rem 1rem; }
+            .nav-center { display: none; }
+            .kpi-strip { grid-template-columns: 1fr; }
+            .dash-hero { padding: 1.5rem 1rem 1rem; }
+            .dash-hero-title { font-size: 1.5rem; }
+            .dash-hero-top { flex-direction: column; gap: 1rem; }
+            main { padding: 1.25rem; }
+            .goal-card { grid-template-columns: 4px 1fr; }
+            .goal-chart-area { display: none; }
+            .initiatives-grid { grid-template-columns: 1fr; }
+            .checkin-grid { grid-template-columns: 1fr; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+        }
+
+        /* ===== MOCKUP BADGES ===== */
+        .mockup-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--gold);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            z-index: 10;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 2px 6px rgba(212, 165, 55, 0.3);
+            pointer-events: none;
+        }
+
+        .mockup-note {
+            background: linear-gradient(135deg, rgba(212, 165, 55, 0.08), rgba(212, 165, 55, 0.02));
+            border: 1px dashed rgba(212, 165, 55, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+            color: var(--brown);
+            line-height: 1.6;
+        }
+
+        .mockup-note strong { color: var(--navy); }
+    </style>
+</head>
+<body>
+    <div class="gradient-bar"></div>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo">
+                    <svg width="22" height="22" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="20" fill="url(#sdG)" fill-opacity="0.08"/><circle cx="36" cy="36" r="20" stroke="url(#sdG)" stroke-width="1.5" stroke-opacity="0.2"/><text x="36" y="42" text-anchor="middle" font-family="Source Serif Pro, serif" font-weight="700" font-size="20" fill="#22333B">SD</text><defs><linearGradient id="sdG" x1="16" y1="16" x2="56" y2="56"><stop stop-color="#00B4CC"/><stop offset="0.5" stop-color="#D4A537"/><stop offset="1" stop-color="#6B4C9A"/></linearGradient></defs></svg>
+                    Strategic District
+                </div>
+                <div class="district-badge">Washoe County SD</div>
+            </div>
+            <nav class="nav-center">
+                <a href="#" class="nav-link">
+                    <svg width="15" height="15" viewBox="0 0 48 48" fill="none"><rect x="10" y="20" width="9" height="16" rx="2" fill="#00B4CC" fill-opacity="0.75"/><rect x="20" y="14" width="9" height="22" rx="2" fill="#00B4CC" fill-opacity="0.5"/><rect x="30" y="8" width="9" height="28" rx="2" fill="#00B4CC" fill-opacity="0.35"/></svg>
+                    Plan Builder
+                </a>
+                <a href="#" class="nav-link active">
+                    <svg width="15" height="15" viewBox="0 0 48 48" fill="none"><polyline points="8,34 16,26 24,30 32,16 40,12" stroke="#6ECF6E" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="32" cy="16" r="3" fill="#6ECF6E" fill-opacity="0.8"/></svg>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-link">
+                    <svg width="15" height="15" viewBox="0 0 48 48" fill="none"><rect x="14" y="24" width="20" height="14" rx="2" fill="#E07A5F" fill-opacity="0.6"/><polygon points="24,12 12,26 36,26" fill="#E07A5F" fill-opacity="0.4"/></svg>
+                    School Plans
+                </a>
+            </nav>
+            <div class="nav-actions">
+                <button class="btn-ghost">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Export
+                </button>
+                <button class="btn-primary">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== DASHBOARD HERO WITH KPIs ===== -->
+    <div class="dash-hero">
+        <div class="dash-hero-inner">
+            <div class="dash-hero-top">
+                <div>
+                    <h1 class="dash-hero-title">Progress Dashboard</h1>
+                    <p class="dash-hero-subtitle">Monitoring your strategic plan health and implementation progress</p>
+                </div>
+                <div class="dash-hero-meta">
+                    <div class="meta-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(234,224,213,0.5)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <strong>2025-26</strong>
+                    </div>
+                    <div class="meta-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(234,224,213,0.5)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Updated <strong>Mar 28, 2026</strong>
+                    </div>
+                    <div class="meta-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(234,224,213,0.5)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <strong>78%</strong> complete
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-strip" style="position: relative;">
+                <!-- KPI 1: Health Score -->
+                <div class="kpi-card">
+                    <div class="kpi-icon-row">
+                        <div class="kpi-icon" style="background: rgba(110, 207, 110, 0.15);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6ECF6E" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        </div>
+                        <span class="kpi-trend trend-up">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"/></svg>
+                            +12
+                        </span>
+                    </div>
+                    <div class="kpi-value">76</div>
+                    <div class="kpi-label">Plan Health Score</div>
+                    <div class="kpi-sparkline"><canvas id="sparkHealth"></canvas></div>
+                </div>
+
+                <!-- KPI 2: Goals Progress -->
+                <div class="kpi-card">
+                    <div class="kpi-icon-row">
+                        <div class="kpi-icon" style="background: rgba(0, 180, 204, 0.15);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00B4CC" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
+                        </div>
+                        <span class="kpi-trend trend-up">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"/></svg>
+                            +8%
+                        </span>
+                    </div>
+                    <div class="kpi-value">67%</div>
+                    <div class="kpi-label">Goals On Track</div>
+                    <div class="kpi-sparkline"><canvas id="sparkGoals"></canvas></div>
+                </div>
+
+                <!-- KPI 3: Budget Utilization -->
+                <div class="kpi-card">
+                    <div class="kpi-icon-row">
+                        <div class="kpi-icon" style="background: rgba(212, 165, 55, 0.15);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A537" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                        </div>
+                        <span class="kpi-trend trend-neutral">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            On pace
+                        </span>
+                    </div>
+                    <div class="kpi-value">54%</div>
+                    <div class="kpi-label">Budget Utilized</div>
+                    <div class="kpi-sparkline"><canvas id="sparkBudget"></canvas></div>
+                </div>
+
+                <!-- KPI 4: Implementation -->
+                <div class="kpi-card">
+                    <div class="kpi-icon-row">
+                        <div class="kpi-icon" style="background: rgba(107, 76, 154, 0.15);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B4C9A" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </div>
+                        <span class="kpi-trend trend-up">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"/></svg>
+                            +15%
+                        </span>
+                    </div>
+                    <div class="kpi-value">62%</div>
+                    <div class="kpi-label">Implementation Rate</div>
+                    <div class="kpi-sparkline"><canvas id="sparkImpl"></canvas></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+        <div class="mockup-note">
+            <strong>Dashboard Mockup — Proposed Redesign</strong><br>
+            What's new: Navy hero with glassmorphism KPI cards &amp; sparklines, Chart.js visualizations, scroll-reveal animations, toast notifications (replacing alert()), redesigned goal cards with accent bars &amp; mini-charts, stacked budget visualization, streamlined equity table, improved empty states with glassmorphism SVG icons. All sample data — production will pull from localStorage as before.
+        </div>
+
+        <!-- ===== STRATEGIC GOALS ===== -->
+        <div class="section reveal">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="24" r="16" fill="rgba(0,180,204,0.08)" stroke="rgba(0,180,204,0.2)" stroke-width="1.5"/>
+                        <circle cx="24" cy="24" r="10" fill="rgba(0,180,204,0.12)" stroke="rgba(0,180,204,0.3)" stroke-width="1"/>
+                        <circle cx="24" cy="24" r="4" fill="#00B4CC"/>
+                    </svg>
+                    Strategic Goals
+                    <span class="section-count">6 goals</span>
+                </h2>
+                <div class="filter-pills">
+                    <button class="filter-pill active">All</button>
+                    <button class="filter-pill">On Track</button>
+                    <button class="filter-pill">At Risk</button>
+                    <button class="filter-pill">Off Track</button>
+                </div>
+            </div>
+
+            <div class="goals-grid stagger">
+                <!-- Goal 1: On Track -->
+                <div class="goal-card glass-card reveal" style="--i:0; padding: 0;">
+                    <div class="goal-accent on-track"></div>
+                    <div class="goal-body">
+                        <div class="goal-top-row">
+                            <div class="goal-name">Increase 4-year graduation rate for all students</div>
+                            <div class="goal-badges">
+                                <span class="badge badge-domain">Student Achievement</span>
+                                <span class="badge badge-on-track">On Track</span>
+                            </div>
+                        </div>
+                        <div class="goal-metrics-row">
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Baseline</div>
+                                <div class="goal-metric-value">81.2%</div>
+                            </div>
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Current</div>
+                                <div class="goal-metric-value">84.7%</div>
+                            </div>
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Target</div>
+                                <div class="goal-metric-value">87.0%</div>
+                            </div>
+                            <div class="goal-progress-area">
+                                <div class="progress-header">
+                                    <span>Progress</span>
+                                    <span style="font-weight: 600; color: var(--navy);">60%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill fill-green" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goal-chart-area">
+                        <div class="goal-mini-chart"><canvas id="goalChart1"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Goal 2: At Risk -->
+                <div class="goal-card glass-card reveal" style="--i:1; padding: 0;">
+                    <div class="goal-accent at-risk"></div>
+                    <div class="goal-body">
+                        <div class="goal-top-row">
+                            <div class="goal-name">Reduce chronic absenteeism rate district-wide</div>
+                            <div class="goal-badges">
+                                <span class="badge badge-domain">Attendance</span>
+                                <span class="badge badge-at-risk">At Risk</span>
+                            </div>
+                        </div>
+                        <div class="goal-metrics-row">
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Baseline</div>
+                                <div class="goal-metric-value">28.4%</div>
+                            </div>
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Current</div>
+                                <div class="goal-metric-value">25.1%</div>
+                            </div>
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Target</div>
+                                <div class="goal-metric-value">20.0%</div>
+                            </div>
+                            <div class="goal-progress-area">
+                                <div class="progress-header">
+                                    <span>Progress</span>
+                                    <span style="font-weight: 600; color: var(--navy);">39%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill fill-gold" style="width: 39%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goal-chart-area">
+                        <div class="goal-mini-chart"><canvas id="goalChart2"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Goal 3: On Track -->
+                <div class="goal-card glass-card reveal" style="--i:2; padding: 0;">
+                    <div class="goal-accent on-track"></div>
+                    <div class="goal-body">
+                        <div class="goal-top-row">
+                            <div class="goal-name">Improve ELA proficiency in grades 3-8</div>
+                            <div class="goal-badges">
+                                <span class="badge badge-domain">Academic Growth</span>
+                                <span class="badge badge-on-track">On Track</span>
+                            </div>
+                        </div>
+                        <div class="goal-metrics-row">
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Baseline</div>
+                                <div class="goal-metric-value">42.3%</div>
+                            </div>
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Current</div>
+                                <div class="goal-metric-value">47.8%</div>
+                            </div>
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Target</div>
+                                <div class="goal-metric-value">50.0%</div>
+                            </div>
+                            <div class="goal-progress-area">
+                                <div class="progress-header">
+                                    <span>Progress</span>
+                                    <span style="font-weight: 600; color: var(--navy);">71%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill fill-green" style="width: 71%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goal-chart-area">
+                        <div class="goal-mini-chart"><canvas id="goalChart3"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Goal 4: Off Track -->
+                <div class="goal-card glass-card reveal" style="--i:3; padding: 0;">
+                    <div class="goal-accent off-track"></div>
+                    <div class="goal-body">
+                        <div class="goal-top-row">
+                            <div class="goal-name">Increase certified staff retention rate</div>
+                            <div class="goal-badges">
+                                <span class="badge badge-domain">Talent Management</span>
+                                <span class="badge badge-off-track">Off Track</span>
+                            </div>
+                        </div>
+                        <div class="goal-metrics-row">
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Baseline</div>
+                                <div class="goal-metric-value">78.5%</div>
+                            </div>
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Current</div>
+                                <div class="goal-metric-value">79.1%</div>
+                            </div>
+                            <div class="goal-metric">
+                                <div class="goal-metric-label">Target</div>
+                                <div class="goal-metric-value">88.0%</div>
+                            </div>
+                            <div class="goal-progress-area">
+                                <div class="progress-header">
+                                    <span>Progress</span>
+                                    <span style="font-weight: 600; color: var(--navy);">6%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill fill-coral" style="width: 6%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goal-chart-area">
+                        <div class="goal-mini-chart"><canvas id="goalChart4"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== INITIATIVES ===== -->
+        <div class="section reveal">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+                        <rect x="8" y="8" width="32" height="32" rx="8" fill="rgba(107,76,154,0.08)" stroke="rgba(107,76,154,0.2)" stroke-width="1.5"/>
+                        <path d="M18 24l4 4 8-8" stroke="#6B4C9A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                    Initiatives
+                    <span class="section-count">8 initiatives</span>
+                </h2>
+                <div class="filter-pills">
+                    <button class="filter-pill active">All</button>
+                    <button class="filter-pill">Not Started</button>
+                    <button class="filter-pill">In Progress</button>
+                    <button class="filter-pill">Complete</button>
+                </div>
+            </div>
+
+            <div class="initiatives-grid stagger">
+                <div class="initiative-card reveal" style="--i:0">
+                    <div class="glass-card">
+                        <div class="init-header">
+                            <div class="init-name">Early Warning System (Insight) Expansion</div>
+                            <div class="init-status-dot dot-in-progress"></div>
+                        </div>
+                        <div class="init-tags">
+                            <span class="init-tag">Student Achievement</span>
+                            <span class="init-tag owner">Dr. Stark</span>
+                        </div>
+                        <div class="progress-bar" style="margin-bottom: 0.75rem;">
+                            <div class="progress-fill fill-teal" style="width: 72%;"></div>
+                        </div>
+                        <div class="init-details">
+                            <div class="init-detail-row"><span>Progress</span><strong>72%</strong></div>
+                            <div class="init-detail-row"><span>Budget</span><strong>$145,000</strong></div>
+                            <div class="init-detail-row"><span>Timeline</span><strong>Aug 2025 - Jun 2026</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="initiative-card reveal" style="--i:1">
+                    <div class="glass-card">
+                        <div class="init-header">
+                            <div class="init-name">Chronic Absenteeism Tiered Intervention</div>
+                            <div class="init-status-dot dot-in-progress"></div>
+                        </div>
+                        <div class="init-tags">
+                            <span class="init-tag">Attendance</span>
+                            <span class="init-tag owner">Student Services</span>
+                        </div>
+                        <div class="progress-bar" style="margin-bottom: 0.75rem;">
+                            <div class="progress-fill fill-teal" style="width: 48%;"></div>
+                        </div>
+                        <div class="init-details">
+                            <div class="init-detail-row"><span>Progress</span><strong>48%</strong></div>
+                            <div class="init-detail-row"><span>Budget</span><strong>$210,000</strong></div>
+                            <div class="init-detail-row"><span>Timeline</span><strong>Sep 2025 - May 2026</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="initiative-card reveal" style="--i:2">
+                    <div class="glass-card">
+                        <div class="init-header">
+                            <div class="init-name">K-3 Structured Literacy Implementation</div>
+                            <div class="init-status-dot dot-in-progress"></div>
+                        </div>
+                        <div class="init-tags">
+                            <span class="init-tag">Academic Growth</span>
+                            <span class="init-tag owner">Curriculum Dept.</span>
+                        </div>
+                        <div class="progress-bar" style="margin-bottom: 0.75rem;">
+                            <div class="progress-fill fill-teal" style="width: 65%;"></div>
+                        </div>
+                        <div class="init-details">
+                            <div class="init-detail-row"><span>Progress</span><strong>65%</strong></div>
+                            <div class="init-detail-row"><span>Budget</span><strong>$320,000</strong></div>
+                            <div class="init-detail-row"><span>Timeline</span><strong>Jul 2025 - Jun 2026</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="initiative-card reveal" style="--i:3">
+                    <div class="glass-card">
+                        <div class="init-header">
+                            <div class="init-name">Teacher Retention & Mentorship Program</div>
+                            <div class="init-status-dot dot-not-started"></div>
+                        </div>
+                        <div class="init-tags">
+                            <span class="init-tag">Talent Management</span>
+                            <span class="init-tag owner">HR</span>
+                        </div>
+                        <div class="progress-bar" style="margin-bottom: 0.75rem;">
+                            <div class="progress-fill fill-coral" style="width: 5%;"></div>
+                        </div>
+                        <div class="init-details">
+                            <div class="init-detail-row"><span>Progress</span><strong>5%</strong></div>
+                            <div class="init-detail-row"><span>Budget</span><strong>$85,000</strong></div>
+                            <div class="init-detail-row"><span>Timeline</span><strong>Jan 2026 - Jun 2026</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="initiative-card reveal" style="--i:4">
+                    <div class="glass-card">
+                        <div class="init-header">
+                            <div class="init-name">Family & Community Engagement Platform</div>
+                            <div class="init-status-dot dot-complete"></div>
+                        </div>
+                        <div class="init-tags">
+                            <span class="init-tag">Community</span>
+                            <span class="init-tag owner">Communications</span>
+                        </div>
+                        <div class="progress-bar" style="margin-bottom: 0.75rem;">
+                            <div class="progress-fill fill-green" style="width: 100%;"></div>
+                        </div>
+                        <div class="init-details">
+                            <div class="init-detail-row"><span>Progress</span><strong>100%</strong></div>
+                            <div class="init-detail-row"><span>Budget</span><strong>$42,000</strong></div>
+                            <div class="init-detail-row"><span>Timeline</span><strong>Complete</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="initiative-card reveal" style="--i:5">
+                    <div class="glass-card">
+                        <div class="init-header">
+                            <div class="init-name">Data Literacy PD Series for Principals</div>
+                            <div class="init-status-dot dot-in-progress"></div>
+                        </div>
+                        <div class="init-tags">
+                            <span class="init-tag">Data Culture</span>
+                            <span class="init-tag owner">Analytics Team</span>
+                        </div>
+                        <div class="progress-bar" style="margin-bottom: 0.75rem;">
+                            <div class="progress-fill fill-teal" style="width: 80%;"></div>
+                        </div>
+                        <div class="init-details">
+                            <div class="init-detail-row"><span>Progress</span><strong>80%</strong></div>
+                            <div class="init-detail-row"><span>Budget</span><strong>$28,000</strong></div>
+                            <div class="init-detail-row"><span>Timeline</span><strong>Oct 2025 - Apr 2026</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== BUDGET & FUNDING ===== -->
+        <div class="section reveal">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="24" r="16" fill="rgba(212,165,55,0.08)" stroke="rgba(212,165,55,0.2)" stroke-width="1.5"/>
+                        <text x="24" y="29" text-anchor="middle" font-family="Source Serif Pro, serif" font-weight="700" font-size="18" fill="#D4A537">$</text>
+                    </svg>
+                    Budget & Funding
+                </h2>
+            </div>
+
+            <div class="budget-layout">
+                <!-- Budget Summary Card -->
+                <div class="glass-card">
+                    <div class="budget-main-stat">
+                        <div class="budget-big-number">$1,250,000</div>
+                        <div class="budget-big-label">Total Budget</div>
+                    </div>
+                    <div class="budget-breakdown">
+                        <div class="budget-bar">
+                            <div class="budget-bar-segment" style="width: 54%; background: var(--teal);"></div>
+                            <div class="budget-bar-segment" style="width: 12%; background: var(--gold);"></div>
+                            <div class="budget-bar-segment" style="width: 34%; background: rgba(94, 80, 63, 0.1);"></div>
+                        </div>
+                        <div class="budget-legend">
+                            <div class="budget-legend-item">
+                                <div class="budget-legend-left">
+                                    <div class="legend-dot" style="background: var(--teal);"></div>
+                                    <span class="budget-legend-label">Spent</span>
+                                </div>
+                                <span class="budget-legend-value">$675,000</span>
+                            </div>
+                            <div class="budget-legend-item">
+                                <div class="budget-legend-left">
+                                    <div class="legend-dot" style="background: var(--gold);"></div>
+                                    <span class="budget-legend-label">Committed</span>
+                                </div>
+                                <span class="budget-legend-value">$155,000</span>
+                            </div>
+                            <div class="budget-legend-item">
+                                <div class="budget-legend-left">
+                                    <div class="legend-dot" style="background: rgba(94, 80, 63, 0.15);"></div>
+                                    <span class="budget-legend-label">Remaining</span>
+                                </div>
+                                <span class="budget-legend-value">$420,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Funding Sources Chart -->
+                <div class="glass-card">
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--brown); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 1rem;">Funding Sources</div>
+                    <div class="chart-container" style="height: 200px;">
+                        <canvas id="fundingChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Budget by Initiative -->
+                <div class="glass-card">
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--brown); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 1rem;">Spend by Initiative</div>
+                    <div class="chart-container" style="height: 200px;">
+                        <canvas id="spendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== QUARTERLY CHECK-IN ===== -->
+        <div class="section reveal">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+                        <rect x="8" y="6" width="32" height="36" rx="6" fill="rgba(0,180,204,0.08)" stroke="rgba(0,180,204,0.2)" stroke-width="1.5"/>
+                        <line x1="16" y1="16" x2="32" y2="16" stroke="rgba(0,180,204,0.3)" stroke-width="1.5"/>
+                        <line x1="16" y1="22" x2="28" y2="22" stroke="rgba(0,180,204,0.25)" stroke-width="1.5"/>
+                        <line x1="16" y1="28" x2="30" y2="28" stroke="rgba(0,180,204,0.2)" stroke-width="1.5"/>
+                    </svg>
+                    Quarterly Check-In
+                </h2>
+            </div>
+
+            <div class="quarter-nav">
+                <button class="quarter-btn">Q1 <span style="font-size: 0.7rem; opacity: 0.6;">Jul-Sep</span></button>
+                <button class="quarter-btn">Q2 <span style="font-size: 0.7rem; opacity: 0.6;">Oct-Dec</span></button>
+                <button class="quarter-btn active">Q3 <span style="font-size: 0.7rem; opacity: 0.6;">Jan-Mar</span></button>
+                <button class="quarter-btn">Q4 <span style="font-size: 0.7rem; opacity: 0.6;">Apr-Jun</span></button>
+            </div>
+
+            <div class="checkin-grid stagger">
+                <div class="glass-card checkin-card reveal" style="--i:0">
+                    <div class="checkin-goal-name">Increase 4-year graduation rate for all students</div>
+                    <div class="checkin-input-group">
+                        <label class="checkin-label">Current Value</label>
+                        <input type="number" class="checkin-input" placeholder="e.g. 84.7" value="84.7">
+                    </div>
+                    <div class="checkin-input-group">
+                        <label class="checkin-label">Qualitative Update</label>
+                        <textarea class="checkin-input" placeholder="Describe progress, barriers, and next steps...">Q3 data shows continued improvement. Targeted interventions at Title I schools showing strongest gains. Need to monitor 12th grade cohort closely heading into Q4.</textarea>
+                    </div>
+                </div>
+
+                <div class="glass-card checkin-card reveal" style="--i:1">
+                    <div class="checkin-goal-name">Reduce chronic absenteeism rate district-wide</div>
+                    <div class="checkin-input-group">
+                        <label class="checkin-label">Current Value</label>
+                        <input type="number" class="checkin-input" placeholder="e.g. 25.1" value="25.1">
+                    </div>
+                    <div class="checkin-input-group">
+                        <label class="checkin-label">Qualitative Update</label>
+                        <textarea class="checkin-input" placeholder="Describe progress, barriers, and next steps...">Winter months created a spike. Re-engagement campaign launched in February. Mentoring program is underperforming at 3 middle schools. Escalating to area superintendents.</textarea>
+                    </div>
+                </div>
+
+                <div class="glass-card checkin-card reveal" style="--i:2">
+                    <div class="checkin-goal-name">Improve ELA proficiency in grades 3-8</div>
+                    <div class="checkin-input-group">
+                        <label class="checkin-label">Current Value</label>
+                        <input type="number" class="checkin-input" placeholder="e.g. 47.8" value="47.8">
+                    </div>
+                    <div class="checkin-input-group">
+                        <label class="checkin-label">Qualitative Update</label>
+                        <textarea class="checkin-input" placeholder="Describe progress, barriers, and next steps...">Mid-year benchmark data positive. Structured literacy rollout on track. Grades 3-5 outpacing 6-8. Additional coaching support allocated for middle school ELA teams.</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.25rem;">
+                <button class="save-checkin-btn" onclick="showToast('Q3 check-in saved successfully', 'success')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    Save Q3 Check-In
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== EQUITY ANALYSIS ===== -->
+        <div class="section reveal">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+                        <circle cx="16" cy="24" r="8" fill="rgba(224,122,95,0.08)" stroke="rgba(224,122,95,0.2)" stroke-width="1.5"/>
+                        <circle cx="32" cy="24" r="8" fill="rgba(0,180,204,0.08)" stroke="rgba(0,180,204,0.2)" stroke-width="1.5"/>
+                        <path d="M24 18v12" stroke="rgba(107,76,154,0.3)" stroke-width="1.5" stroke-dasharray="2 2"/>
+                    </svg>
+                    Equity Analysis
+                </h2>
+            </div>
+
+            <div class="equity-layout">
+                <div class="glass-card">
+                    <div class="equity-goal-title">Graduation Rate by Subgroup</div>
+                    <div class="equity-header-row">
+                        <div class="equity-header-label">Subgroup</div>
+                        <div class="equity-header-label">Progress</div>
+                        <div class="equity-header-label">Base</div>
+                        <div class="equity-header-label">Current</div>
+                        <div class="equity-header-label">Target</div>
+                    </div>
+                    <div class="equity-row">
+                        <div class="equity-group-name">Hispanic/Latino</div>
+                        <div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill fill-green" style="width: 55%;"></div></div></div>
+                        <div class="equity-val">72.1%</div>
+                        <div class="equity-val">76.8%</div>
+                        <div class="equity-val">80.0%</div>
+                    </div>
+                    <div class="equity-row">
+                        <div class="equity-group-name">Black/AA</div>
+                        <div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill fill-gold" style="width: 35%;"></div></div></div>
+                        <div class="equity-val">68.3%</div>
+                        <div class="equity-val">71.0%</div>
+                        <div class="equity-val">78.0%</div>
+                    </div>
+                    <div class="equity-row">
+                        <div class="equity-group-name">IEP Students</div>
+                        <div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill fill-coral" style="width: 20%;"></div></div></div>
+                        <div class="equity-val">55.2%</div>
+                        <div class="equity-val">57.4%</div>
+                        <div class="equity-val">66.0%</div>
+                    </div>
+                    <div class="equity-row">
+                        <div class="equity-group-name">ELL Students</div>
+                        <div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill fill-teal" style="width: 48%;"></div></div></div>
+                        <div class="equity-val">61.7%</div>
+                        <div class="equity-val">66.5%</div>
+                        <div class="equity-val">72.0%</div>
+                    </div>
+                    <div class="equity-row">
+                        <div class="equity-group-name">FRL Students</div>
+                        <div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill fill-green" style="width: 52%;"></div></div></div>
+                        <div class="equity-val">70.8%</div>
+                        <div class="equity-val">75.1%</div>
+                        <div class="equity-val">79.0%</div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="equity-goal-title">Chronic Absenteeism by Subgroup</div>
+                    <div class="equity-header-row">
+                        <div class="equity-header-label">Subgroup</div>
+                        <div class="equity-header-label">Progress</div>
+                        <div class="equity-header-label">Base</div>
+                        <div class="equity-header-label">Current</div>
+                        <div class="equity-header-label">Target</div>
+                    </div>
+                    <div class="equity-row">
+                        <div class="equity-group-name">Hispanic/Latino</div>
+                        <div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill fill-gold" style="width: 30%;"></div></div></div>
+                        <div class="equity-val">32.1%</div>
+                        <div class="equity-val">29.8%</div>
+                        <div class="equity-val">24.0%</div>
+                    </div>
+                    <div class="equity-row">
+                        <div class="equity-group-name">Black/AA</div>
+                        <div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill fill-coral" style="width: 18%;"></div></div></div>
+                        <div class="equity-val">38.6%</div>
+                        <div class="equity-val">36.2%</div>
+                        <div class="equity-val">26.0%</div>
+                    </div>
+                    <div class="equity-row">
+                        <div class="equity-group-name">IEP Students</div>
+                        <div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill fill-coral" style="width: 12%;"></div></div></div>
+                        <div class="equity-val">41.2%</div>
+                        <div class="equity-val">39.8%</div>
+                        <div class="equity-val">30.0%</div>
+                    </div>
+                    <div class="equity-row">
+                        <div class="equity-group-name">ELL Students</div>
+                        <div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill fill-gold" style="width: 28%;"></div></div></div>
+                        <div class="equity-val">35.4%</div>
+                        <div class="equity-val">32.7%</div>
+                        <div class="equity-val">26.0%</div>
+                    </div>
+                    <div class="equity-row">
+                        <div class="equity-group-name">FRL Students</div>
+                        <div class="equity-bar-cell"><div class="equity-mini-bar"><div class="equity-mini-fill fill-gold" style="width: 33%;"></div></div></div>
+                        <div class="equity-val">34.0%</div>
+                        <div class="equity-val">31.2%</div>
+                        <div class="equity-val">25.0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== DRIFT DETECTION ===== -->
+        <div class="section reveal">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+                        <path d="M24 8L40 38H8L24 8Z" fill="rgba(224,122,95,0.08)" stroke="rgba(224,122,95,0.25)" stroke-width="1.5" stroke-linejoin="round"/>
+                        <line x1="24" y1="18" x2="24" y2="28" stroke="#E07A5F" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="24" cy="33" r="1.5" fill="#E07A5F"/>
+                    </svg>
+                    Progress Drift Detection
+                </h2>
+            </div>
+
+            <div class="drift-grid">
+                <div class="drift-card glass-card" style="padding: 0;">
+                    <div class="drift-accent severe"></div>
+                    <div class="drift-body">
+                        <div class="drift-title">Staff Retention Rate: Significantly Behind Plan</div>
+                        <div class="drift-description">Expected 82.3% by Q3 based on trajectory. Actual is 79.1%. The mentorship program hasn't launched yet and winter attrition was higher than projected. Recommend emergency review with HR leadership.</div>
+                    </div>
+                    <div class="drift-action-area">
+                        <div class="drift-metric">
+                            <div class="drift-metric-value behind">-3.2%</div>
+                            <div class="drift-metric-label">behind plan</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="drift-card glass-card" style="padding: 0;">
+                    <div class="drift-accent moderate"></div>
+                    <div class="drift-body">
+                        <div class="drift-title">Chronic Absenteeism: Slightly Behind Plan</div>
+                        <div class="drift-description">Expected 23.3% by Q3, actual is 25.1%. Winter spike was anticipated but recovery is slower than planned. Re-engagement campaigns active but underperforming at 3 middle schools.</div>
+                    </div>
+                    <div class="drift-action-area">
+                        <div class="drift-metric">
+                            <div class="drift-metric-value behind">+1.8%</div>
+                            <div class="drift-metric-label">above target</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ===== TOAST SYSTEM =====
+        function showToast(message, type) {
+            var container = document.getElementById('toastContainer');
+            var toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            var icon = type === 'success'
+                ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>'
+                : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+            toast.innerHTML = icon + message;
+            container.appendChild(toast);
+
+            setTimeout(function() {
+                toast.style.animation = 'toastOut 0.3s ease forwards';
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 3000);
+        }
+
+        // ===== FILTER PILLS =====
+        document.querySelectorAll('.filter-pills').forEach(function(group) {
+            group.querySelectorAll('.filter-pill').forEach(function(pill) {
+                pill.addEventListener('click', function() {
+                    group.querySelectorAll('.filter-pill').forEach(function(p) { p.classList.remove('active'); });
+                    pill.classList.add('active');
+                    showToast('Filter applied: ' + pill.textContent, 'success');
+                });
+            });
+        });
+
+        // ===== QUARTER NAV =====
+        document.querySelectorAll('.quarter-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.quarter-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+            });
+        });
+
+        // ===== CHART.JS SPARKLINES =====
+        function drawSparkline(canvasId, data, color) {
+            var canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            var ctx = canvas.getContext('2d');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(function(_, i) { return ''; }),
+                    datasets: [{
+                        data: data,
+                        borderColor: color,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: color,
+                        fill: true,
+                        backgroundColor: function(context) {
+                            var chart = context.chart;
+                            var ctx2 = chart.ctx;
+                            var gradient = ctx2.createLinearGradient(0, 0, 0, 32);
+                            gradient.addColorStop(0, color.replace(')', ', 0.2)').replace('rgb', 'rgba'));
+                            gradient.addColorStop(1, color.replace(')', ', 0)').replace('rgb', 'rgba'));
+                            return gradient;
+                        },
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    },
+                    elements: { line: { borderCapStyle: 'round' } }
+                }
+            });
+        }
+
+        // ===== MINI GOAL CHARTS =====
+        function drawGoalMiniChart(canvasId, baseline, current, target, color) {
+            var canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            var ctx = canvas.getContext('2d');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Base', 'Now', 'Goal'],
+                    datasets: [{
+                        data: [baseline, current, target],
+                        backgroundColor: [
+                            'rgba(94, 80, 63, 0.12)',
+                            color,
+                            'rgba(94, 80, 63, 0.06)'
+                        ],
+                        borderColor: [
+                            'rgba(94, 80, 63, 0.2)',
+                            color,
+                            'rgba(94, 80, 63, 0.15)'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 3,
+                        barPercentage: 0.7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
+        // ===== FUNDING DOUGHNUT =====
+        function drawFundingChart() {
+            var canvas = document.getElementById('fundingChart');
+            if (!canvas) return;
+            var ctx = canvas.getContext('2d');
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Title I', 'General Fund', 'State Grant', 'ESSER', 'Donations'],
+                    datasets: [{
+                        data: [420000, 380000, 250000, 150000, 50000],
+                        backgroundColor: [
+                            '#00B4CC', '#22333B', '#D4A537', '#6ECF6E', '#6B4C9A'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 8,
+                                boxHeight: 8,
+                                borderRadius: 4,
+                                useBorderRadius: true,
+                                padding: 12,
+                                font: { size: 11, family: 'Inter' },
+                                color: '#5E503F'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ===== SPEND BY INITIATIVE =====
+        function drawSpendChart() {
+            var canvas = document.getElementById('spendChart');
+            if (!canvas) return;
+            var ctx = canvas.getContext('2d');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Literacy', 'Absenteeism', 'Insight EWS', 'Retention', 'Engagement', 'Data PD'],
+                    datasets: [{
+                        label: 'Budget',
+                        data: [320000, 210000, 145000, 85000, 42000, 28000],
+                        backgroundColor: 'rgba(0, 180, 204, 0.15)',
+                        borderColor: 'rgba(0, 180, 204, 0.4)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }, {
+                        label: 'Spent',
+                        data: [198000, 95000, 104000, 4200, 42000, 22000],
+                        backgroundColor: 'rgba(0, 180, 204, 0.7)',
+                        borderColor: 'var(--teal)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                boxWidth: 8,
+                                boxHeight: 8,
+                                borderRadius: 4,
+                                useBorderRadius: true,
+                                padding: 12,
+                                font: { size: 11, family: 'Inter' },
+                                color: '#5E503F'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(94, 80, 63, 0.06)' },
+                            ticks: {
+                                callback: function(val) { return '$' + (val/1000) + 'k'; },
+                                font: { size: 10 },
+                                color: '#999'
+                            }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { size: 10, family: 'Inter' },
+                                color: '#5E503F'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ===== SCROLL REVEAL =====
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            observer.observe(el);
+        });
+
+        // ===== INIT ALL CHARTS =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sparklines
+            drawSparkline('sparkHealth', [52, 55, 60, 58, 64, 68, 71, 76], 'rgb(110, 207, 110)');
+            drawSparkline('sparkGoals', [40, 42, 50, 48, 55, 60, 63, 67], 'rgb(0, 180, 204)');
+            drawSparkline('sparkBudget', [8, 15, 22, 30, 36, 42, 48, 54], 'rgb(212, 165, 55)');
+            drawSparkline('sparkImpl', [10, 18, 25, 32, 38, 45, 55, 62], 'rgb(107, 76, 154)');
+
+            // Mini goal charts
+            drawGoalMiniChart('goalChart1', 81.2, 84.7, 87.0, 'rgba(110, 207, 110, 0.7)');
+            drawGoalMiniChart('goalChart2', 28.4, 25.1, 20.0, 'rgba(212, 165, 55, 0.7)');
+            drawGoalMiniChart('goalChart3', 42.3, 47.8, 50.0, 'rgba(110, 207, 110, 0.7)');
+            drawGoalMiniChart('goalChart4', 78.5, 79.1, 88.0, 'rgba(224, 122, 95, 0.7)');
+
+            // Budget charts
+            drawFundingChart();
+            drawSpendChart();
+        });
+    </script>
+</body>
+</html>

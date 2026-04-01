@@ -1,0 +1,467 @@
+{
+  "timestamp": "2026-03-30T23:45:00Z",
+  "environment": {
+    "node": "v22.22.0",
+    "os": "linux",
+    "osVersion": "6.8.0-94-generic #96~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC"
+  },
+  "results": [
+    {
+      "file": "structural-checks-district.js",
+      "status": "FAIL",
+      "attempts": 1,
+      "testsRun": 31,
+      "testsPassed": 29,
+      "testsFailed": 2,
+      "failures": [
+        {
+          "testName": "All static IDs exist in HTML",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Missing HTML element IDs: perPupilExpenditure, customDomainName, customDomainDesc, customCoreValue, customCompCategory. These are referenced in JS files but not created in the district HTML template."
+        },
+        {
+          "testName": "All onclick handlers exported to window",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Missing onclick handler exports: stepGoto, clearStep, clearEntirePlan, filterTemplates, applyTemplate. Functions defined in JS but not exposed to window scope."
+        }
+      ],
+      "healingLog": []
+    },
+    {
+      "file": "structural-checks-school.js",
+      "status": "FAIL",
+      "attempts": 1,
+      "testsRun": 24,
+      "testsPassed": 23,
+      "testsFailed": 1,
+      "failures": [
+        {
+          "testName": "All static IDs exist in HTML",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Missing HTML element IDs for goal modal: goalBuilderModal, goalNeed, goalRootCause, goalStatement, goalMetric, goalTarget, goalDate. These fields are referenced in school.js but not created in the strategic-school HTML template."
+        }
+      ],
+      "healingLog": []
+    },
+    {
+      "file": "budget-math-checks.js",
+      "status": "FAIL",
+      "attempts": 1,
+      "testsRun": 15,
+      "testsPassed": 11,
+      "testsFailed": 4,
+      "failures": [
+        {
+          "testName": "FUNDING_SOURCES defined",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "FUNDING_SOURCES constant/object not found in any budget JS file. Referenced by budget logic but never defined. Likely should be in budget-setup.js or a constants file."
+        },
+        {
+          "testName": "Feasibility weights sum to ~1.0",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "calculateFeasibilityScore function in budget-integration.js (line 519) cannot be parsed for weight values. Function may be missing or have syntax issues preventing weight extraction."
+        },
+        {
+          "testName": "Budget containers in HTML",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Only 1 of 5 expected budget container elements found in HTML. Missing containers for budget display, allocation, tracker, or summary sections."
+        },
+        {
+          "testName": "Budget validation logic present",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P0",
+          "details": "Budget validation logic not found in budget-setup.js or budget-integration.js. No function checking minimum budget, maximum allocation, or constraint enforcement."
+        }
+      ],
+      "healingLog": []
+    },
+    {
+      "file": "duplicate-function-checks.js",
+      "status": "FAIL",
+      "attempts": 1,
+      "testsRun": 45,
+      "testsPassed": 1,
+      "testsFailed": 44,
+      "failures": [
+        {
+          "testName": "[P0] calculateFeasibilityScore: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P0",
+          "details": "calculateFeasibilityScore exists in both js/ai-engine.js:725 (takes planState) and js/budget-integration.js:519 (no params). Critical conflict with different signatures and logic."
+        },
+        {
+          "testName": "[P0] updateBudgetSummary: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P0",
+          "details": "updateBudgetSummary duplicated in js/budget-alignment.js:118 and js/budget-tracker.js:56 with identical empty signatures. One should be renamed or removed."
+        },
+        {
+          "testName": "[P1] trackDownload: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "trackDownload in js/doc-generator.js:297 (stageId, docType, docName) vs js/toolkit.js:1411 (filename). Different signatures for same purpose."
+        },
+        {
+          "testName": "[P1] generateVisionMissionPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:402 and js/doc-generator.js:2849. Both in same file - likely copy-paste error. Line 2849 region contains 40+ duplicate doc generation functions."
+        },
+        {
+          "testName": "[P1] generateVisionWorkshopPPTX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:498 and js/doc-generator.js:2850. Both in same file."
+        },
+        {
+          "testName": "[P1] generateStakeholderSurveyDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:680 and js/doc-generator.js:2851. Both in same file."
+        },
+        {
+          "testName": "[P1] generateFocusGroupGuideDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:738 and js/doc-generator.js:2852. Both in same file."
+        },
+        {
+          "testName": "[P1] generateBoardVisionPPTX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:815 and js/doc-generator.js:2853. Both in same file."
+        },
+        {
+          "testName": "[P1] generateValuesReportPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:886 and js/doc-generator.js:2856. Both in same file."
+        },
+        {
+          "testName": "[P1] generateValuesWorkshopPPTX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:963 and js/doc-generator.js:2857. Both in same file."
+        },
+        {
+          "testName": "[P1] generateValuesBehaviorsDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1052 and js/doc-generator.js:2858. Both in same file."
+        },
+        {
+          "testName": "[P1] generateStaffCommsDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1095 and js/doc-generator.js:2859. Both in same file."
+        },
+        {
+          "testName": "[P1] generateBoardValuesPPTX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1150 and js/doc-generator.js:2860. Both in same file."
+        },
+        {
+          "testName": "[P1] generateCompetencyReportPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1208 and js/doc-generator.js:2863. Both in same file."
+        },
+        {
+          "testName": "[P1] generateCompetencyMapDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1263 and js/doc-generator.js:2864. Both in same file."
+        },
+        {
+          "testName": "[P1] generateLeadershipAssessmentDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1309 and js/doc-generator.js:2865. Both in same file."
+        },
+        {
+          "testName": "[P1] generateDomainsReportPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1360 and js/doc-generator.js:2868. Both in same file."
+        },
+        {
+          "testName": "[P1] generateDomainsPPTX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1414 and js/doc-generator.js:2869. Both in same file."
+        },
+        {
+          "testName": "[P1] generatePrioritizationMatrixDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1473 and js/doc-generator.js:2870. Both in same file."
+        },
+        {
+          "testName": "[P1] generateGoalsReportPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1528 and js/doc-generator.js:2873. Both in same file."
+        },
+        {
+          "testName": "[P1] generateGoalWorkshopPPTX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1581 and js/doc-generator.js:2874. Both in same file."
+        },
+        {
+          "testName": "[P1] generateGoalImpactMatrixDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1633 and js/doc-generator.js:2875. Both in same file."
+        },
+        {
+          "testName": "[P1] generateCommunityReviewPPTX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1698 and js/doc-generator.js:2876. Both in same file."
+        },
+        {
+          "testName": "[P1] generateInitiativesPhaseoutDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1710 and js/doc-generator.js:2877. Both in same file."
+        },
+        {
+          "testName": "[P1] generateTechnicalReferenceGuidePDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1754 and js/doc-generator.js:2878. Both in same file."
+        },
+        {
+          "testName": "[P1] generateForecastReportPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1754 and js/doc-generator.js:2879. Both in same file."
+        },
+        {
+          "testName": "[P1] generateScenarioAnalysisPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1764 and js/doc-generator.js:2880. Both in same file."
+        },
+        {
+          "testName": "[P1] generateBoardForecastPPTX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1816 and js/doc-generator.js:2881. Both in same file."
+        },
+        {
+          "testName": "[P1] generateAlignmentReportPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1837 and js/doc-generator.js:2884. Both in same file."
+        },
+        {
+          "testName": "[P1] generateResponsibilityChartDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1891 and js/doc-generator.js:2885. Both in same file."
+        },
+        {
+          "testName": "[P1] generateDeptCommsTemplateDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1933 (planState, department) and js/doc-generator.js:2886 (ps, scope). Different parameter names/meanings."
+        },
+        {
+          "testName": "[P1] generateInitiativesReportPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:1988 and js/doc-generator.js:2889. Both in same file."
+        },
+        {
+          "testName": "[P1] generateInitiativeProposalDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2041 (planState, initiativeId) and js/doc-generator.js:2890 (ps, scope). Different parameter meanings."
+        },
+        {
+          "testName": "[P1] generatePrioritizationMatrixPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2110 and js/doc-generator.js:2891. Both in same file."
+        },
+        {
+          "testName": "[P1] generateRoadmapPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2153 and js/doc-generator.js:2894. Both in same file."
+        },
+        {
+          "testName": "[P1] generateMilestonePlanDOCX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2202 and js/doc-generator.js:2895. Both in same file."
+        },
+        {
+          "testName": "[P1] generateBoardTimelinePPTX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2268 and js/doc-generator.js:2896. Both in same file."
+        },
+        {
+          "testName": "[P1] generateStrategicPlanPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2289 and js/doc-generator.js:2899. Both in same file."
+        },
+        {
+          "testName": "[P1] generateExecutiveSummaryPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2417 and js/doc-generator.js:2900. Both in same file."
+        },
+        {
+          "testName": "[P1] generateBoardAdoptionPPTX: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2464 and js/doc-generator.js:2901. Both in same file."
+        },
+        {
+          "testName": "[P1] generateCommunityPlanPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2522 and js/doc-generator.js:2902. Both in same file."
+        },
+        {
+          "testName": "[P1] generateFeasibilityReportPDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2582 and js/doc-generator.js:2903. Both in same file."
+        },
+        {
+          "testName": "[P1] generateStakeholderEngagementGuidePDF: Defined in 2 files",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "Duplicate at js/doc-generator.js:2638 and js/doc-generator.js:2906. Both in same file. CRITICAL PATTERN: Lines 2849-2906 appear to be wholesale duplicate function definitions."
+        },
+        {
+          "testName": "[P0] calculateFeasibilityScore signatures differ",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P0",
+          "details": "calculateFeasibilityScore has conflicting signatures: ai-engine.js takes (planState), budget-integration.js has undefined params. Logic likely differs between implementations."
+        },
+        {
+          "testName": "[P0] updateBudgetSummary signatures identical",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P0",
+          "details": "updateBudgetSummary duplicated with identical signatures in budget-alignment.js and budget-tracker.js. Entire duplicate function exists in both files."
+        }
+      ],
+      "healingLog": []
+    },
+    {
+      "file": "school-goal-modal-checks.js",
+      "status": "FAIL",
+      "attempts": 1,
+      "testsRun": 31,
+      "testsPassed": 19,
+      "testsFailed": 12,
+      "failures": [
+        {
+          "testName": "HTML contains: goalBuilderModal",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "goalBuilderModal (goal builder modal container) not found in HTML. Element is created dynamically in JS but should have static HTML placeholder."
+        },
+        {
+          "testName": "HTML contains: goalAreaAddModal",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "goalAreaAddModal not found in HTML. Created dynamically but missing static structure."
+        },
+        {
+          "testName": "HTML contains: goalStatement",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "goalStatement input field not in HTML. Used 16 times in JS but no HTML element exists."
+        },
+        {
+          "testName": "HTML contains: goalNeed",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "goalNeed input field not in HTML. Used 2 times in JS but no HTML element."
+        },
+        {
+          "testName": "HTML contains: goalRootCause",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "goalRootCause input field not in HTML. Used 2 times in JS but no HTML element."
+        },
+        {
+          "testName": "HTML contains: goalMetric",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "goalMetric field not in HTML. Used 2 times in JS but no HTML element."
+        },
+        {
+          "testName": "HTML contains: goalTarget",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "goalTarget field not in HTML. Used 2 times in JS but no HTML element."
+        },
+        {
+          "testName": "HTML contains: goalDate",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "goalDate field not in HTML. Used 2 times in JS but no HTML element."
+        },
+        {
+          "testName": "Modal function exists: openGoalModal",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "openGoalModal function not found. Required to open goal builder modal but not defined in school.js."
+        },
+        {
+          "testName": "Modal function exists: closeGoalModal",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "closeGoalModal function not found. Required to close goal builder modal but not defined in school.js."
+        },
+        {
+          "testName": "Modal function exists: editGoal",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "editGoal function not found. Required for editing existing goals but not defined in school.js."
+        },
+        {
+          "testName": "Modal function exists: deleteGoal",
+          "diagnosis": "SOURCE_BUG",
+          "severity": "P1",
+          "details": "deleteGoal function not found. Required for deleting goals but not defined in school.js."
+        }
+      ],
+      "healingLog": []
+    }
+  ],
+  "summary": {
+    "totalFiles": 5,
+    "totalTests": 146,
+    "passed": 83,
+    "failed": 63,
+    "sourceBugs": 63,
+    "testBugsFixed": 0,
+    "environmentBugs": 0,
+    "criticalIssues": [
+      "js/doc-generator.js lines 2849-2906 contain wholesale duplicate function definitions (~40 functions duplicated)",
+      "Missing HTML element IDs across district and school modules",
+      "Missing onclick handler exports to window scope",
+      "Missing FUNDING_SOURCES constant definition",
+      "Missing goal modal functions (open, close, edit, delete)",
+      "Duplicate calculateFeasibilityScore with conflicting signatures across files",
+      "Duplicate updateBudgetSummary in both budget-alignment.js and budget-tracker.js"
+    ]
+  }
+}

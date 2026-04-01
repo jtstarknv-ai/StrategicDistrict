@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Strategic District</title>
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/header.css">
+  <link rel="stylesheet" href="/styles/footer.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/shared/auth.js"></script>
+  <style>
+    body { padding-top: 0; }
+    header { margin-top: 6px; }
+    .header-content { padding-top: 8px; padding-bottom: 8px; }
+    .logo img { height: 48px; width: auto; }
+    .logo span { font-size: 1.25rem; font-weight: 700; }
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    footer { background-color: #DDD3C6 !important; padding-top: 0 !important; }
+
+    /* Scroll-reveal animations */
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0; transform: translateX(-40px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0; transform: translateX(40px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .stagger > * { transition-delay: calc(var(--i, 0) * 120ms); }
+
+    /* Hero Section */
+    .hero-section {
+      background-color: var(--color-primary-cream);
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-section h1 {
+      color: var(--color-primary-navy);
+      font-size: var(--font-size-h1);
+      font-weight: 700;
+      margin-bottom: 20px;
+      font-family: 'Source Serif Pro', serif;
+    }
+    .hero-section p {
+      color: var(--color-primary-brown);
+      font-size: 1.125rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      background: linear-gradient(135deg, #FEFDFB 0%, #F9F7F3 100%);
+      padding: 60px 20px;
+    }
+    .contact-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    @media (min-width: 1024px) {
+      .contact-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Contact Form */
+    .contact-form {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+    .contact-form h2 {
+      color: var(--color-primary-navy);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      font-family: 'Source Serif Pro', serif;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      color: var(--color-primary-navy);
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.9375rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9375rem;
+      box-sizing: border-box;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #00B4CC;
+      box-shadow: 0 0 0 3px rgba(0, 180, 204, 0.1);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 150px;
+    }
+    .form-submit {
+      background-color: #00B4CC;
+      color: white;
+      padding: 12px 32px;
+      border: none;
+      border-radius: var(--radius-md, 8px);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+    }
+    .form-submit:hover {
+      background-color: #0093a3;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 180, 204, 0.25);
+    }
+
+    /* Info Boxes */
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .info-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      border-left: 5px solid;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+    .info-box.direct {
+      border-left-color: #00B4CC;
+    }
+    .info-box.support {
+      border-left-color: #D4A537;
+    }
+    .info-box h3 {
+      color: var(--color-primary-navy);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-family: 'Source Serif Pro', serif;
+    }
+    .info-box p {
+      color: var(--color-primary-brown);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .info-box .email-link {
+      display: block;
+      color: #00B4CC;
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 16px;
+      font-size: 0.9375rem;
+    }
+    .info-box .email-link:hover {
+      text-decoration: underline;
+    }
+    .info-box .note {
+      color: #999;
+      font-size: 0.875rem;
+      font-style: italic;
+      margin: 0;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      background: linear-gradient(135deg, #E8DCC9 0%, #DCC9B6 100%);
+      padding: 60px 20px;
+    }
+    .faq-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .faq-section h2 {
+      color: var(--color-primary-navy);
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 50px;
+      font-family: 'Source Serif Pro', serif;
+    }
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 768px) {
+      .faq-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .faq-card {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+    .faq-card h3 {
+      color: var(--color-primary-navy);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-family: 'Source Serif Pro', serif;
+      line-height: 1.4;
+    }
+    .faq-card p {
+      color: var(--color-primary-brown);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: var(--color-primary-navy);
+      padding: 60px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(212, 165, 55, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .cta-section h2 {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      font-family: 'Source Serif Pro', serif;
+    }
+    .cta-section p {
+      color: rgba(234, 224, 213, 0.85);
+      font-size: 1.125rem;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+    .cta-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: center;
+    }
+    @media (min-width: 640px) {
+      .cta-buttons {
+        flex-direction: row;
+      }
+    }
+    .cta-primary {
+      background-color: #D4A537;
+      color: white;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .cta-primary:hover {
+      background-color: #c1932d;
+    }
+    .cta-secondary {
+      background: transparent;
+      color: white;
+      padding: 14px 32px;
+      border: 2px solid rgba(234, 224, 213, 0.4);
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .cta-secondary:hover {
+      background-color: rgba(234, 224, 213, 0.1);
+      border-color: rgba(234, 224, 213, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="rainbow-bar"></div>
+  <header>
+    <div class="header-content">
+      <a href="/" class="logo">
+        <img src="/assets/images/SDlogo.png" alt="Strategic District" height="48">
+        <span>Strategic District</span>
+      </a>
+      <nav class="main-nav">
+        <a href="/what-we-offer/">What We Offer</a>
+        <a href="/how-it-works/">How It Works</a>
+        <a href="/sample-plan/">Strategic Plans</a>
+        <a href="/contact/" class="active">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div id="auth-buttons"></div>
+        <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="mobile-nav">
+      <a href="/what-we-offer/">What We Offer</a>
+      <a href="/how-it-works/">How It Works</a>
+      <a href="/sample-plan/">Strategic Plans</a>
+      <a href="/contact/" class="active">Contact</a>
+      <a href="/login/">Sign In</a>
+      <a href="/signup/" class="header-signup-btn">Get Started</a>
+    </div>
+  </header>
+
+  <div class="section-divider"></div>
+
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Get in Touch</h1>
+      <p>Have questions? Let's talk. Our team is here to help you build the strategic plan your district deserves.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="contact-section">
+    <div class="contact-container">
+      <div class="contact-grid">
+        <div class="contact-form-wrapper reveal-left">
+          <form class="contact-form">
+            <h2>Send us a Message</h2>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="district">District</label>
+              <input type="text" id="district" name="district">
+            </div>
+            <div class="form-group">
+              <label for="role">Role</label>
+              <select id="role" name="role">
+                <option value="">Select your role</option>
+                <option value="superintendent">Superintendent</option>
+                <option value="assistant-superintendent">Assistant Superintendent</option>
+                <option value="director">Director</option>
+                <option value="coordinator">Coordinator</option>
+                <option value="principal">Principal</option>
+                <option value="teacher">Teacher</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit" class="form-submit">Send Message</button>
+          </form>
+        </div>
+
+        <div class="contact-info reveal-right">
+          <div class="info-box direct">
+            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style="margin-bottom: 12px">
+              <rect x="2" y="2" width="40" height="40" rx="12" fill="#00B4CC" fill-opacity="0.1" stroke="#00B4CC" stroke-opacity="0.2"/>
+              <rect x="10" y="14" width="24" height="16" rx="2" fill="#00B4CC" fill-opacity="0.1" stroke="#00B4CC" stroke-width="1.5"/>
+              <path d="M10 14l12 9 12-9" stroke="#00B4CC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3>Direct Contact</h3>
+            <p>Interested in Strategic District? Have questions about pricing, features, or how it works for your district? We'd love to hear from you.</p>
+            <a href="mailto:hello@strategicdistrict.com" class="email-link">hello@strategicdistrict.com</a>
+            <p class="note">We typically respond within 24 hours during business days.</p>
+          </div>
+
+          <div class="info-box support">
+            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style="margin-bottom: 12px">
+              <rect x="2" y="2" width="40" height="40" rx="12" fill="#D4A537" fill-opacity="0.1" stroke="#D4A537" stroke-opacity="0.2"/>
+              <path d="M14 24v-4a8 8 0 1 1 16 0v4" stroke="#D4A537" stroke-width="1.5" stroke-linecap="round"/>
+              <rect x="10" y="24" width="5" height="7" rx="1.5" fill="#D4A537" fill-opacity="0.15" stroke="#D4A537" stroke-width="1.5"/>
+              <rect x="29" y="24" width="5" height="7" rx="1.5" fill="#D4A537" fill-opacity="0.15" stroke="#D4A537" stroke-width="1.5"/>
+            </svg>
+            <h3>Customer Support</h3>
+            <p>Already using Strategic District? Our support team is here to help with any questions about your account, plans, or technical issues.</p>
+            <a href="mailto:help@strategicdistrict.com" class="email-link">help@strategicdistrict.com</a>
+            <p class="note">Enterprise customers receive priority support.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="faq-section">
+    <div class="faq-container">
+      <h2 class="reveal">Frequently Asked Questions</h2>
+      <div class="faq-grid stagger">
+        <div class="faq-card reveal" style="--i: 0">
+          <h3>How much does it cost?</h3>
+          <p>Strategic District is free to start. Steps 1-7 are included at no cost. Enterprise starts at $5,000 per year and unlocks the full 14-step process, Strategic School, and professional exports. Save with multi-year plans.</p>
+        </div>
+
+        <div class="faq-card reveal" style="--i: 1">
+          <h3>Do we need training?</h3>
+          <p>Our step-by-step builder is designed to be intuitive. Most teams don't need training. We provide clear instructions and examples throughout every step.</p>
+        </div>
+
+        <div class="faq-card reveal" style="--i: 2">
+          <h3>How long does it take?</h3>
+          <p>Most districts complete their strategic plan in 4-6 weeks of active work. The free foundation steps can be done in a few focused sessions.</p>
+        </div>
+
+        <div class="faq-card reveal" style="--i: 3">
+          <h3>What is Strategic School?</h3>
+          <p>Strategic School is our school-level planning tool included with Enterprise. It lets district leaders create School Improvement Plans that automatically align to the district's strategic plan.</p>
+        </div>
+
+        <div class="faq-card reveal" style="--i: 4">
+          <h3>Can we export our plan?</h3>
+          <p>Yes. Enterprise users can export their complete strategic plan to PDF, Word, and web formats. Professional reports ready for your board and community.</p>
+        </div>
+
+        <div class="faq-card reveal" style="--i: 5">
+          <h3>Is our data secure?</h3>
+          <p>Yes. All data is encrypted and stored securely. We never share or sell district information. Your plan belongs to you.</p>
+        </div>
+
+        <div class="faq-card reveal" style="--i: 6">
+          <h3>Can we update our plan later?</h3>
+          <p>Absolutely. Strategic District is built for continuous improvement. Come back any time to update a section, refresh the whole plan, or create new school plans.</p>
+        </div>
+
+        <div class="faq-card reveal" style="--i: 7">
+          <h3>What data gets auto-populated?</h3>
+          <p>When you select your district in Step 1, we pull publicly available data including enrollment, demographics, and school counts. You can edit or add to this at any time.</p>
+        </div>
+
+        <div class="faq-card reveal" style="--i: 8">
+          <h3>How many plans can we create?</h3>
+          <p>Free accounts can create one strategic plan. Enterprise accounts can create unlimited district and school plans.</p>
+        </div>
+
+        <div class="faq-card reveal" style="--i: 9">
+          <h3>Who built this?</h3>
+          <p>Strategic District was built by Stark Analytica LLC, a company founded by and staffed entirely with former educators and district leaders. We built this because we lived the strategic planning process ourselves and knew it could be better.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="cta-section">
+    <div class="cta-container">
+      <h2>Ready to Get Started?</h2>
+      <p>Build a strategic plan for your district. Start free, upgrade any time.</p>
+      <div class="cta-buttons">
+        <a href="/signup/" class="cta-primary">Get Started Free</a>
+        <a href="/sample-plan/" class="cta-secondary">View Sample Plans</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+    <div class="footer-content" style="padding-top: 24px;">
+      <div class="footer-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+        <div class="footer-column">
+          <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+            <img src="/assets/images/SDlogo.png" alt="Strategic District" style="height: 112px; width: auto;">
+            <div style="font-weight: 700; color: #000000; font-size: 2rem; text-transform: uppercase; letter-spacing: 1px;">STRATEGIC DISTRICT</div>
+          </div>
+          
+        </div>
+        <div class="footer-column" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Explore</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/what-we-offer/" style="color: var(--color-primary-brown);">What We Offer</a></li>
+              <li><a href="/how-it-works/" style="color: var(--color-primary-brown);">How It Works</a></li>
+              <li><a href="/sample-plan/" style="color: var(--color-primary-brown);">Strategic Plans</a></li>
+              <li><a href="/builder/" style="color: var(--color-primary-brown);">Start Building</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Customer Service</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/contact/" style="color: var(--color-primary-brown);">Contact</a></li>
+              <li><a href="/login/" style="color: var(--color-primary-brown);">Sign In</a></li>
+              <li><a href="/signup/" style="color: var(--color-primary-brown);">Sign Up</a></li>
+              <li><a href="#privacy" style="color: var(--color-primary-brown);">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div style="height: 1px; background: rgba(94, 80, 63, 0.2); margin: 12px 0;"></div>
+      <div class="footer-bottom">
+        <div class="footer-copyright" style="color: var(--color-primary-brown);">
+          Professional strategic planning for PK-12 public education, charters, and private schools. &nbsp;|&nbsp; Powered by <a href="https://starkanalytica.com" style="color: var(--color-primary-navy); text-decoration: none; font-weight: 500;">Stark Analytica LLC</a> &nbsp;|&nbsp; &copy; 2026 Strategic District. All rights reserved.
+        </div>
+      </div>
+    </div>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+  </footer>
+
+  <script src="/js/shared/header.js"></script>
+  <script>
+    var header = document.querySelector('header');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 0) {
+        header.classList.add('scroll-shadow');
+      } else {
+        header.classList.remove('scroll-shadow');
+      }
+    });
+
+    // Scroll-reveal animations
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(function(el) {
+      revealObserver.observe(el);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+================================================================================
+BUDGET INTEGRATION - QUICK REFERENCE CARD
+================================================================================
+
+FILES TO ADD/MODIFY:
+
+1. index.html
+   - Add after <script src="js/budget-setup.js">
+   <script src="js/budget-integration.js"></script>
+
+2. index.html - Step 8 (Strategic Goal Setting)
+   - Add this div after "section-purpose" div, before "guided-steps" div:
+   <div id="goalBudgetContext" style="margin-bottom:1.5rem"></div>
+
+3. index.html - Step 10 (Central Office Alignment)
+   - Add this div inside gs-10-3 after "substep-desc", before the h2:
+   <div id="departmentBudgetView" style="margin-bottom:1.5rem"></div>
+
+4. index.html - Step 11 (Action Initiatives)
+   - Add this div before budgetSummaryCard or budget tracking section:
+   <div id="budgetAllocationTracker" style="margin-bottom:1.5rem"></div>
+
+5. index.html - Step 14 (Review & Finalize)
+   - Add this div before the "Finalize section" comment:
+   <div id="feasibilityCheckContainer" style="margin-bottom:2rem"></div>
+
+6. builder.js - Extend initiatives in saveFormState()
+   Replace the initiatives mapping with:
+
+   planState.initiatives = Array.from(initItems).map(function(item) {
+     return {
+       title: item.querySelector('.initiative-title')?.value || '',
+       description: item.querySelector('.initiative-description')?.value || '',
+       lead: item.querySelector('.initiative-lead')?.value || '',
+       budgetAmount: parseFloat(item.querySelector('.initiative-budget-amount')?.value) || 0,
+       fundingSource: item.querySelector('.initiative-funding-source')?.value || ''
+     };
+   });
+
+7. builder.js - Call render functions at right times:
+
+   In Step 8 activation:
+   renderGoalBudgetContext();
+
+   In Step 10 activation:
+   renderDepartmentBudgetView();
+
+   After any initiative added/removed/updated in Step 11:
+   renderBudgetAllocationTracker();
+
+   In Step 14 activation:
+   renderFeasibilityCheck();
+
+================================================================================
+FUNCTION QUICK REFERENCE
+================================================================================
+
+Step 8:
+  renderGoalBudgetContext()
+  → Shows budget total and by-source breakdown
+  → Reads from: planState.budgetSetup
+  → Renders to: #goalBudgetContext
+
+Step 10:
+  renderDepartmentBudgetView()
+  → Shows estimated budget per selected department
+  → Reads from: planState.budgetSetup + department selections
+  → Renders to: #departmentBudgetView
+
+Step 11:
+  renderBudgetAllocationTracker()
+  → Shows live budget utilization by source
+  → Reads from: planState.budgetSetup + planState.initiatives
+  → Renders to: #budgetAllocationTracker
+
+  getSourceUtilization()
+  → Returns { [sourceKey]: { total, allocated, remaining, pct } }
+  → Used by tracker and feasibility check
+
+Step 14:
+  renderFeasibilityCheck()
+  → Comprehensive 5-section financial analysis
+  → Shows overall feasibility score (0-100)
+  → Renders to: #feasibilityCheckContainer
+
+  calculateFeasibilityScore()
+  → Returns { score, breakdown, warnings }
+  → Scoring: budget(30%) + priority(25%) + sustainability(25%) + coverage(20%)
+
+  renderFeasibilityWarnings(warnings)
+  → Renders alert cards for warnings array
+
+================================================================================
+REQUIRED DATA STRUCTURE
+================================================================================
+
+planState.budgetSetup (from budget-setup.js):
+  {
+    totalBudget: number,
+    fundingSources: {
+      [sourceKey]: { amount: number, notes: string }
+    },
+    priorities: [
+      { key: string, rank: number, targetPct: number }
+    ],
+    multiYearProjection: {
+      [year]: { [sourceKey]: number }
+    }
+  }
+
+planState.initiatives (needs extension):
+  [{
+    title: string,
+    description: string,
+    lead: string,
+    budgetAmount: number,        ← ADD THIS
+    fundingSource: string         ← ADD THIS (e.g., 'title_i', 'esser', etc.)
+  }]
+
+planState.goals (from Step 8):
+  [{ text, domain, ... }]
+
+================================================================================
+COLORS (inline CSS)
+================================================================================
+
+Navy:   #22333B  (primary text, headings)
+Cream:  #EAE0D5  (borders, light bg)
+Brown:  #5E503F  (secondary text)
+Teal:   #00B4CC  (available budget, primary accent)
+Green:  #6ECF6E  (good status, balanced)
+Gold:   #D4A537  (caution, adjustments needed)
+Coral:  #E07A5F  (critical, over-allocated)
+Purple: #6B4C9A  (secondary accent)
+
+All styling is inline CSS with:
+  - border-radius: 12px
+  - White card backgrounds
+  - Subtle shadows: 0 2px 4px rgba(0,0,0,0.05)
+  - Grid layouts: display: grid; gap: 1rem
+
+================================================================================
+STEP-BY-STEP INTEGRATION
+================================================================================
+
+BEFORE STARTING:
+  [ ] Read BUDGET-INTEGRATION-README.md for overview
+  [ ] Review budget-integration-snippets.txt for exact locations
+  [ ] Have budget-integration.js file ready
+
+STEP 1: Load the script
+  [ ] Add <script src="js/budget-integration.js"></script> to index.html
+  [ ] Place AFTER <script src="js/budget-setup.js">
+  [ ] Test: Open browser console, type window.renderGoalBudgetContext
+  [ ] Should NOT error (function should exist)
+
+STEP 2: Add HTML containers
+  [ ] Add #goalBudgetContext to Step 8
+  [ ] Add #departmentBudgetView to Step 10
+  [ ] Add #budgetAllocationTracker to Step 11
+  [ ] Add #feasibilityCheckContainer to Step 14
+  [ ] Save index.html
+
+STEP 3: Extend initiative data structure
+  [ ] Update saveFormState() in builder.js to include budgetAmount
+  [ ] Update saveFormState() in builder.js to include fundingSource
+  [ ] Update addInitiative() to create hidden inputs for budget/source
+  [ ] Test: Add initiative, check console planState.initiatives
+
+STEP 4: Call render functions
+  [ ] In Step 8: call renderGoalBudgetContext()
+  [ ] In Step 10: call renderDepartmentBudgetView()
+  [ ] In Step 11: call renderBudgetAllocationTracker()
+  [ ] In Step 14: call renderFeasibilityCheck()
+
+STEP 5: Test
+  [ ] Set budget in Step 2 ($1M, multiple sources)
+  [ ] Go to Step 8, verify budget context shows
+  [ ] Go to Step 10, verify department view shows
+  [ ] Go to Step 11, add initiative with budget, verify tracker updates
+  [ ] Go to Step 14, verify feasibility analysis shows
+  [ ] Test over-allocation: add initiative > budget, verify warning
+
+STEP 6: Verify colors and styling
+  [ ] Check all card styling (white bg, border, shadow)
+  [ ] Check all color usage (green/gold/coral)
+  [ ] Test on mobile (responsive)
+  [ ] Check currency formatting ($X,XXX)
+
+================================================================================
+COMMON MISTAKES TO AVOID
+================================================================================
+
+❌ Loading budget-integration.js BEFORE budget-setup.js
+   → Will error because FUNDING_SOURCES won't be defined
+   ✓ ALWAYS load budget-setup.js first
+
+❌ Forgetting to add HTML container divs
+   → Functions won't render anything
+   ✓ Add all 4 divs before testing
+
+❌ Not extending initiative data structure
+   → Budget tracker will show $0 for all initiatives
+   ✓ Add budgetAmount and fundingSource to planState.initiatives
+
+❌ Calling render functions at wrong time
+   → Content won't be visible when step loads
+   ✓ Call in step activation logic, not just once
+
+❌ Using querySelector instead of getElementById for containers
+   → May fail if CSS selectors change
+   ✓ HTML containers use IDs specifically for reliability
+
+================================================================================
+TESTING CHECKLIST
+================================================================================
+
+[ ] Load page, no console errors
+[ ] Step 2: Set budget $1,000,000 total, split across sources
+[ ] Step 2: Set budget priorities
+[ ] Step 8: See budget context panel with $1M total
+[ ] Step 8: See breakdown by funding sources
+[ ] Step 8: See guidance text about considering costs
+[ ] Step 10: Select departments, see estimated per-dept budgets
+[ ] Step 11: Add initiative with $250K budget, title I source
+[ ] Step 11: See tracker showing $250K allocated, $750K remaining
+[ ] Step 11: Add another initiative $250K, esser source
+[ ] Step 11: See tracker updated to $500K allocated
+[ ] Step 11: Try to add $600K initiative (over budget)
+[ ] Step 11: See warning that would be over-allocated
+[ ] Step 14: See feasibility score calculated
+[ ] Step 14: See all 5 sections rendered
+[ ] Step 14: See warnings/alerts if applicable
+[ ] Check responsive on mobile/tablet
+[ ] Check colors: green (good), gold (caution), coral (alert)
+[ ] Verify currency formatting with thousand separators
+
+================================================================================
+AFTER INTEGRATION
+================================================================================
+
+Once integrated and tested:
+
+1. Commit changes to git with message:
+   "Add budget integration touchpoints to Steps 8, 10, 11, 14"
+
+2. Deploy to staging environment
+
+3. Test with real district data
+
+4. Document any custom modifications
+
+5. Consider adding to feature documentation
+
+6. Optional: Add automated tests for feasibility score calculation
+
+================================================================================

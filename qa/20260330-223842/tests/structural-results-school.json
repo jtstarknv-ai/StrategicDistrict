@@ -1,0 +1,129 @@
+{
+  "target": "school",
+  "timestamp": "2026-03-31T06:01:48.140Z",
+  "passed": 24,
+  "failed": 0,
+  "total": 24,
+  "results": [
+    {
+      "test": "Syntax: js/school.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/school-data.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Syntax: js/state-config.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "All static IDs exist in HTML",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "All onclick handlers exported to window",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 1 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 2 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 3 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 4 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 5 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 6 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 7 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 8 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 9 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 10 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 11 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Step 12 complete",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Cross-ref: GOAL_AREAS_DB defined in school-data.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Cross-ref: ESSA_EVIDENCE_TIERS defined in school-data.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Cross-ref: NAMED_PROGRAMS_DB defined in school-data.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Cross-ref: STATE_ESSA_CONFIG defined in state-config.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Cross-ref: DISTRICT_DATABASE defined in school-data.js",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Cross-file references used in school.js",
+      "passed": true,
+      "details": "Found 5/5 expected references"
+    },
+    {
+      "test": "Goal modal IDs created dynamically",
+      "passed": true,
+      "details": "Found 1 dynamic creations"
+    }
+  ]
+}

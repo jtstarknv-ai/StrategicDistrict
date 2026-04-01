@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- SD Geometric Logo - Navy/Teal branded -->
+  <defs>
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22333B"/>
+      <stop offset="100%" style="stop-color:#14213D"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00B4CC"/>
+      <stop offset="100%" style="stop-color:#D4A537"/>
+    </linearGradient>
+  </defs>
+  <!-- Background rounded square -->
+  <rect x="4" y="4" width="112" height="112" rx="16" fill="url(#brandGrad)"/>
+  <!-- S letter - geometric block style -->
+  <path d="M22,32 L56,32 L56,44 L34,44 L34,52 L56,52 L56,88 L22,88 L22,76 L44,76 L44,68 L22,68 Z" fill="url(#accentGrad)"/>
+  <!-- D letter - geometric block style -->
+  <path d="M64,32 L90,32 C96,32 100,36 100,42 L100,78 C100,84 96,88 90,88 L64,88 Z M76,44 L76,76 L88,76 C89,76 90,75 90,74 L90,46 C90,45 89,44 88,44 Z" fill="white"/>
+</svg>

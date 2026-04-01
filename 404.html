@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Page not found. Return to StrategicDistrict.">
+  <title>Page Not Found - StrategicDistrict</title>
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/header.css">
+  <link rel="stylesheet" href="/styles/footer.css">
+  <link rel="stylesheet" href="/styles/components.css">
+
+  <style>
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .error-container {
+      text-align: center;
+      padding: var(--spacing-5xl) var(--spacing-lg);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .error-icon {
+      font-size: 4rem;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .error-code {
+      font-family: var(--font-serif);
+      font-size: 5rem;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-primary-dark-blue);
+      line-height: var(--line-height-tight);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .error-title {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-md);
+      line-height: var(--line-height-tight);
+    }
+
+    .error-message {
+      font-size: var(--font-size-body-lg);
+      color: var(--color-text-muted);
+      margin-bottom: var(--spacing-3xl);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .error-decoration {
+      margin: var(--spacing-3xl) 0;
+    }
+
+    .decoration-line {
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-secondary-gold) 0%, transparent 100%);
+      margin: 0 auto;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: var(--spacing-lg);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .error-code {
+        font-size: 3.5rem;
+      }
+
+      .error-title {
+        font-size: var(--font-size-h3);
+      }
+
+      .error-message {
+        font-size: var(--font-size-body-md);
+      }
+
+      .error-container {
+        padding: var(--spacing-3xl) var(--spacing-lg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header>
+    <div class="header-content">
+      <a href="/" class="logo"><img src="/assets/images/SDlogo.png" alt="Strategic District" height="36"></a>
+      <nav class="main-nav">
+        <a href="/what-we-offer/">What We Offer</a>
+        <a href="/how-it-works/">How It Works</a>
+        <a href="/sample-plan/">Strategic Plans</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a href="/builder/" class="btn btn-primary">Build Your Plan</a>
+        <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="mobile-nav">
+      <a href="/what-we-offer/">What We Offer</a>
+      <a href="/how-it-works/">How It Works</a>
+      <a href="/sample-plan/">Strategic Plans</a>
+      <a href="/contact/">Contact</a>
+      <a href="/builder/" class="btn btn-primary">Build Your Plan</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="error-container">
+      <div class="error-icon">🗺️</div>
+      <div class="error-code">404</div>
+      <h1 class="error-title">Page Not Found</h1>
+      <p class="error-message">The page you're looking for doesn't exist. Let's get you back on track.</p>
+
+      <div class="error-decoration">
+        <div class="decoration-line"></div>
+      </div>
+
+      <div class="error-actions">
+        <a href="/" class="btn btn-primary">Go Home</a>
+        <a href="/builder/" class="btn btn-secondary">Build a Plan</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+    <div class="footer-content" style="padding-top: 24px;">
+      <div class="footer-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+        <div class="footer-column">
+          <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+            <img src="/assets/images/SDlogo.png" alt="Strategic District" style="height: 112px; width: auto;">
+            <div style="font-weight: 700; color: #000000; font-size: 2rem; text-transform: uppercase; letter-spacing: 1px;">STRATEGIC DISTRICT</div>
+          </div>
+          
+        </div>
+        <div class="footer-column" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Explore</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/what-we-offer/" style="color: var(--color-primary-brown);">What We Offer</a></li>
+              <li><a href="/how-it-works/" style="color: var(--color-primary-brown);">How It Works</a></li>
+              <li><a href="/sample-plan/" style="color: var(--color-primary-brown);">Strategic Plans</a></li>
+              <li><a href="/builder/" style="color: var(--color-primary-brown);">Start Building</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Customer Service</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/contact/" style="color: var(--color-primary-brown);">Contact</a></li>
+              <li><a href="/login/" style="color: var(--color-primary-brown);">Sign In</a></li>
+              <li><a href="/signup/" style="color: var(--color-primary-brown);">Sign Up</a></li>
+              <li><a href="#privacy" style="color: var(--color-primary-brown);">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div style="height: 1px; background: rgba(94, 80, 63, 0.2); margin: 12px 0;"></div>
+      <div class="footer-bottom">
+        <div class="footer-copyright" style="color: var(--color-primary-brown);">
+          Professional strategic planning for PK-12 public education, charters, and private schools. &nbsp;|&nbsp; Powered by <a href="https://starkanalytica.com" style="color: var(--color-primary-navy); text-decoration: none; font-weight: 500;">Stark Analytica LLC</a> &nbsp;|&nbsp; &copy; 2026 Strategic District. All rights reserved.
+        </div>
+      </div>
+    </div>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+  </footer>
+
+  <script src="/js/shared/header.js"></script>
+</body>
+</html>

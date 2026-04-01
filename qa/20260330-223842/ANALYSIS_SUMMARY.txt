@@ -1,0 +1,86 @@
+DISTRICT BUILDER - QA ANALYSIS REPORT
+Generated: 2026-03-30 at 22:38:42 UTC
+Analyst: The Analyst (QA Council Agent 1)
+
+SCOPE
+Target: /sessions/sleepy-gifted-allen/mnt/site/builder/
+Files Analyzed: 1 HTML + 11 JS files
+Total Functions: 403
+Total HTML IDs: 361
+Total getElementById calls: 285
+
+CRITICAL FINDINGS (2)
+1. Duplicate: calculateFeasibilityScore
+   - Location 1: js/ai-engine.js:725 (signature: calculateFeasibilityScore(planState))
+   - Location 2: js/budget-integration.js:519 (signature: calculateFeasibilityScore())
+   - Issue: Different implementations, different parameters. Risk of wrong function being called.
+
+2. Duplicate: updateBudgetSummary
+   - Location 1: js/budget-alignment.js:118
+   - Location 2: js/budget-tracker.js:56
+   - Issue: Two separate implementations cause budget UI inconsistency.
+
+WARNINGS (25)
+Missing HTML Elements (24 elements referenced in JS but not in index.html):
+  - AI Helper Controls: ai-cf-token, ai-groq-key, aiHelper, aiHelperBody, aiHelperPanel, aiHelperTitle
+  - Calendar Views: calViewQuarterly, calViewTimeline, calendarQuarterly, calendarTimeline
+  - Custom Form Fields: customCompCategory, customCompSkill, customCoreValue, customDomainDesc, customDomainName
+  - Data Display: driftAlertContainer, perPupilExpenditure
+  - Form/Input Elements: planNameInput, survey-form, upgradeModal
+  - Survey Features: live-responses, response-count, role-breakdown, total-responses
+
+Note: These may be dynamically created at runtime or part of conditional feature flags.
+
+STEP VERIFICATION (14/14 COMPLETE)
+All 14 steps have both:
+  - Step content div with data-step attribute
+  - Sidebar navigation entry
+Status: COMPLETE
+
+CODE QUALITY
+Syntax Check: PASS (all 11 JS files valid)
+Handlers: All HTML onclick/onchange handlers exist in JS (100%)
+Global State: planState defined in builder.js:230, used across 9 files
+Dynamic ID Patterns: Confirmed (gs-*, crit-*, grade-*, my-*, stakeholderFeedback*)
+
+CROSS-FILE ANALYSIS
+- Central State Object: planState (builder.js:230)
+- Referenced by: ai-engine, budget-alignment, budget-integration, budget-setup, 
+               budget-tracker, doc-generator, features, stakeholder, toolkit
+- Risk Level: Medium (tightly coupled modules)
+
+RECOMMENDATIONS
+Priority 1 (Do Now):
+  1. Resolve calculateFeasibilityScore duplicates
+     - Choose one implementation (prefer ai-engine.js with full planState)
+     - Remove duplicate from budget-integration.js
+     - Update budget-integration.js calls to use unified function
+  
+  2. Resolve updateBudgetSummary duplicates
+     - Consolidate implementations
+     - Verify both locations update same UI elements
+     - Test budget summary after fix
+
+Priority 2 (Medium-term):
+  1. Audit 24 missing IDs
+     - Check if dynamically created (innerHTML patterns)
+     - If not used, remove dead code
+     - If needed, add to static HTML or verify creation timing
+  
+  2. Refactor global state management
+     - Consider centralized state machine
+     - Use events or pub/sub for cross-module updates
+     - Improve debugging and state tracking
+
+Priority 3 (Nice-to-have):
+  - Add JSDoc comments to exported window.* functions
+  - Create module dependency graph
+  - Standardize error handling across modules
+
+NOTES
+- All syntax is valid (Node --check passes)
+- All handler functions are defined and exported
+- Step structure is complete and consistent
+- No missing function handlers detected (all onclick/onchange calls exist)
+
+Report saved to: /sessions/sleepy-gifted-allen/mnt/site/qa/20260330-223842/district-analysis-report.json

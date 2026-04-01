@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password - StrategicDistrict</title>
+  <meta name="description" content="Reset your StrategicDistrict account password.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/header.css">
+  <link rel="stylesheet" href="/styles/footer.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/forms.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  
+  <style>
+    body {
+      padding-top: var(--header-height, 80px);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    main {
+      flex: 1;
+      padding: var(--spacing-5xl) var(--spacing-lg);
+      background: linear-gradient(135deg, var(--color-primary-cream) 0%, rgba(198, 172, 143, 0.05) 100%);
+    }
+
+    .auth-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: var(--spacing-3xl) var(--spacing-2xl);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .auth-header h1 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h3);
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .auth-header p {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-body-sm);
+      line-height: var(--line-height-normal);
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    label {
+      display: block;
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-body-sm);
+    }
+
+    input[type="email"] {
+      width: 100%;
+      padding: var(--spacing-md) var(--spacing-md);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--font-size-body-md);
+      color: var(--color-text-primary);
+      background-color: white;
+      transition: all var(--transition-base);
+      box-sizing: border-box;
+    }
+
+    input[type="email"]:focus {
+      outline: none;
+      border-color: var(--color-pop-gold);
+      box-shadow: 0 0 0 3px rgba(212, 165, 55, 0.1);
+      background-color: white;
+    }
+
+    input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .error-message {
+      color: #dc2626;
+      font-size: var(--font-size-body-sm);
+      margin-top: var(--spacing-xs);
+      display: block;
+    }
+
+    .success-message {
+      background-color: #ecfdf5;
+      border: 1px solid #86efac;
+      color: #166534;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-lg);
+      font-size: var(--font-size-body-sm);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: var(--spacing-md) var(--spacing-lg);
+      background-color: var(--color-pop-gold);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--font-size-body-md);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      margin-top: var(--spacing-lg);
+    }
+
+    .btn-submit:hover {
+      background-color: #c49c2d;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: var(--spacing-2xl);
+      padding-top: var(--spacing-2xl);
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    .auth-footer p {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-body-sm);
+    }
+
+    .auth-footer a {
+      color: var(--color-pop-gold);
+      text-decoration: none;
+      font-weight: var(--font-weight-semibold);
+      transition: color var(--transition-base);
+    }
+
+    .auth-footer a:hover {
+      color: #c49c2d;
+      text-decoration: underline;
+    }
+
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    @media (max-width: 767px) {
+      main {
+        padding: var(--spacing-3xl) var(--spacing-md);
+      }
+
+      .auth-container {
+        padding: var(--spacing-2xl) var(--spacing-lg);
+      }
+
+      .auth-header h1 {
+        font-size: var(--font-size-h4);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Rainbow Gradient Bar -->
+  <div class="rainbow-bar"></div>
+  
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <a href="/" class="logo">
+        <img src="/assets/images/SDlogo.png" alt="Strategic District" height="36">
+        <span>Strategic District</span>
+      </a>
+      <nav class="main-nav">
+        <a href="/what-we-offer/">What We Offer</a>
+        <a href="/how-it-works/">How It Works</a>
+        <a href="/sample-plan/">Strategic Plans</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div id="auth-buttons"></div>
+      </div>
+    </div>
+    <div class="header-rainbow-bar"></div>
+  </header>
+
+  <main>
+    <div class="auth-container">
+      <div class="auth-header">
+        <h1>Reset Password</h1>
+        <p>Enter your email address and we'll send you a link to reset your password.</p>
+      </div>
+
+      <div id="success-message" class="success-message" style="display: none;"></div>
+      <div id="error-message" class="error-message" style="display: none;"></div>
+
+      <form id="reset-form">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="your@email.com">
+          <span class="error-message" id="email-error"></span>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">Send Reset Link</button>
+      </form>
+
+      <div class="auth-footer">
+        <p><a href="/login/">Back to sign in</a></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          © 2026 Strategic District. All rights reserved. Powered by <a href="https://starkanalytica.com" style="color: rgba(234, 224, 213, 0.8); text-decoration: none;">Stark Analytica LLC</a>.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Auth Library -->
+  <script src="/js/shared/auth.js"></script>
+
+  <script>
+    (function() {
+      "use strict";
+
+      var form = document.getElementById("reset-form");
+      var submitBtn = document.getElementById("submit-btn");
+      var successMessage = document.getElementById("success-message");
+      var errorMessage = document.getElementById("error-message");
+
+      function clearMessages() {
+        successMessage.style.display = "none";
+        errorMessage.style.display = "none";
+      }
+
+      function showSuccess(message) {
+        clearMessages();
+        successMessage.textContent = message;
+        successMessage.style.display = "block";
+      }
+
+      function showError(message) {
+        clearMessages();
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+      }
+
+      function validateForm() {
+        var email = document.getElementById("email").value.trim();
+        var isValid = true;
+
+        document.getElementById("email-error").textContent = "";
+
+        if (!email) {
+          document.getElementById("email-error").textContent = "Email is required";
+          isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          document.getElementById("email-error").textContent = "Please enter a valid email address";
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      form.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        if (!validateForm()) {
+          return;
+        }
+
+        var email = document.getElementById("email").value.trim();
+
+        submitBtn.disabled = true;
+        submitBtn.classList.add("loading");
+        submitBtn.textContent = "Sending...";
+
+        window.sdAuth.resetPasswordForEmail(email).then(function(result) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove("loading");
+          submitBtn.textContent = "Send Reset Link";
+
+          if (result.success) {
+            showSuccess("Password reset link sent! Check your email for further instructions.");
+            form.reset();
+          } else {
+            showError("Error: " + result.error);
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

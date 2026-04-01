@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- SD Geometric Logo - White version for dark backgrounds -->
+  <!-- S letter -->
+  <path d="M6,16 L52,16 L52,32 L22,32 L22,44 L52,44 L52,104 L6,104 L6,88 L36,88 L36,76 L6,76 Z" fill="white" opacity="0.95"/>
+  <!-- D letter -->
+  <path d="M60,16 L96,16 C106,16 114,24 114,34 L114,86 C114,96 106,104 96,104 L60,104 Z M76,32 L76,88 L94,88 C97,88 100,85 100,82 L100,38 C100,35 97,32 94,32 Z" fill="white"/>
+</svg>

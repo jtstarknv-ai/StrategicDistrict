@@ -1,0 +1,12 @@
+<svg viewBox="0 0 240 48" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sd-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4A537"/>
+      <stop offset="100%" stop-color="#00B4CC"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#sd-grad)"/>
+  <text x="8" y="34" font-family="system-ui,-apple-system,sans-serif" font-size="28" font-weight="700" fill="#EAE0D5" letter-spacing="-2">SD</text>
+  <text x="54" y="22" font-family="system-ui,-apple-system,sans-serif" font-size="15" font-weight="600" fill="#22333B" letter-spacing="-0.3">Strategic</text>
+  <text x="54" y="40" font-family="system-ui,-apple-system,sans-serif" font-size="15" font-weight="400" fill="#22333B" letter-spacing="-0.3">District</text>
+</svg>

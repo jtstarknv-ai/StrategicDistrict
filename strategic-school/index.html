@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic School Plan Builder | Strategic District</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/school.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="icon" type="image/png" href="../assets/favicon.png">
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Auth & Sync -->
+    <script src="/js/shared/auth.js"></script>
+    <script src="/js/shared/plan-sync.js"></script>
+
+    <!-- Vendor Scripts -->
+    <script src="/js/vendor/pretext.min.js"></script>
+</head>
+<body>
+    <!-- Gradient Bar -->
+    <div class="gradient-bar"></div>
+
+    <!-- Header Navigation -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo">
+                    <svg width="22" height="22" viewBox="0 0 72 72" fill="none" style="flex-shrink:0"><circle cx="36" cy="36" r="20" fill="url(#sdGrad)" fill-opacity="0.08"/><circle cx="36" cy="36" r="20" stroke="url(#sdGrad)" stroke-width="1.5" stroke-opacity="0.2"/><text x="36" y="42" text-anchor="middle" font-family="Source Serif Pro, serif" font-weight="700" font-size="20" fill="#22333B">SD</text><defs><linearGradient id="sdGrad" x1="16" y1="16" x2="56" y2="56"><stop stop-color="#00B4CC"/><stop offset="0.5" stop-color="#D4A537"/><stop offset="1" stop-color="#6B4C9A"/></linearGradient></defs></svg>
+                    Strategic District Plan
+                </div>
+            </div>
+
+            <nav class="nav-center">
+                <a href="../builder/index.html" class="nav-link" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="16" height="16" viewBox="0 0 48 48" fill="none" style="flex-shrink:0"><rect x="10" y="20" width="9" height="16" rx="2" fill="#00B4CC" fill-opacity="0.75"/><rect x="20" y="14" width="9" height="22" rx="2" fill="#00B4CC" fill-opacity="0.5"/><rect x="30" y="8" width="9" height="28" rx="2" fill="#00B4CC" fill-opacity="0.35"/></svg>District Strategic Plan</a>
+                <a href="../builder/dashboard.html" class="nav-link" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="16" height="16" viewBox="0 0 48 48" fill="none" style="flex-shrink:0"><polyline points="8,34 16,26 24,30 32,16 40,12" stroke="#6ECF6E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="32" cy="16" r="3" fill="#6ECF6E" fill-opacity="0.8"/></svg>Progress Dashboard</a>
+                <a href="../strategic-school/index.html" class="nav-link active" style="display:inline-flex;align-items:center;gap:0.35rem"><svg width="16" height="16" viewBox="0 0 48 48" fill="none" style="flex-shrink:0"><rect x="14" y="24" width="20" height="14" rx="2" fill="#E07A5F" fill-opacity="0.6"/><polygon points="24,12 12,26 36,26" fill="#E07A5F" fill-opacity="0.4"/><rect x="21" y="30" width="6" height="8" rx="1" fill="#EAE0D5" fill-opacity="0.9"/></svg>Strategic School</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="sign-out-btn" onclick="handleSignOut(event)">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="school-builder-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-title">SCHOOL PLAN BUILDER</div>
+
+            <ul class="steps-list">
+                <li class="step-item active" data-step="1" onclick="stepGoto(1)">
+                    <span class="step-number">1</span>
+                    <span class="step-label">District Connection</span>
+                </li>
+                <li class="step-item" data-step="2" onclick="stepGoto(2)">
+                    <span class="step-number">2</span>
+                    <span class="step-label">School Profile</span>
+                </li>
+                <li class="step-item" data-step="3" onclick="stepGoto(3)">
+                    <span class="step-number">3</span>
+                    <span class="step-label">Needs Assessment</span>
+                </li>
+                <li class="step-item" data-step="4" onclick="stepGoto(4)">
+                    <span class="step-number">4</span>
+                    <span class="step-label">Vision & Mission</span>
+                </li>
+                <li class="step-item" data-step="5" onclick="stepGoto(5)">
+                    <span class="step-number">5</span>
+                    <span class="step-label">Values & Culture</span>
+                </li>
+                <li class="step-item" data-step="6" onclick="stepGoto(6)">
+                    <span class="step-number">6</span>
+                    <span class="step-label">School Goals</span>
+                </li>
+                <li class="step-item" data-step="7" onclick="stepGoto(7)">
+                    <span class="step-number">7</span>
+                    <span class="step-label">Action Planning</span>
+                </li>
+                <li class="step-item" data-step="8" onclick="stepGoto(8)">
+                    <span class="step-number">8</span>
+                    <span class="step-label">Stakeholder Engagement</span>
+                </li>
+                <li class="step-item" data-step="9" onclick="stepGoto(9)">
+                    <span class="step-number">9</span>
+                    <span class="step-label">Resource Allocation</span>
+                </li>
+                <li class="step-item" data-step="10" onclick="stepGoto(10)">
+                    <span class="step-number">10</span>
+                    <span class="step-label">Implementation Calendar</span>
+                </li>
+                <li class="step-item" data-step="11" onclick="stepGoto(11)">
+                    <span class="step-number">11</span>
+                    <span class="step-label">Monitoring & Accountability</span>
+                </li>
+                <li class="step-item" data-step="12" onclick="stepGoto(12)">
+                    <span class="step-number">12</span>
+                    <span class="step-label">Review & Export</span>
+                </li>
+            </ul>
+
+            <div class="completion-bar-container">
+                <div class="completion-bar">
+                    <div class="completion-bar-fill" id="progressFill"></div>
+                </div>
+                <p class="completion-text"><span id="currentStepDisplay">1</span> of 12</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content-panel">
+            <!-- Step 1: District Connection -->
+            <div class="step-content active" data-step="1">
+                <div class="step-header">
+                    <h1 class="step-title">District Connection</h1>
+                </div>
+                <p class="section-purpose">Link your school plan to your district's strategic direction.</p>
+
+                <div style="padding:1.5rem 0">
+                    <!-- District Search -->
+                    <div style="margin-bottom:1.5rem">
+                        <label for="districtSearch" style="display:block;margin-bottom:0.5rem;font-weight:500">Search for District Plan</label>
+                        <div style="display:flex;gap:0.5rem">
+                            <input type="text" id="districtSearch" placeholder="Type district name..." style="flex:1;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;font-family:inherit;font-size:0.875rem">
+                            <button class="btn btn-secondary" onclick="searchDistrict()">Search</button>
+                        </div>
+                    </div>
+
+                    <!-- District Reference Box -->
+                    <div class="reference-box" id="districtRefBox1">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem">
+                            <h3 style="margin:0;font-size:0.9375rem;font-weight:600">Selected District Plan</h3>
+                            <button class="btn btn-outline" onclick="clearDistrictSelection()" style="padding:0.375rem 0.75rem;font-size:0.8125rem">Clear</button>
+                        </div>
+                        <div id="districtRefContent1" class="reference-content">
+                            <p class="text-muted">No district plan selected. Search above to link a district plan.</p>
+                        </div>
+                    </div>
+
+                    <!-- Skip Option -->
+                    <div style="margin-top:1.5rem">
+                        <p class="text-muted" style="margin-bottom:1rem">You can skip this if your school doesn't have a linked district plan.</p>
+                        <button class="btn btn-outline" onclick="skipDistrictConnection()">Skip This Step</button>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(0)" style="visibility:hidden">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(1)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(2)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: School Profile -->
+            <div class="step-content" data-step="2">
+                <div class="step-header">
+                    <h1 class="step-title">School Profile</h1>
+                </div>
+                <p class="section-purpose">Provide essential information about your school.</p>
+
+                <div style="padding:1.5rem 0">
+                    <!-- State Selector -->
+                    <div class="form-group" style="margin-bottom:1.5rem">
+                        <label for="stateSelect">State <span class="essa-badge">Required</span></label>
+                        <select id="stateSelect" onchange="onStateSelected(this.value)">
+                            <option value="">-- Select Your State --</option>
+                        </select>
+                    </div>
+
+                    <!-- State ESSA Requirements (populated dynamically) -->
+                    <div id="stateRequirementsInfo"></div>
+
+                    <!-- School Designation -->
+                    <div class="form-group" style="margin-bottom:1.5rem">
+                        <label>School Designation(s)</label>
+                        <p class="field-hint">Select all that apply to your school.</p>
+                        <div id="designationCheckboxes" class="checkbox-group">
+                            <label class="checkbox-label"><input type="checkbox" value="CSI" onchange="toggleDesignation(this.value, this.checked)"> <strong>CSI</strong> - Comprehensive Support and Improvement</label>
+                            <label class="checkbox-label"><input type="checkbox" value="TSI" onchange="toggleDesignation(this.value, this.checked)"> <strong>TSI</strong> - Targeted Support and Improvement</label>
+                            <label class="checkbox-label"><input type="checkbox" value="ATSI" onchange="toggleDesignation(this.value, this.checked)"> <strong>ATSI</strong> - Additional Targeted Support and Improvement</label>
+                        </div>
+                    </div>
+
+                    <!-- Basic Information -->
+                    <h3 class="field-group-header">Basic Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="schoolName">School Name <span class="essa-badge">Required</span></label>
+                            <input type="text" id="schoolName" placeholder="Enter school name">
+                        </div>
+                        <div class="form-group">
+                            <label for="schoolType">School Type <span class="essa-badge">Required</span></label>
+                            <select id="schoolType">
+                                <option value="">-- Select --</option>
+                                <option value="elementary">Elementary School</option>
+                                <option value="middle">Middle School</option>
+                                <option value="high">High School</option>
+                                <option value="alternative">Alternative School</option>
+                                <option value="charter">Charter School</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="gradeLevels">Grade Levels <span class="essa-badge">Required</span></label>
+                            <input type="text" id="gradeLevels" placeholder="e.g., K-5 or 9-12">
+                        </div>
+                        <div class="form-group">
+                            <label for="enrollment">Total Enrollment <span class="essa-badge">Required</span></label>
+                            <input type="number" id="enrollment" placeholder="e.g., 450">
+                        </div>
+                    </div>
+
+                    <!-- Staff Information -->
+                    <h3 class="field-group-header" style="margin-top:2rem">Staff Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="teacherCount">Teacher Count</label>
+                            <input type="number" id="teacherCount" placeholder="e.g., 25">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentTeacherRatio">Student-Teacher Ratio</label>
+                            <input type="text" id="studentTeacherRatio" placeholder="e.g., 18:1">
+                        </div>
+                        <div class="form-group">
+                            <label for="principalName">Principal Name</label>
+                            <input type="text" id="principalName" placeholder="Enter principal name">
+                        </div>
+                        <div class="form-group">
+                            <label for="schoolYear">School Year</label>
+                            <input type="text" id="schoolYear" placeholder="e.g., 2025-2026">
+                        </div>
+                    </div>
+
+                    <!-- Demographics -->
+                    <h3 class="field-group-header" style="margin-top:2rem">Demographics</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="frlRate">Free/Reduced Lunch Rate (%)</label>
+                            <input type="number" id="frlRate" min="0" max="100" placeholder="e.g., 65">
+                        </div>
+                        <div class="form-group">
+                            <label for="iepRate">IEP Rate (%)</label>
+                            <input type="number" id="iepRate" min="0" max="100" placeholder="e.g., 15">
+                        </div>
+                        <div class="form-group">
+                            <label for="elRate">English Learner Rate (%)</label>
+                            <input type="number" id="elRate" min="0" max="100" placeholder="e.g., 28">
+                        </div>
+                        <div class="form-group">
+                            <label for="pocRate">Students of Color (%)</label>
+                            <input type="number" id="pocRate" min="0" max="100" placeholder="e.g., 52">
+                        </div>
+                    </div>
+
+                    <!-- Academic Performance -->
+                    <h3 class="field-group-header" style="margin-top:2rem">Academic Performance</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="readingProf">Reading Proficiency (%)</label>
+                            <input type="number" id="readingProf" min="0" max="100" placeholder="e.g., 48">
+                        </div>
+                        <div class="form-group">
+                            <label for="mathProf">Math Proficiency (%)</label>
+                            <input type="number" id="mathProf" min="0" max="100" placeholder="e.g., 42">
+                        </div>
+                        <div class="form-group">
+                            <label for="gradRate">Graduation Rate (HS Only, %)</label>
+                            <input type="number" id="gradRate" min="0" max="100" placeholder="e.g., 87">
+                        </div>
+                        <div class="form-group">
+                            <label for="absentRate">Chronic Absenteeism Rate (%)</label>
+                            <input type="number" id="absentRate" min="0" max="100" placeholder="e.g., 22">
+                        </div>
+                    </div>
+
+                    <!-- School Culture & Climate -->
+                    <h3 class="field-group-header" style="margin-top:2rem">School Culture & Climate</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="suspensionRate">Suspension Rate (%)</label>
+                            <input type="number" id="suspensionRate" min="0" max="100" placeholder="e.g., 8">
+                        </div>
+                        <div class="form-group">
+                            <label for="attendanceRate">Attendance Rate (%)</label>
+                            <input type="number" id="attendanceRate" min="0" max="100" placeholder="e.g., 95">
+                        </div>
+                        <div class="form-group">
+                            <label for="retentionRate">Teacher Retention Rate (%)</label>
+                            <input type="number" id="retentionRate" min="0" max="100" placeholder="e.g., 82">
+                        </div>
+                    </div>
+
+                    <!-- School Designation Status -->
+                    <h3 class="field-group-header" style="margin-top:2rem">School Designation Status</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Title I Status</label>
+                            <select id="titleIStatus">
+                                <option value="">-- Select --</option>
+                                <option value="title1">Title I School</option>
+                                <option value="non-title1">Non-Title I School</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Improvement Designation</label>
+                            <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem">
+                                <label class="checkbox-label"><input type="checkbox" id="designationCSI" value="CSI"> CSI (Comprehensive Support)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="designationTSI" value="TSI"> TSI (Targeted Support)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="designationATSI" value="ATSI"> ATSI (Additional Targeted)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="designationMRI" value="MRI"> MRI (More Rigorous Intervention)</label>
+                                <label class="checkbox-label"><input type="checkbox" id="designationNone" value="none"> No Designation</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(1)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(2)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(3)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Needs Assessment -->
+            <div class="step-content" data-step="3">
+                <div class="step-header">
+                    <h1 class="step-title">Needs Assessment</h1>
+                    <div class="step-badges">
+                        <span class="essa-badge">ESSA Required</span>
+                    </div>
+                </div>
+                <p class="section-purpose">Analyze your data to identify strengths, gaps, and root causes.</p>
+
+                <div style="padding:1.5rem 0">
+                    <!-- School Data Summary -->
+                    <div class="reference-box">
+                        <h3 style="margin:0 0 0.75rem 0;font-size:0.9375rem;font-weight:600">School Data Summary</h3>
+                        <div class="reference-content" id="schoolDataRef">
+                            <p class="text-muted">Complete Step 2 to see your school data here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Strengths -->
+                    <h3 class="field-group-header" style="margin-top:2rem">School Strengths</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">What is your school doing well? Identify areas of strength you can build upon.</p>
+                    <div id="strengthsList" style="margin-bottom:1rem"></div>
+                    <div style="display:flex;gap:0.5rem;margin-bottom:2rem">
+                        <input type="text" id="customStrengthInput" placeholder="Add your own strength..." style="flex:1;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;">
+                        <button class="btn btn-secondary" onclick="addCustomStrength()">Add</button>
+                    </div>
+
+                    <!-- Challenges -->
+                    <h3 class="field-group-header">Challenges & Gaps</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">What are your biggest challenges? Where do you see gaps in performance or resources?</p>
+                    <div id="challengesList" style="margin-bottom:1rem"></div>
+                    <div style="display:flex;gap:0.5rem;margin-bottom:2rem">
+                        <input type="text" id="customChallengeInput" placeholder="Add your own challenge..." style="flex:1;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;">
+                        <button class="btn btn-secondary" onclick="addCustomChallenge()">Add</button>
+                    </div>
+
+                    <!-- Root Causes -->
+                    <h3 class="field-group-header">Root Cause Analysis</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">For each major gap, what are the underlying causes? Why is this happening?</p>
+                    <div id="rootCausesList" style="margin-bottom:1rem"></div>
+                    <div style="display:flex;gap:0.5rem;margin-bottom:2rem">
+                        <input type="text" id="customRootCauseInput" placeholder="Add a root cause..." style="flex:1;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;">
+                        <button class="btn btn-secondary" onclick="addCustomRootCause()">Add</button>
+                    </div>
+
+                    <!-- Priority Areas -->
+                    <h3 class="field-group-header">Priority Areas</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">Based on your assessment, what are your top priority areas for improvement?</p>
+                    <div id="priorityAreasList" style="margin-bottom:1rem"></div>
+                    <div style="display:flex;gap:0.5rem">
+                        <input type="text" id="customPriorityInput" placeholder="Add a priority area..." style="flex:1;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;">
+                        <button class="btn btn-secondary" onclick="addCustomPriority()">Add</button>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(2)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(3)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(4)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Vision & Mission -->
+            <div class="step-content" data-step="4">
+                <div class="step-header">
+                    <h1 class="step-title">Vision & Mission</h1>
+                </div>
+                <p class="section-purpose">Define your school's aspirational future and core purpose.</p>
+
+                <div style="padding:1.5rem 0">
+                    <!-- District Reference -->
+                    <div class="reference-box">
+                        <h3 style="margin:0 0 0.75rem 0;font-size:0.9375rem;font-weight:600">District Vision & Mission</h3>
+                        <div id="districtRefContent4" class="reference-content">
+                            <p class="text-muted">Link a district plan in Step 1 to see district vision and mission here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Vision -->
+                    <h3 class="field-group-header" style="margin-top:2rem">School Vision Statement</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">Where do you see your school in 3-5 years? Paint a picture of success.</p>
+                    <div class="form-group">
+                        <label for="schoolVision">Your Vision</label>
+                        <textarea id="schoolVision" maxlength="500" placeholder="Write your school's vision..." oninput="updateCharCount('schoolVision', 'visionCharCount')"></textarea>
+                        <div class="char-count"><span id="visionCharCount">0</span>/500</div>
+                    </div>
+                    <div class="suggestion-section">
+                        <h4>Need Inspiration? Try a Template</h4>
+                        <div id="visionTemplates" class="suggestion-grid"></div>
+                    </div>
+
+                    <!-- Mission -->
+                    <h3 class="field-group-header" style="margin-top:2rem">School Mission Statement</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">What is your school's core purpose? What will you do every day to achieve your vision?</p>
+                    <div class="form-group">
+                        <label for="schoolMission">Your Mission</label>
+                        <textarea id="schoolMission" maxlength="500" placeholder="Write your school's mission..." oninput="updateCharCount('schoolMission', 'missionCharCount')"></textarea>
+                        <div class="char-count"><span id="missionCharCount">0</span>/500</div>
+                    </div>
+                    <div class="suggestion-section">
+                        <h4>Need Inspiration? Try a Template</h4>
+                        <div id="missionTemplates" class="suggestion-grid"></div>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(3)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(4)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(5)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Values & Culture -->
+            <div class="step-content" data-step="5">
+                <div class="step-header">
+                    <h1 class="step-title">Values & Culture</h1>
+                </div>
+                <p class="section-purpose">Define the core values and cultural commitments that guide your school.</p>
+
+                <div style="padding:1.5rem 0">
+                    <!-- District Values Reference -->
+                    <div class="reference-box">
+                        <h3 style="margin:0 0 0.75rem 0;font-size:0.9375rem;font-weight:600">District Values</h3>
+                        <div id="districtRefContent5" class="reference-content">
+                            <p class="text-muted">Link a district plan in Step 1 to see district values here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Core Values -->
+                    <h3 class="field-group-header" style="margin-top:2rem">Core Values</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">What are the 3-5 core values that define your school culture?</p>
+                    <div id="valuesList" style="margin-bottom:1rem"></div>
+                    <div style="display:flex;gap:0.5rem;margin-bottom:2rem">
+                        <input type="text" id="customValueInput" placeholder="Add a value..." style="flex:1;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;">
+                        <button class="btn btn-secondary" onclick="addCustomValue()">Add</button>
+                    </div>
+
+                    <!-- Culture Commitments -->
+                    <h3 class="field-group-header">Culture Commitments</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">What specific commitments will your school make to live out these values?</p>
+                    <div id="cultureList" style="margin-bottom:1rem"></div>
+                    <div style="display:flex;gap:0.5rem">
+                        <input type="text" id="customCultureInput" placeholder="Add a commitment..." style="flex:1;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;">
+                        <button class="btn btn-secondary" onclick="addCustomCulture()">Add</button>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(4)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(5)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(6)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: School Goals -->
+            <div class="step-content" data-step="6">
+                <div class="step-header">
+                    <h1 class="step-title">School Goals</h1>
+                </div>
+                <p class="section-purpose">Set 3-5 strategic goals aligned to your priority areas and vision.</p>
+
+                <div style="padding:1.5rem 0">
+                    <!-- District Goals Reference -->
+                    <div class="reference-box">
+                        <h3 style="margin:0 0 0.75rem 0;font-size:0.9375rem;font-weight:600">District Goals</h3>
+                        <div id="districtRefContent6" class="reference-content">
+                            <p class="text-muted">Link a district plan in Step 1 to see district goals here.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="field-group-header" style="margin-top:2rem">Build Your School Plan</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:0.75rem">Organize your plan by <strong>Goal Area</strong> (e.g., Student Success, Adult Learning Culture, Connectedness). Within each area, define problem statements, goals, annual performance objectives (APOs), and improvement strategies.</p>
+                    <p style="font-size:0.8rem;color:#999;margin-bottom:1.5rem">Hierarchy: Goal Area → Problem Statement → Goal → Annual Performance Objective → Improvement Strategy</p>
+
+                    <div id="goalsContainer" style="margin-bottom:2rem"></div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(5)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(6)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(7)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7: Action Planning -->
+            <div class="step-content" data-step="7">
+                <div class="step-header">
+                    <h1 class="step-title">Action Planning</h1>
+                </div>
+                <p class="section-purpose">Develop specific actions to achieve each school goal.</p>
+
+                <div style="padding:1.5rem 0">
+                    <h3 class="field-group-header">Action Plans</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">For each goal, identify the specific actions, responsible parties, and timelines.</p>
+                    <div id="actionPlansContainer" style="margin-bottom:2rem"></div>
+                    <button class="btn btn-primary" onclick="addActionPlan()">+ Add Action Plan</button>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(6)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(7)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(8)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 8: Stakeholder Engagement -->
+            <div class="step-content" data-step="8">
+                <div class="step-header">
+                    <h1 class="step-title">Stakeholder Engagement</h1>
+                    <div class="step-badges">
+                        <span class="essa-badge">ESSA Required</span>
+                    </div>
+                </div>
+                <p class="section-purpose">Document how you've meaningfully engaged families, students, and community in plan development.</p>
+
+                <div style="padding:1.5rem 0">
+                    <!-- Upload Stakeholder Feedback -->
+                    <h3 class="field-group-header">Upload Stakeholder Feedback</h3>
+                    <p class="text-muted">Upload survey results from your stakeholder engagement. We'll analyze themes automatically.</p>
+                    <div class="upload-zone" id="stakeholderUploadZone">
+                        <input type="file" id="stakeholderFileUpload" accept=".csv,.xlsx" onchange="handleStakeholderUpload(this)" style="display:none">
+                        <label for="stakeholderFileUpload" class="upload-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <span>Drop CSV or click to browse</span>
+                        </label>
+                    </div>
+                    <div id="themeAnalysisResults" style="margin-top:1.5rem"></div>
+
+                    <!-- Committee Members -->
+                    <h3 class="field-group-header" style="margin-top:2rem">Committee Members</h3>
+                    <p class="text-muted">List the people who participated in developing this plan.</p>
+                    <div id="committeeMembersList" style="margin-bottom:1rem"></div>
+                    <div style="display:flex;gap:0.5rem">
+                        <input type="text" id="committeeMemberName" placeholder="Name" style="flex:1;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;">
+                        <select id="committeeMemberRole" style="padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;">
+                            <option value="">-- Role --</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="addCommitteeMember()">Add</button>
+                    </div>
+
+                    <!-- Family Engagement -->
+                    <h3 class="field-group-header" style="margin-top:2rem">Family Engagement Documentation <span class="essa-badge">ESSA Required</span></h3>
+                    <textarea id="familyEngagement" placeholder="Describe how families were engaged in the development, implementation, and monitoring of this plan..." style="width:100%;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;font-family:inherit;min-height:6rem"></textarea>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(7)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(8)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(9)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 9: Resource Allocation -->
+            <div class="step-content" data-step="9">
+                <div class="step-header">
+                    <h1 class="step-title">Resource Allocation</h1>
+                </div>
+                <p class="section-purpose">Align budget and resources to your goals and action plans.</p>
+
+                <div style="padding:1.5rem 0">
+                    <h3 class="field-group-header">Funding Sources</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">What funding sources will support your plan? (Title I, ESEA, local, grants, etc.)</p>
+                    <div id="fundingSourcesList" style="margin-bottom:2rem"></div>
+                    <div style="display:flex;gap:0.5rem;margin-bottom:2rem">
+                        <input type="text" id="fundingSourceInput" placeholder="e.g., Title I" style="flex:1;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;">
+                        <button class="btn btn-secondary" onclick="addFundingSource()">Add</button>
+                    </div>
+
+                    <h3 class="field-group-header">Key Investments</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">How will you invest resources to address priorities and achieve goals?</p>
+                    <div id="investmentsList" style="margin-bottom:2rem"></div>
+                    <div style="display:flex;gap:0.5rem;margin-bottom:2rem">
+                        <input type="text" id="investmentInput" placeholder="e.g., Professional development" style="flex:1;padding:0.75rem;border:1px solid #d0c5ba;border-radius:6px;">
+                        <button class="btn btn-secondary" onclick="addInvestment()">Add</button>
+                    </div>
+
+                    <h3 class="field-group-header">Resource Alignment</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">Document how resources are aligned to each goal and action plan.</p>
+                    <div id="resourceAlignmentList" style="margin-bottom:2rem"></div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(8)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(9)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(10)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 10: Implementation Calendar -->
+            <div class="step-content" data-step="10">
+                <div class="step-header">
+                    <h1 class="step-title">Implementation Calendar</h1>
+                </div>
+                <p class="section-purpose">Create a timeline for implementing your action plans throughout the year.</p>
+
+                <div style="padding:1.5rem 0">
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:2rem">When will each action plan be implemented? Map your actions to quarters and specific dates.</p>
+                    <div id="calendarContainer"></div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(9)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(10)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(11)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 11: Monitoring & Accountability -->
+            <div class="step-content" data-step="11">
+                <div class="step-header">
+                    <h1 class="step-title">Monitoring & Accountability</h1>
+                </div>
+                <p class="section-purpose">Define how you'll monitor progress and hold the school accountable for results.</p>
+
+                <div style="padding:1.5rem 0">
+                    <!-- Leading Indicators -->
+                    <h3 class="field-group-header">Leading Indicators</h3>
+                    <p class="text-muted">Select indicators that predict progress toward your goals. Indicators are filtered based on your selected goals.</p>
+                    <div id="leadingIndicatorsList" style="margin-bottom:2rem"></div>
+
+                    <!-- Lagging Indicators -->
+                    <h3 class="field-group-header">Lagging Indicators</h3>
+                    <p class="text-muted">Select outcome measures that show whether your goals were achieved.</p>
+                    <div id="laggingIndicatorsList" style="margin-bottom:2rem"></div>
+
+                    <!-- Monitoring Frequency -->
+                    <h3 class="field-group-header">Monitoring Schedule</h3>
+                    <div class="form-group">
+                        <label for="monitoringFrequency">How often will you review progress?</label>
+                        <select id="monitoringFrequency">
+                            <option value="">-- Select --</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="bi-annually">Bi-annually</option>
+                            <option value="annually">Annually</option>
+                        </select>
+                    </div>
+
+                    <!-- Accountability Lead -->
+                    <h3 class="field-group-header">Accountability Structure</h3>
+                    <div class="form-group">
+                        <label for="accountabilityLead">Accountability Lead</label>
+                        <input type="text" id="accountabilityLead" placeholder="Name and role">
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(10)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(11)">Clear</button>
+                        <button class="btn btn-primary" onclick="stepGoto(12)">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 12: Review & Export -->
+            <div class="step-content" data-step="12">
+                <div class="step-header">
+                    <h1 class="step-title">Review & Export</h1>
+                </div>
+                <p class="section-purpose">Review your completed plan, finalize it, and export for stakeholder sharing.</p>
+
+                <div style="padding:1.5rem 0">
+                    <!-- Compliance Checklist -->
+                    <h3 class="field-group-header">Compliance Checklist</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">Verify that your plan meets all required federal and state requirements.</p>
+                    <div id="complianceChecklist" style="margin-bottom:2rem"></div>
+
+                    <!-- Review Checklist -->
+                    <h3 class="field-group-header">Plan Completeness Review</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">Check off each section as you review it.</p>
+                    <div id="reviewChecklist" style="margin-bottom:2rem"></div>
+
+                    <!-- Plan Summary -->
+                    <h3 class="field-group-header">Plan Summary</h3>
+                    <div id="reviewContainer" style="margin-bottom:2rem"></div>
+
+                    <!-- Finalize -->
+                    <h3 class="field-group-header">Finalize Your Plan</h3>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="confirmAccuracy">
+                            <span>I confirm that the information in this plan is accurate and complete.</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="confirmStakeholders">
+                            <span>I confirm that stakeholders have been meaningfully engaged in the development of this plan.</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="planAuthor">Plan Author/Principal Name <span class="essa-badge">Required</span></label>
+                        <input type="text" id="planAuthor" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label for="adoptionDate">Date Plan Adopted <span class="essa-badge">Required</span></label>
+                        <input type="date" id="adoptionDate">
+                    </div>
+
+                    <!-- Export -->
+                    <h3 class="field-group-header" style="margin-top:2rem">Export Your Plan</h3>
+                    <p style="font-size:0.9rem;color:#666;margin-bottom:1rem">Download your school plan in your preferred format for sharing with stakeholders and the district.</p>
+                    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+                        <button class="btn btn-secondary" onclick="exportPDF()">📄 Export as PDF</button>
+                        <button class="btn btn-secondary" onclick="exportWord()">📝 Export as Word</button>
+                        <button class="btn btn-secondary" onclick="savePlan()">💾 Save Plan</button>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button class="btn btn-outline" onclick="stepGoto(11)">Back</button>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearStep(12)">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Guidance Panel -->
+    <div class="guidance-panel" id="guidancePanel">
+        <button class="guidance-toggle" onclick="toggleGuidance()" title="Help & Guidance">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+        <div class="guidance-content" id="guidanceContent"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/state-config.js"></script>
+    <script src="js/school-data.js"></script>
+    <script src="js/school.js"></script>
+</body>
+</html>

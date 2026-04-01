@@ -1,0 +1,659 @@
+/* ============================================================================
+   STRATEGICDISTRICT.COM , BASE STYLES & GLOBAL RESETS
+   Global typography, resets, utilities, and foundation components
+   ============================================================================ */
+
+/* ========== CSS RESETS ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Rainbow bar is handled by header element, not html::before */
+/* Removed html::before to prevent duplicate bars */
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body-md);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* ========== TYPOGRAPHY DEFAULTS ========== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  margin-bottom: var(--spacing-lg);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  margin-bottom: var(--spacing-lg);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+  margin-bottom: var(--spacing-md);
+}
+
+h4 {
+  font-size: var(--font-size-h4);
+  margin-bottom: var(--spacing-md);
+}
+
+h5 {
+  font-size: var(--font-size-h5);
+  margin-bottom: var(--spacing-sm);
+}
+
+h6 {
+  font-size: var(--font-size-h6);
+  margin-bottom: var(--spacing-sm);
+}
+
+p {
+  margin-bottom: var(--spacing-md);
+  line-height: var(--line-height-relaxed);
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+}
+
+/* Keep visited links the same color as their designed state */
+a:visited {
+  color: inherit;
+}
+
+/* Ensure buttons with explicit colors keep white text when visited */
+a.btn-teal:visited,
+a.btn-gold:visited,
+a.btn-cta:visited,
+a.btn-primary:visited,
+a.btn-hero-primary:visited,
+a.btn-hero-secondary:visited,
+a.cta-primary:visited,
+a.cta-secondary:visited,
+a.sample-cta:visited,
+a.cta-btn:visited,
+a[class*="btn"]:visited {
+  color: white;
+}
+
+/* ========== LIST STYLES ========== */
+ul, ol {
+  margin-bottom: var(--spacing-md);
+  padding-left: var(--spacing-xl);
+}
+
+li {
+  margin-bottom: var(--spacing-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+/* ========== CODE & PREFORMATTED ========== */
+code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  background-color: var(--color-background-alt);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-sm);
+}
+
+pre {
+  background-color: var(--color-background-alt);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  margin-bottom: var(--spacing-md);
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* ========== BLOCKQUOTE ========== */
+blockquote {
+  border-left: 4px solid var(--color-secondary-sage);
+  padding-left: var(--spacing-lg);
+  margin-left: 0;
+  margin-bottom: var(--spacing-lg);
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+/* ========== IMAGES & MEDIA ========== */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+figure {
+  margin-bottom: var(--spacing-lg);
+}
+
+figcaption {
+  font-size: var(--font-size-body-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-sm);
+}
+
+/* ========== FORM RESETS ========== */
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  outline: 2px solid var(--color-primary-dark-blue);
+  outline-offset: 2px;
+}
+
+/* ========== TABLE STYLES ========== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--spacing-lg);
+}
+
+th {
+  background-color: var(--color-background-alt);
+  padding: var(--spacing-md);
+  text-align: left;
+  font-weight: var(--font-weight-semibold);
+  border-bottom: 2px solid var(--color-border-light);
+}
+
+td {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* ========== UTILITY CLASSES ========== */
+
+/* Display utilities */
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Text utilities */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-light {
+  color: var(--color-text-light);
+}
+
+.text-inverse {
+  color: var(--color-text-inverse);
+}
+
+.text-primary {
+  color: var(--color-primary-navy);
+}
+
+.text-secondary {
+  color: var(--color-secondary-sage);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+/* Font weight utilities */
+.font-light {
+  font-weight: var(--font-weight-light);
+}
+
+.font-regular {
+  font-weight: var(--font-weight-regular);
+}
+
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Margin utilities */
+.mt-0 { margin-top: 0; }
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-xl { margin-top: var(--spacing-xl); }
+.mt-2xl { margin-top: var(--spacing-2xl); }
+
+.mb-0 { margin-bottom: 0; }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+.mb-2xl { margin-bottom: var(--spacing-2xl); }
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Padding utilities */
+.p-0 { padding: 0; }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+
+.px-md { padding-left: var(--spacing-md); padding-right: var(--spacing-md); }
+.px-lg { padding-left: var(--spacing-lg); padding-right: var(--spacing-lg); }
+
+.py-md { padding-top: var(--spacing-md); padding-bottom: var(--spacing-md); }
+.py-lg { padding-top: var(--spacing-lg); padding-bottom: var(--spacing-lg); }
+
+/* ========== TOP GRADIENT BAR ========== */
+/* Rainbow bar positioned fixed at top of all pages */
+.rainbow-bar,
+.gradient-bar {
+  height: 6px;
+  background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+/* ========== HUE GRADIENT DIVIDERS & BORDERS ========== */
+
+/* Horizontal divider with bright hue gradient (vibrant features/data) */
+.hue-divider {
+  height: 2px;
+  background: var(--gradient-hue-bright);
+  border: none;
+  margin: var(--spacing-2xl) 0;
+  opacity: 0.8;
+}
+
+.hue-divider.subtle {
+  height: 1px;
+  opacity: 0.5;
+  margin: var(--spacing-xl) 0;
+  background: var(--gradient-hue-subtle);
+}
+
+.hue-divider.thick {
+  height: 3px;
+  opacity: 0.9;
+  margin: var(--spacing-3xl) 0;
+}
+
+.hue-divider.muted {
+  background: var(--gradient-hue-subtle);
+  opacity: 0.6;
+}
+
+/* Bordered element with bright hue gradient border */
+.hue-border {
+  border: 2px solid;
+  border-image: var(--gradient-hue-bright) 1;
+}
+
+.hue-border.top {
+  border: none;
+  border-top: 2px solid;
+  border-image: var(--gradient-hue-bright) 1;
+}
+
+.hue-border.bottom {
+  border: none;
+  border-bottom: 2px solid;
+  border-image: var(--gradient-hue-bright) 1;
+}
+
+.hue-border.left {
+  border: none;
+  border-left: 4px solid;
+  border-image: var(--gradient-hue-bright) 1;
+}
+
+.hue-border.muted {
+  border-image: var(--gradient-hue-subtle) 1;
+}
+
+/* Accent line (decorative) */
+.accent-line {
+  width: 60px;
+  height: 3px;
+  background: var(--gradient-hue-bright);
+  margin-bottom: var(--spacing-lg);
+}
+
+.accent-line.sage {
+  background: var(--color-secondary-sage);
+}
+
+.accent-line.gold {
+  background: var(--color-secondary-gold);
+}
+
+.accent-line.pop-green {
+  background: var(--color-pop-green);
+}
+
+.accent-line.pop-teal {
+  background: var(--color-pop-teal);
+}
+
+.accent-line.pop-gold {
+  background: var(--color-pop-gold);
+}
+
+.accent-line.pop-coral {
+  background: var(--color-pop-coral);
+}
+
+.accent-line.pop-purple {
+  background: var(--color-pop-purple);
+}
+
+.accent-line.center {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ========== BACKGROUND UTILITIES ========== */
+
+.bg-primary {
+  background-color: var(--color-primary-black);
+  color: var(--color-text-inverse);
+}
+
+.bg-secondary {
+  background-color: var(--color-primary-navy);
+  color: var(--color-text-inverse);
+}
+
+.bg-cream {
+  background-color: var(--color-primary-cream);
+  color: var(--color-text-primary);
+}
+
+.bg-light {
+  background-color: var(--color-background-alt);
+}
+
+.bg-sage-gradient {
+  background: var(--gradient-subtle-sage);
+}
+
+.bg-gold-gradient {
+  background: var(--gradient-subtle-gold);
+}
+
+/* ========== CONTAINER ========== */
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-lg);
+  padding-right: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-left: var(--spacing-2xl);
+    padding-right: var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: var(--spacing-3xl);
+    padding-right: var(--spacing-3xl);
+  }
+}
+
+/* ========== SECTION SPACING ========== */
+section {
+  padding: var(--section-padding-mobile);
+}
+
+@media (min-width: 768px) {
+  section {
+    padding: var(--section-padding-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  section {
+    padding: var(--section-padding-desktop);
+  }
+}
+
+/* ========== RESPONSIVE GRID ========== */
+.grid {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+.grid-2 {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.grid-3 {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.grid-4 {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ========== POP COLOR UTILITIES (bright accents for features/data) ========== */
+
+.text-pop-green {
+  color: var(--color-pop-green);
+}
+
+.text-pop-teal {
+  color: var(--color-pop-teal);
+}
+
+.text-pop-gold {
+  color: var(--color-pop-gold);
+}
+
+.text-pop-coral {
+  color: var(--color-pop-coral);
+}
+
+.text-pop-purple {
+  color: var(--color-pop-purple);
+}
+
+.bg-pop-green {
+  background-color: var(--color-pop-green);
+  color: white;
+}
+
+.bg-pop-teal {
+  background-color: var(--color-pop-teal);
+  color: white;
+}
+
+.bg-pop-gold {
+  background-color: var(--color-pop-gold);
+  color: white;
+}
+
+.bg-pop-coral {
+  background-color: var(--color-pop-coral);
+  color: white;
+}
+
+.bg-pop-purple {
+  background-color: var(--color-pop-purple);
+  color: white;
+}
+
+/* Border utilities with pop colors */
+.border-pop-green {
+  border-color: var(--color-pop-green);
+}
+
+.border-pop-teal {
+  border-color: var(--color-pop-teal);
+}
+
+.border-pop-gold {
+  border-color: var(--color-pop-gold);
+}
+
+.border-pop-coral {
+  border-color: var(--color-pop-coral);
+}
+
+.border-pop-purple {
+  border-color: var(--color-pop-purple);
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+  body {
+    background: white;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  .no-print {
+    display: none;
+  }
+}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <!-- SD Logo - Small/Favicon size -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22333B"/>
+      <stop offset="100%" style="stop-color:#14213D"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00B4CC"/>
+      <stop offset="100%" style="stop-color:#D4A537"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="38" height="38" rx="6" fill="url(#bg)"/>
+  <!-- S -->
+  <path d="M7,10 L19,10 L19,15 L12,15 L12,17.5 L19,17.5 L19,30 L7,30 L7,25 L14,25 L14,22.5 L7,22.5 Z" fill="url(#accent)"/>
+  <!-- D -->
+  <path d="M22,10 L31,10 C33.5,10 34,12 34,13.5 L34,26.5 C34,28 33.5,30 31,30 L22,30 Z M26,14 L26,26 L30,26 C30.5,26 31,25.5 31,25 L31,15 C31,14.5 30.5,14 30,14 Z" fill="white"/>
+</svg>

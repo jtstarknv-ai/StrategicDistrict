@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works - Strategic District</title>
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/header.css">
+  <link rel="stylesheet" href="/styles/footer.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/shared/auth.js"></script>
+  <style>
+    body {
+      padding-top: 0;
+    }
+
+    header {
+      margin-top: 6px;
+    }
+
+    .header-content {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .logo img {
+      height: 48px;
+      width: auto;
+    }
+
+    .logo span {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    /* Section divider */
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Footer override */
+    footer {
+      background-color: #DDD3C6 !important;
+      padding-top: 0 !important;
+    }
+
+    /* Hero Section */
+    .hero {
+      background-color: var(--color-primary-cream);
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h1);
+      color: var(--color-primary-navy);
+      margin: 0 0 24px 0;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--color-primary-brown);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Journey Section */
+    .journey-section {
+      background: white;
+      padding: 50px 20px;
+    }
+
+    .journey-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h2);
+      color: var(--color-primary-navy);
+      text-align: center;
+      margin: 0 0 16px 0;
+    }
+
+    .section-description {
+      font-size: 1.0625rem;
+      color: var(--color-primary-brown);
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    .journey-phases {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+
+    .phase-group {
+      background: #f9f7f3;
+      padding: 24px;
+      border-radius: 8px;
+    }
+
+    .phase-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      color: var(--color-primary-navy);
+      margin: 0 0 20px 0;
+      font-weight: 600;
+    }
+
+    .step-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .step-card {
+      background: white;
+      padding: 16px;
+      border-radius: 4px;
+      border-left: 4px solid;
+      display: flex;
+      gap: 12px;
+    }
+
+    .step-card.foundation {
+      border-left-color: #6ECF6E;
+    }
+
+    .step-card.design {
+      border-left-color: #00B4CC;
+    }
+
+    .step-card.execution {
+      border-left-color: #6B4C9A;
+    }
+
+    .step-number {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-primary-navy);
+      min-width: 24px;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--color-primary-navy);
+      margin: 0 0 4px 0;
+    }
+
+    .step-description {
+      font-size: 0.875rem;
+      color: var(--color-primary-brown);
+      margin: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .badge.foundation {
+      background-color: rgba(110, 207, 110, 0.15);
+      color: #6ECF6E;
+    }
+
+    .badge.design {
+      background-color: rgba(0, 180, 204, 0.15);
+      color: #00B4CC;
+    }
+
+    .badge.execution {
+      background-color: rgba(107, 76, 154, 0.15);
+      color: #6B4C9A;
+    }
+
+    /* School Builder Section - Full Picture */
+    .school-builder {
+      background: linear-gradient(135deg, #E8DCC9 0%, #F9F7F3 100%);
+      padding: 60px 20px;
+    }
+
+    .school-builder-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .school-builder-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .school-builder-header h2 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h2);
+      color: var(--color-primary-navy);
+      margin: 0 0 16px 0;
+      line-height: 1.2;
+    }
+
+    .school-builder-header p {
+      font-size: 1.0625rem;
+      color: var(--color-primary-brown);
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Plan grid layout */
+    .plan-grid-wrapper {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    /* The outer "always come back" ring */
+    .plan-outer-ring {
+      border: 2px dashed var(--color-pop-teal);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .ring-label-top {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #E8DCC9 0%, #F3EEE6 100%);
+      padding: 2px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-pop-teal);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .plan-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .plan-step {
+      background: white;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .plan-step.span-full {
+      grid-column: 1 / -1;
+    }
+
+    .plan-step.step-start {
+      background: linear-gradient(135deg, rgba(0, 180, 204, 0.06) 0%, white 100%);
+      border-bottom: 2px solid var(--color-pop-teal);
+    }
+
+    .plan-step.step-end {
+      background: linear-gradient(135deg, white 0%, rgba(107, 76, 154, 0.06) 100%);
+      border-top: 2px solid var(--color-pop-purple);
+    }
+
+    .plan-step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .plan-step.step-start .plan-step-num { background: var(--color-pop-teal); }
+    .plan-step.step-end .plan-step-num { background: var(--color-pop-purple); }
+    .plan-step.step-left .plan-step-num { background: var(--color-pop-green); }
+    .plan-step.step-right .plan-step-num { background: var(--color-pop-teal); }
+
+    .plan-step-info { flex: 1; }
+
+    .plan-step-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-primary-navy);
+      margin: 0 0 2px 0;
+    }
+
+    .plan-step-sub {
+      font-size: 0.8rem;
+      color: var(--color-primary-brown);
+      margin: 0;
+    }
+
+    .plan-step-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+
+    .tag-free {
+      background: rgba(110, 207, 110, 0.15);
+      color: #4a9e4a;
+    }
+
+    .tag-enterprise {
+      background: rgba(0, 180, 204, 0.12);
+      color: #008fa3;
+    }
+
+    /* Ring bottom: Strategic School + continuous improvement */
+    .ring-bottom {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .ring-card {
+      flex: 1;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      text-align: center;
+    }
+
+    .ring-card h4 {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin: 0 0 6px 0;
+    }
+
+    .ring-card p {
+      font-size: 0.85rem;
+      color: var(--color-primary-brown);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .ring-card-icon {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .plan-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ring-bottom {
+        flex-direction: column;
+      }
+    }
+
+    /* Details Section */
+    .details-section {
+      background: white;
+      padding: 60px 20px;
+    }
+
+    .details-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .details-title {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h2);
+      color: var(--color-primary-navy);
+      text-align: center;
+      margin: 0 0 48px 0;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 32px;
+    }
+
+    .detail-box {
+      border-top: 4px solid;
+      padding: 32px;
+      background: #f9f7f3;
+      border-radius: 4px;
+    }
+
+    .detail-box.color-1 {
+      border-top-color: #00B4CC;
+    }
+
+    .detail-box.color-2 {
+      border-top-color: #6ECF6E;
+    }
+
+    .detail-box.color-3 {
+      border-top-color: #6B4C9A;
+    }
+
+    .detail-box.color-4 {
+      border-top-color: #E07A5F;
+    }
+
+    .detail-box.color-5 {
+      border-top-color: #D4A537;
+    }
+
+    .detail-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: white;
+      color: white;
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+    }
+
+    .detail-box.color-1 .detail-number {
+      background-color: #00B4CC;
+    }
+
+    .detail-box.color-2 .detail-number {
+      background-color: #6ECF6E;
+    }
+
+    .detail-box.color-3 .detail-number {
+      background-color: #6B4C9A;
+    }
+
+    .detail-box.color-4 .detail-number {
+      background-color: #E07A5F;
+    }
+
+    .detail-box.color-5 .detail-number {
+      background-color: #D4A537;
+    }
+
+    .detail-box h3 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      color: var(--color-primary-navy);
+      margin: 0 0 12px 0;
+      font-weight: 600;
+    }
+
+    .detail-box p {
+      font-size: 0.9375rem;
+      color: var(--color-primary-brown);
+      margin: 0 0 16px 0;
+      line-height: 1.6;
+    }
+
+    .detail-callout {
+      background: rgba(107, 76, 154, 0.08);
+      border-left: 3px solid #6B4C9A;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 2px;
+    }
+
+    .detail-callout-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #6B4C9A;
+      margin: 0 0 6px 0;
+      letter-spacing: 0.3px;
+    }
+
+    .detail-callout-text {
+      font-size: 0.875rem;
+      color: var(--color-primary-brown);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .detail-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .detail-list li {
+      font-size: 0.875rem;
+      color: var(--color-primary-brown);
+      padding: 6px 0 6px 20px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .detail-list li:before {
+      content: '\2713';
+      position: absolute;
+      left: 0;
+      color: #6ECF6E;
+      font-weight: 700;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background-color: var(--color-primary-navy);
+      padding: 60px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(212, 165, 55, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .cta-section::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(212, 165, 55, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .cta-container {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-section h2,
+    .cta-section p {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .cta-title {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h2);
+      color: var(--color-primary-cream);
+      margin: 0 0 12px 0 !important;
+      line-height: 1.2;
+    }
+
+    .cta-description {
+      font-size: 1.0625rem;
+      color: rgba(249, 247, 243, 0.9);
+      margin: 0 0 24px 0 !important;
+      line-height: 1.6;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 32px;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background-color: #00B4CC;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #0091A8;
+    }
+
+    .btn-secondary {
+      background-color: var(--color-primary-navy);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #2C3E50;
+    }
+
+    .btn-gold {
+      background-color: #D4A537;
+      color: white;
+    }
+
+    .btn-gold:hover {
+      background-color: #c1932d;
+      box-shadow: 0 8px 20px rgba(212, 165, 55, 0.25);
+    }
+
+    /* Scroll-reveal animations */
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0; transform: translateX(-40px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0; transform: translateX(40px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .stagger > * { transition-delay: calc(var(--i, 0) * 120ms); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .journey-phases {
+        grid-template-columns: 1fr;
+      }
+
+      .school-builder-container {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .section-title {
+        font-size: 1.75rem;
+      }
+
+      .cta-title {
+        font-size: 1.75rem;
+      }
+
+      .journey-phases {
+        grid-template-columns: 1fr;
+      }
+
+      .school-builder-container {
+        grid-template-columns: 1fr;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .journey-section,
+      .school-builder,
+      .details-section,
+      .cta-section {
+        padding: 40px 16px;
+      }
+
+      .school-builder-mockup {
+        padding: 20px;
+      }
+
+      .detail-box {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="rainbow-bar"></div>
+  <header>
+    <div class="header-content">
+      <a href="/" class="logo">
+        <img src="/assets/images/SDlogo.png" alt="Strategic District" height="48">
+        <span>Strategic District</span>
+      </a>
+      <nav class="main-nav">
+        <a href="/what-we-offer/">What We Offer</a>
+        <a href="/how-it-works/" class="active">How It Works</a>
+        <a href="/sample-plan/">Strategic Plans</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div id="auth-buttons"></div>
+        <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="mobile-nav">
+      <a href="/what-we-offer/">What We Offer</a>
+      <a href="/how-it-works/" class="active">How It Works</a>
+      <a href="/sample-plan/">Strategic Plans</a>
+      <a href="/contact/">Contact</a>
+      <a href="/login/">Sign In</a>
+      <a href="/signup/" class="header-signup-btn">Get Started</a>
+    </div>
+  </header>
+
+  <div class="section-divider"></div>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="reveal">Your Vision. Full Alignment. Real Action.</h1>
+      <p class="reveal">A guided, research-based process that takes you from defining your district's context through implementation planning and quarterly tracking. Complete your strategic plan and align your entire school district.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="journey-section">
+    <div class="journey-container">
+      <h2 class="section-title reveal">Your Strategic Planning Journey</h2>
+      <p class="section-description reveal">The Strategic District Strategic Plan process guides you through every research-backed step. From understanding your district to implementing and tracking progress, every step builds on the last to create a complete, actionable strategy that your entire organization can align around.</p>
+
+      <div class="journey-phases stagger">
+        <div class="phase-group" style="--i: 0">
+          <div class="badge foundation">Free</div>
+          <h3 class="phase-title">Foundation (Steps 1-7)</h3>
+          <div class="step-cards">
+            <div class="step-card foundation">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <div class="step-title">District Profile</div>
+                <div class="step-description">Context & data</div>
+              </div>
+            </div>
+            <div class="step-card foundation">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <div class="step-title">Budget & Funding Sources</div>
+                <div class="step-description">Resource alignment</div>
+              </div>
+            </div>
+            <div class="step-card foundation">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <div class="step-title">Stakeholder Engagement</div>
+                <div class="step-description">Convene & survey</div>
+              </div>
+            </div>
+            <div class="step-card foundation">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <div class="step-title">Vision & Mission</div>
+                <div class="step-description">Guiding principles</div>
+              </div>
+            </div>
+            <div class="step-card foundation">
+              <div class="step-number">5</div>
+              <div class="step-content">
+                <div class="step-title">Core Values</div>
+                <div class="step-description">What matters most</div>
+              </div>
+            </div>
+            <div class="step-card foundation">
+              <div class="step-number">6</div>
+              <div class="step-content">
+                <div class="step-title">Competencies</div>
+                <div class="step-description">Student capabilities</div>
+              </div>
+            </div>
+            <div class="step-card foundation">
+              <div class="step-number">7</div>
+              <div class="step-content">
+                <div class="step-title">Strategic Domains</div>
+                <div class="step-description">Focus areas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-group" style="--i: 1">
+          <div class="badge design">Enterprise</div>
+          <h3 class="phase-title">Design (Steps 8-11)</h3>
+          <div class="step-cards">
+            <div class="step-card design">
+              <div class="step-number">8</div>
+              <div class="step-content">
+                <div class="step-title">Strategic Goal Setting</div>
+                <div class="step-description">With measures</div>
+              </div>
+            </div>
+            <div class="step-card design">
+              <div class="step-number">9</div>
+              <div class="step-content">
+                <div class="step-title">Goal Forecasting</div>
+                <div class="step-description">Multi-year targets</div>
+              </div>
+            </div>
+            <div class="step-card design">
+              <div class="step-number">10</div>
+              <div class="step-content">
+                <div class="step-title">Central Office Alignment</div>
+                <div class="step-description">Department mapping</div>
+              </div>
+            </div>
+            <div class="step-card design">
+              <div class="step-number">11</div>
+              <div class="step-content">
+                <div class="step-title">Action Initiatives</div>
+                <div class="step-description">Strategies & tactics</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-group" style="--i: 2">
+          <div class="badge execution">Enterprise</div>
+          <h3 class="phase-title">Execution (Steps 12-14)</h3>
+          <div class="step-cards">
+            <div class="step-card execution">
+              <div class="step-number">12</div>
+              <div class="step-content">
+                <div class="step-title">Stakeholder Review</div>
+                <div class="step-description">Validate & refine</div>
+              </div>
+            </div>
+            <div class="step-card execution">
+              <div class="step-number">13</div>
+              <div class="step-content">
+                <div class="step-title">Implementation Calendar</div>
+                <div class="step-description">Timeline & quarters</div>
+              </div>
+            </div>
+            <div class="step-card execution">
+              <div class="step-number">14</div>
+              <div class="step-content">
+                <div class="step-title">Review & Export</div>
+                <div class="step-description">Finalize & share</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="school-builder">
+    <div class="school-builder-container">
+      <div class="school-builder-header">
+        <h2 class="reveal">See the Full Picture with Enterprise</h2>
+        <p class="reveal">The section above shows the steps in isolation. Enterprise brings them together into one cohesive, connected strategic plan. Every piece builds on the last.</p>
+      </div>
+
+      <div class="plan-grid-wrapper reveal">
+        <div class="plan-outer-ring">
+          <div class="ring-label-top">Come back any time to update your plan</div>
+
+          <div class="plan-grid">
+            <!-- Step 1: spans top -->
+            <div class="plan-step span-full step-start">
+              <div class="plan-step-num">1</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">District Profile</div>
+                <div class="plan-step-sub">Select your district and we auto-populate your public data</div>
+              </div>
+              <div class="plan-step-tag tag-free">Free</div>
+            </div>
+
+            <!-- Left column: Steps 2-7 (Free) | Right column: Steps 8-13 (Enterprise) -->
+            <div class="plan-step step-left">
+              <div class="plan-step-num">2</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Budget & Funding Sources</div>
+                <div class="plan-step-sub">Resource alignment</div>
+              </div>
+              <div class="plan-step-tag tag-free">Free</div>
+            </div>
+
+            <div class="plan-step step-right">
+              <div class="plan-step-num">8</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Strategic Goal Setting</div>
+                <div class="plan-step-sub">With measures</div>
+              </div>
+              <div class="plan-step-tag tag-enterprise">Enterprise</div>
+            </div>
+
+            <div class="plan-step step-left">
+              <div class="plan-step-num">3</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Stakeholder Engagement</div>
+                <div class="plan-step-sub">Convene & survey</div>
+              </div>
+              <div class="plan-step-tag tag-free">Free</div>
+            </div>
+
+            <div class="plan-step step-right">
+              <div class="plan-step-num">9</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Goal Forecasting</div>
+                <div class="plan-step-sub">Multi-year targets</div>
+              </div>
+              <div class="plan-step-tag tag-enterprise">Enterprise</div>
+            </div>
+
+            <div class="plan-step step-left">
+              <div class="plan-step-num">4</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Vision & Mission</div>
+                <div class="plan-step-sub">Guiding principles</div>
+              </div>
+              <div class="plan-step-tag tag-free">Free</div>
+            </div>
+
+            <div class="plan-step step-right">
+              <div class="plan-step-num">10</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Central Office Alignment</div>
+                <div class="plan-step-sub">Department mapping</div>
+              </div>
+              <div class="plan-step-tag tag-enterprise">Enterprise</div>
+            </div>
+
+            <div class="plan-step step-left">
+              <div class="plan-step-num">5</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Core Values</div>
+                <div class="plan-step-sub">What matters most</div>
+              </div>
+              <div class="plan-step-tag tag-free">Free</div>
+            </div>
+
+            <div class="plan-step step-right">
+              <div class="plan-step-num">11</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Action Initiatives</div>
+                <div class="plan-step-sub">Strategies & tactics</div>
+              </div>
+              <div class="plan-step-tag tag-enterprise">Enterprise</div>
+            </div>
+
+            <div class="plan-step step-left">
+              <div class="plan-step-num">6</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Competencies</div>
+                <div class="plan-step-sub">Student capabilities</div>
+              </div>
+              <div class="plan-step-tag tag-free">Free</div>
+            </div>
+
+            <div class="plan-step step-right">
+              <div class="plan-step-num">12</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Stakeholder Review</div>
+                <div class="plan-step-sub">Validate & refine</div>
+              </div>
+              <div class="plan-step-tag tag-enterprise">Enterprise</div>
+            </div>
+
+            <div class="plan-step step-left">
+              <div class="plan-step-num">7</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Strategic Domains</div>
+                <div class="plan-step-sub">Focus areas</div>
+              </div>
+              <div class="plan-step-tag tag-free">Free</div>
+            </div>
+
+            <div class="plan-step step-right" style="grid-column: 2;">
+              <div class="plan-step-num">13</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Implementation Calendar</div>
+                <div class="plan-step-sub">Timeline & quarters</div>
+              </div>
+              <div class="plan-step-tag tag-enterprise">Enterprise</div>
+            </div>
+
+            <!-- Step 14: spans bottom -->
+            <div class="plan-step span-full step-end">
+              <div class="plan-step-num">14</div>
+              <div class="plan-step-info">
+                <div class="plan-step-title">Review & Export</div>
+                <div class="plan-step-sub">Finalize your plan, generate professional reports, and share with your board and community</div>
+              </div>
+              <div class="plan-step-tag tag-enterprise">Enterprise</div>
+            </div>
+          </div>
+
+          <!-- Cards inside the ring, below the grid -->
+          <div class="ring-bottom">
+            <div class="ring-card">
+              <span class="ring-card-icon" role="img" aria-label="refresh"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="2" y="2" width="36" height="36" rx="10" fill="#00B4CC" fill-opacity="0.1" stroke="#00B4CC" stroke-opacity="0.2"/><path d="M26 14a8 8 0 1 0 1.5 8.5" stroke="#00B4CC" stroke-width="1.5" stroke-linecap="round"/><path d="M26 10v4h4" stroke="#00B4CC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <h4>Continuous Improvement</h4>
+              <p>Update any section of your district plan or do a full refresh. Your strategy is a living document.</p>
+            </div>
+            <div class="ring-card">
+              <span class="ring-card-icon" role="img" aria-label="school"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="2" y="2" width="36" height="36" rx="10" fill="#E07A5F" fill-opacity="0.1" stroke="#E07A5F" stroke-opacity="0.2"/><path d="M20 8L8 16v4l12 8 12-8v-4L20 8z" fill="#E07A5F" fill-opacity="0.12" stroke="#E07A5F" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 20v6c0 1.5 3 4 8 4s8-2.5 8-4v-6" stroke="#E07A5F" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              <h4>Strategic School</h4>
+              <p>Create aligned School Improvement Plans for every school, connected to your district strategy.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="details-section">
+    <div class="details-container">
+      <h2 class="details-title reveal">What Do Guided Steps Entail?</h2>
+      <div class="details-grid stagger">
+        <div class="detail-box color-1" style="--i: 0">
+          <div class="detail-number">1</div>
+          <h3>Name Your Strategic Plan</h3>
+          <p>Select your district from our database and we auto-populate your public data. Name your plan, set the timeline, and you're ready to build.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">Starting with real data saves time and grounds your plan in facts from day one.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Search and select your district</li>
+            <li>Auto-populate public enrollment and demographics</li>
+            <li>Name and configure your plan</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-2" style="--i: 1">
+          <div class="detail-number">2</div>
+          <h3>Budget & Funding Sources</h3>
+          <p>Understand your district's current financial resources, funding sources, and budget allocation priorities. This foundation enables informed strategic planning aligned with fiscal capacity.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">Strategy without budget reality is fiction. Align strategic priorities with available resources from the start.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Map current budget allocation and sources</li>
+            <li>Identify discretionary and flexible funding</li>
+            <li>Align strategic investments with financial capacity</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-3" style="--i: 2">
+          <div class="detail-number">3</div>
+          <h3>District Profile</h3>
+          <p>Understand your district's current state: demographics, academic performance, operational health, and key stakeholders. Build the foundation for strategic thinking.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">Strategy without context is wishful thinking. Great plans are grounded in reality.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Review district data and demographics</li>
+            <li>Assess current academic performance</li>
+            <li>Identify key assets and challenges</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-4" style="--i: 3">
+          <div class="detail-number">4</div>
+          <h3>Vision & Mission</h3>
+          <p>Define where your district is headed and why. A compelling vision rallies the entire organization around shared purpose.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">When everyone knows the destination, decisions become clearer and more aligned.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Craft your district vision statement</li>
+            <li>Define your mission and purpose</li>
+            <li>Test alignment with stakeholders</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-5" style="--i: 4">
+          <div class="detail-number">5</div>
+          <h3>Core Values</h3>
+          <p>Identify the principles and beliefs that guide decision-making. Values keep everyone accountable to what matters most.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">Values become the cultural compass when strategy gets complicated.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Identify core values and beliefs</li>
+            <li>Define what each value means in practice</li>
+            <li>Build shared ownership of values</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-1" style="--i: 5">
+          <div class="detail-number">6</div>
+          <h3>Competencies</h3>
+          <p>Define the key student capabilities your district aims to develop. These competencies frame what success looks like for every learner.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">Competencies align instruction, assessment, and accountability behind shared student outcomes.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Select or create student competency frameworks</li>
+            <li>Align to district vision and values</li>
+            <li>Define proficiency indicators</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-2" style="--i: 6">
+          <div class="detail-number">7</div>
+          <h3>Strategic Domains</h3>
+          <p>Identify the major focus areas where your district will concentrate strategic energy. Domains prevent scattered priorities and ensure focus.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">The best strategies are focused strategies. Domains force trade-offs and clarity.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Identify strategic priorities and gaps</li>
+            <li>Define 3-5 strategic domains</li>
+            <li>Connect domains to vision and values</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-3" style="--i: 7">
+          <div class="detail-number">8</div>
+          <h3>Strategic Goal Setting</h3>
+          <p>Define specific, measurable goals within each strategic domain. Goals translate vision into concrete targets.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">Measurable goals keep districts accountable and help teams know when they're winning.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Set 2-4 year strategic goals</li>
+            <li>Define baseline and target measures</li>
+            <li>Build goals across key domains</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-4" style="--i: 8">
+          <div class="detail-number">9</div>
+          <h3>Goal Forecasting</h3>
+          <p>Project progress pathways and annual targets that get you from baseline to goal. Forecasting builds realistic multi-year roadmaps.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">Year-to-year targets help teams stay on pace and adjust strategies when off track.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Project annual progress toward goals</li>
+            <li>Set year-by-year targets</li>
+            <li>Build flexibility for adjustments</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-5" style="--i: 9">
+          <div class="detail-number">10</div>
+          <h3>Central Office Alignment</h3>
+          <p>Map how every central office department supports the district's strategic priorities. Alignment cascades strategy through the organization.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">When central office is aligned, schools and classrooms can focus on execution.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Map departmental roles and responsibilities</li>
+            <li>Connect actions to strategic goals</li>
+            <li>Align budgets and resources to priorities</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-1" style="--i: 10">
+          <div class="detail-number">11</div>
+          <h3>Action Initiatives</h3>
+          <p>Define the specific initiatives and strategies that will drive progress toward your goals. Initiatives are the work of the plan.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">Without specific actions, strategy stays abstract. Initiatives make strategy actionable.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Identify key initiatives per strategic goal</li>
+            <li>Define scope, timeline, and leadership</li>
+            <li>Build sustainability and scale plans</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-2" style="--i: 11">
+          <div class="detail-number">12</div>
+          <h3>Implementation Calendar</h3>
+          <p>Create a quarterly roadmap that sequences initiatives and activities. Implementation calendars turn strategy into a timeline your teams can execute.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">When work is sequenced and staged thoughtfully, teams can focus and execute.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Build quarterly roadmaps</li>
+            <li>Sequence initiatives for impact</li>
+            <li>Track progress and adjust quarterly</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-3" style="--i: 12">
+          <div class="detail-number">13</div>
+          <h3>Stakeholder Review</h3>
+          <p>Present your strategic plan to key stakeholders and board for feedback, validation, and refinement. Stakeholder review ensures buy-in and alignment before final launch.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">Plans that are co-created with stakeholders gain ownership and support for implementation.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Share draft plan with leadership team</li>
+            <li>Gather stakeholder feedback and input</li>
+            <li>Refine based on feedback and alignment</li>
+          </ul>
+        </div>
+
+        <div class="detail-box color-4" style="--i: 13">
+          <div class="detail-number">14</div>
+          <h3>Review & Export</h3>
+          <p>Generate polished strategic plan documents and presentations for your board, community, and schools. Your plan is now ready to share and execute.</p>
+          <div class="detail-callout">
+            <div class="detail-callout-title">Why This Matters</div>
+            <div class="detail-callout-text">A professional plan document builds stakeholder confidence and clarity across the district.</div>
+          </div>
+          <ul class="detail-list">
+            <li>Review plan with leadership team</li>
+            <li>Generate PDF and web versions</li>
+            <li>Prepare for board and community rollout</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="cta-section">
+    <div class="cta-container">
+      <h2 class="cta-title reveal">Start Your Strategic Plan Today</h2>
+      <p class="cta-description reveal">Join forward-thinking districts building real strategic plans.</p>
+      <div class="cta-buttons">
+        <a href="/signup/" class="btn btn-primary">Get Started Free</a>
+        <a href="/sample-plan/" class="btn btn-gold">View Sample Plans</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+    <div class="footer-content" style="padding-top: 24px;">
+      <div class="footer-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+        <div class="footer-column">
+          <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+            <img src="/assets/images/SDlogo.png" alt="Strategic District" style="height: 112px; width: auto;">
+            <div style="font-weight: 700; color: #000000; font-size: 2rem; text-transform: uppercase; letter-spacing: 1px;">STRATEGIC DISTRICT</div>
+          </div>
+          
+        </div>
+        <div class="footer-column" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Explore</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/what-we-offer/" style="color: var(--color-primary-brown);">What We Offer</a></li>
+              <li><a href="/how-it-works/" style="color: var(--color-primary-brown);">How It Works</a></li>
+              <li><a href="/sample-plan/" style="color: var(--color-primary-brown);">Strategic Plans</a></li>
+              <li><a href="/builder/" style="color: var(--color-primary-brown);">Start Building</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Customer Service</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/contact/" style="color: var(--color-primary-brown);">Contact</a></li>
+              <li><a href="/login/" style="color: var(--color-primary-brown);">Sign In</a></li>
+              <li><a href="/signup/" style="color: var(--color-primary-brown);">Sign Up</a></li>
+              <li><a href="#privacy" style="color: var(--color-primary-brown);">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div style="height: 1px; background: rgba(94, 80, 63, 0.2); margin: 12px 0;"></div>
+      <div class="footer-bottom">
+        <div class="footer-copyright" style="color: var(--color-primary-brown);">
+          Professional strategic planning for PK-12 public education, charters, and private schools. &nbsp;|&nbsp; Powered by <a href="https://starkanalytica.com" style="color: var(--color-primary-navy); text-decoration: none; font-weight: 500;">Stark Analytica LLC</a> &nbsp;|&nbsp; &copy; 2026 Strategic District. All rights reserved.
+        </div>
+      </div>
+    </div>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+  </footer>
+
+  <script src="/js/shared/header.js"></script>
+  <script>
+    var header = document.querySelector('header');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 0) {
+        header.classList.add('scroll-shadow');
+      } else {
+        header.classList.remove('scroll-shadow');
+      }
+    });
+
+    // Scroll-reveal animations
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(function(el) {
+      revealObserver.observe(el);
+    });
+  </script>
+</body>
+</html>

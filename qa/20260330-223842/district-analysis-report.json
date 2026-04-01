@@ -1,0 +1,146 @@
+{
+  "target": "district-builder",
+  "timestamp": "2026-03-30T22:38:42Z",
+  "metadata": {
+    "baseDir": "/sessions/sleepy-gifted-allen/mnt/site/builder",
+    "indexFile": "index.html",
+    "jsFiles": [
+      "js/ai-engine.js",
+      "js/budget-alignment.js",
+      "js/budget-integration.js",
+      "js/budget-setup.js",
+      "js/budget-tracker.js",
+      "js/builder.js",
+      "js/doc-generator.js",
+      "js/features.js",
+      "js/paywall.js",
+      "js/stakeholder.js",
+      "js/toolkit.js"
+    ]
+  },
+  "missingIds": [
+    {"id": "ai-cf-token", "referencedIn": "ai-engine.js", "description": "AI API key input for Cloudflare"},
+    {"id": "ai-groq-key", "referencedIn": "ai-engine.js", "description": "AI API key input for Groq"},
+    {"id": "aiHelper", "referencedIn": "ai-engine.js", "description": "AI Helper panel container"},
+    {"id": "aiHelperBody", "referencedIn": "ai-engine.js", "description": "AI Helper body content"},
+    {"id": "aiHelperPanel", "referencedIn": "ai-engine.js", "description": "AI Helper panel"},
+    {"id": "aiHelperTitle", "referencedIn": "ai-engine.js", "description": "AI Helper title"},
+    {"id": "calViewQuarterly", "referencedIn": "builder.js", "description": "Calendar quarterly view button"},
+    {"id": "calViewTimeline", "referencedIn": "builder.js", "description": "Calendar timeline view button"},
+    {"id": "calendarQuarterly", "referencedIn": "builder.js", "description": "Calendar quarterly container"},
+    {"id": "calendarTimeline", "referencedIn": "builder.js", "description": "Calendar timeline container"},
+    {"id": "customCompCategory", "referencedIn": "features.js", "description": "Custom competency category field"},
+    {"id": "customCompSkill", "referencedIn": "features.js", "description": "Custom competency skill field"},
+    {"id": "customCoreValue", "referencedIn": "features.js", "description": "Custom core value input"},
+    {"id": "customDomainDesc", "referencedIn": "builder.js", "description": "Custom domain description field"},
+    {"id": "customDomainName", "referencedIn": "builder.js", "description": "Custom domain name field"},
+    {"id": "driftAlertContainer", "referencedIn": "features.js", "description": "Drift alert messages container"},
+    {"id": "live-responses", "referencedIn": "stakeholder.js", "description": "Live survey responses counter"},
+    {"id": "perPupilExpenditure", "referencedIn": "builder.js", "description": "Per-pupil expenditure metric display"},
+    {"id": "planNameInput", "referencedIn": "builder.js", "description": "Plan name input field (different from planNameTop)"},
+    {"id": "response-count", "referencedIn": "stakeholder.js", "description": "Survey response count display"},
+    {"id": "role-breakdown", "referencedIn": "stakeholder.js", "description": "Stakeholder role breakdown chart"},
+    {"id": "survey-form", "referencedIn": "stakeholder.js", "description": "Survey form container"},
+    {"id": "total-responses", "referencedIn": "stakeholder.js", "description": "Total survey responses counter"},
+    {"id": "upgradeModal", "referencedIn": "paywall.js", "description": "Premium upgrade modal"}
+  ],
+  "missingHandlers": [],
+  "missingExports": [],
+  "syntaxErrors": [],
+  "duplicateFunctions": [
+    {
+      "name": "calculateFeasibilityScore",
+      "locations": [
+        "js/ai-engine.js:725",
+        "js/budget-integration.js:519"
+      ],
+      "severity": "critical",
+      "note": "Two different implementations. ai-engine.js takes planState parameter, budget-integration.js takes no parameters."
+    },
+    {
+      "name": "updateBudgetSummary",
+      "locations": [
+        "js/budget-alignment.js:118",
+        "js/budget-tracker.js:56"
+      ],
+      "severity": "critical",
+      "note": "Two different implementations. Likely causing budget summary display inconsistencies."
+    }
+  ],
+  "stepCompleteness": [
+    {"step": 1, "title": "District Profile", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 2, "title": "Budget & Funding Sources", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 3, "title": "Stakeholder Engagement", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 4, "title": "Vision & Mission", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 5, "title": "Core Values", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 6, "title": "Competencies", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 7, "title": "Strategic Domains", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 8, "title": "Strategic Goal Setting", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 9, "title": "Strategic Goal Forecasting", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 10, "title": "Central Office Alignment", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 11, "title": "Action Initiatives", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 12, "title": "Stakeholder Review", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 13, "title": "Implementation Calendar", "hasContentDiv": true, "hasSidebarEntry": true},
+    {"step": 14, "title": "Review & Finalize", "hasContentDiv": true, "hasSidebarEntry": true}
+  ],
+  "crossFileIssues": [
+    {
+      "type": "global-state-dependency",
+      "variable": "planState",
+      "definedIn": "js/builder.js:230",
+      "referencedIn": [
+        "js/ai-engine.js",
+        "js/budget-alignment.js",
+        "js/budget-integration.js",
+        "js/budget-setup.js",
+        "js/budget-tracker.js",
+        "js/doc-generator.js",
+        "js/features.js",
+        "js/stakeholder.js",
+        "js/toolkit.js"
+      ],
+      "severity": "info",
+      "note": "Central state object shared across all modules. Ensure it's loaded first and all modifications are tracked."
+    }
+  ],
+  "codeQuality": {
+    "syntaxValidation": "PASS - All 11 JS files pass Node syntax check",
+    "totalFunctions": 403,
+    "totalHtmlIds": 361,
+    "totalGetElementByIdCalls": 285,
+    "dynamicIdPatterns": [
+      "gs-{step}-{goalIndex}",
+      "gs-{step}-{goalIndex}-status",
+      "crit-{step}-{criteriaIndex}",
+      "grade-circle-{step}",
+      "grade-summary-{step}",
+      "grade-tips-{step}",
+      "grade-tips-list-{step}",
+      "grader-stage-{step}",
+      "my-{goalId}-{year}",
+      "stakeholderFeedback{step}"
+    ]
+  },
+  "summary": {
+    "totalIssues": 29,
+    "criticalIssues": 2,
+    "warningIssues": 25,
+    "infoIssues": 2,
+    "overallStatus": "WARNING",
+    "assessment": "District Builder has 2 critical duplicate function definitions that could cause runtime issues. 24 missing HTML IDs are referenced by JS but don't exist in the DOM - these may be conditionally rendered or part of a feature not yet fully integrated. All 14 steps are properly structured with content divs and sidebar entries. Code syntax is valid across all files."
+  },
+  "detailedFindings": {
+    "critical": {
+      "duplicateFunctions": "Two functions are defined in multiple files with different signatures, causing potential conflicts during execution. calculateFeasibilityScore exists in both ai-engine.js (with planning state) and budget-integration.js (without parameters). updateBudgetSummary exists in both budget-alignment.js and budget-tracker.js.",
+      "recommendation": "Consolidate duplicate functions, choose single authoritative implementation, and update all call sites to match the unified interface."
+    },
+    "warnings": {
+      "missingDomElements": "24 IDs are referenced via getElementById() but don't exist in index.html. These could be: (1) Dynamically created at runtime, (2) In separate HTML files, (3) Conditionally rendered based on feature flags, (4) Legacy code referencing removed elements.",
+      "recommendation": "Audit each missing ID: verify it's created dynamically, move inline HTML creation to static definitions, or remove dead code."
+    },
+    "bestPractices": {
+      "globalState": "Heavy reliance on global planState object shared across 9 modules. State mutations across file boundaries make debugging difficult.",
+      "recommendation": "Consider centralizing state management with clear update patterns, use event emitters for cross-module communication, or implement a proper state management library."
+    }
+  }
+}

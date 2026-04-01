@@ -1,0 +1,36 @@
+{
+  "target": "district-builder",
+  "timestamp": "2026-03-31T06:01:48.296Z",
+  "passed": 4,
+  "failed": 1,
+  "total": 5,
+  "duplicatesFound": 0,
+  "duplicates": [],
+  "results": [
+    {
+      "test": "No duplicate functions detected",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "P0 - calculateFeasibilityScore defined in one file (resolved)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "P0 - recalculateBudgetSummary not found",
+      "passed": false,
+      "details": "Could not locate function"
+    },
+    {
+      "test": "[RESOLVED] calculateFeasibilityScore no longer duplicated",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "[RESOLVED] updateBudgetSummary no longer duplicated",
+      "passed": true,
+      "details": ""
+    }
+  ]
+}

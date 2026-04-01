@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategic Plans | Strategic District</title>
+  <meta name="description" content="See what a Strategic District plan looks like. Explore interactive elements and download a sample PDF.">
+
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/header.css">
+  <link rel="stylesheet" href="/styles/footer.css">
+  <link rel="stylesheet" href="/styles/components.css">
+
+  <!-- Chart.js for interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Auth Library -->
+  <script src="/js/shared/auth.js"></script>
+
+  <style>
+    body { padding-top: 0; }
+    header { margin-top: 6px; }
+    .header-content { padding-top: 8px; padding-bottom: 8px; }
+    .logo img { height: 48px; width: auto; }
+    .logo span { font-size: 1.25rem; font-weight: 700; }
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    footer { background-color: #DDD3C6 !important; padding-top: 0 !important; }
+
+    /* Scroll-reveal animations */
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0; transform: translateX(-40px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0; transform: translateX(40px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .stagger > * { transition-delay: calc(var(--i, 0) * 120ms); }
+
+    /* Hero Section */
+    .hero-section {
+      background-color: var(--color-primary-cream);
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-section h1 {
+      color: var(--color-primary-navy);
+      font-size: var(--font-size-h1);
+      font-weight: 700;
+      margin-bottom: 20px;
+      font-family: 'Source Serif Pro', serif;
+    }
+    .hero-section p {
+      color: var(--color-primary-brown);
+      font-size: 1.125rem;
+      line-height: 1.6;
+      margin: 0 0 30px 0;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-ctas a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn-teal {
+      background-color: #00B4CC;
+      color: white;
+    }
+    .btn-teal:hover {
+      background-color: #0093a3;
+      transform: translateY(-2px);
+    }
+    .btn-gold {
+      background-color: #D4A537;
+      color: white;
+    }
+    .btn-gold:hover {
+      background-color: #c1932d;
+      transform: translateY(-2px);
+    }
+    .icon-svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Featured District Section */
+    .featured-district {
+      background: linear-gradient(135deg, #FEFDFB 0%, #F9F7F3 100%);
+      padding: 60px 20px;
+    }
+    .featured-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .featured-label {
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      color: #D4A537;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .featured-name {
+      text-align: center;
+      font-family: 'Source Serif Pro', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin-bottom: 40px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 32px;
+      text-align: center;
+    }
+    .stat-item { padding: 0 12px; }
+    .stat-number {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 2.75rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-number.green { color: #6ECF6E; }
+    .stat-number.teal { color: #00B4CC; }
+    .stat-number.gold { color: #D4A537; }
+    .stat-number.coral { color: #E07A5F; }
+    .stat-number.purple { color: #6B4C9A; }
+    .stat-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8125rem;
+      color: var(--color-primary-navy);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* What's Inside Section */
+    .whats-inside {
+      padding: 80px 20px;
+      background-color: white;
+    }
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 60px;
+    }
+    .section-header h2 {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin: 0 0 16px 0;
+    }
+    .section-header p {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.125rem;
+      color: var(--color-primary-brown);
+      margin: 0;
+      line-height: 1.6;
+    }
+    .cards-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .plan-card {
+      background: white;
+      border: 1px solid #e0d5c7;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .plan-card:hover {
+      box-shadow: 0 8px 24px rgba(34, 51, 59, 0.12);
+      transform: translateY(-4px);
+    }
+    .card-accent { height: 4px; background-color: #D4A537; }
+    .card-accent.teal { background-color: #00B4CC; }
+    .card-accent.green { background-color: #6ECF6E; }
+    .card-accent.coral { background-color: #E07A5F; }
+    .card-accent.purple { background-color: #6B4C9A; }
+    .card-content {
+      padding: 32px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-primary-cream);
+      border-radius: 6px;
+      font-size: 24px;
+    }
+    .card-title {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin: 0 0 12px 0;
+    }
+    .card-description {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      color: var(--color-primary-brown);
+      line-height: 1.6;
+      margin: 0 0 16px 0;
+      flex: 1;
+    }
+    .card-snippet {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8125rem;
+      background-color: var(--color-primary-cream);
+      padding: 12px;
+      border-radius: 4px;
+      color: var(--color-primary-navy);
+      border-left: 3px solid #D4A537;
+      margin-top: auto;
+    }
+
+    /* Interactive Preview Section */
+    .interactive-preview {
+      background: linear-gradient(135deg, #E8DCC9 0%, #DCC9B6 100%);
+      padding: 80px 20px;
+    }
+    .interactive-preview .section-header h2 {
+      font-size: 2.5rem;
+    }
+    .interactive-preview .section-header p {
+      color: var(--color-primary-navy);
+      font-size: 1.1875rem;
+    }
+    .preview-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .preview-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 32px;
+      border-bottom: 2px solid #d4c7b8;
+      flex-wrap: wrap;
+    }
+    .tab-button {
+      padding: 16px 24px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-primary-brown);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .tab-button.active {
+      color: var(--color-primary-navy);
+      border-bottom-color: #00B4CC;
+    }
+    .tab-button:hover { color: var(--color-primary-navy); }
+    .tab-content {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .tab-content h3 {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin: 0 0 16px 0;
+    }
+    .tab-content p {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9375rem;
+      color: var(--color-primary-brown);
+      line-height: 1.7;
+      margin: 0 0 16px 0;
+    }
+    .preview-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+    .preview-list li {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9375rem;
+      color: var(--color-primary-brown);
+      padding: 8px 0 8px 28px;
+      position: relative;
+      line-height: 1.6;
+    }
+    .preview-list li:before {
+      content: "\25B8";
+      position: absolute;
+      left: 0;
+      color: #00B4CC;
+      font-weight: bold;
+    }
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin: 30px 0;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e0d5c7;
+    }
+
+    /* Central Office Alignment Preview */
+    .alignment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .alignment-card {
+      background: var(--color-primary-cream);
+      padding: 16px;
+      border-radius: 6px;
+      border-left: 3px solid #00B4CC;
+    }
+    .alignment-card h4 {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin: 0 0 6px 0;
+    }
+    .alignment-card p {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8125rem;
+      color: var(--color-primary-brown);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Timeline Preview */
+    .timeline-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+    .timeline-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-primary-navy);
+      width: 120px;
+      flex-shrink: 0;
+    }
+    .timeline-bar-track {
+      flex: 1;
+      height: 28px;
+      background: var(--color-primary-cream);
+      border-radius: 4px;
+      display: flex;
+      overflow: hidden;
+    }
+    .timeline-bar-fill {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    /* Why Stand Out Section */
+    .comparison {
+      padding: 80px 20px;
+      background: linear-gradient(135deg, #FEFDFB 0%, #F9F7F3 100%);
+    }
+    .comparison-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      margin-top: 50px;
+    }
+    .comparison-item { text-align: center; }
+    .comparison-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-primary-cream);
+      border-radius: 8px;
+      font-size: 32px;
+    }
+    .comparison-title {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-primary-navy);
+      margin: 0 0 12px 0;
+    }
+    .comparison-description {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9375rem;
+      color: var(--color-primary-brown);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: var(--color-primary-navy);
+      padding: 60px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(212, 165, 55, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-container {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-section h2 {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      font-family: 'Source Serif Pro', serif;
+    }
+    .cta-section p {
+      color: rgba(234, 224, 213, 0.85);
+      font-size: 1.125rem;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+    .cta-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: center;
+    }
+    @media (min-width: 640px) {
+      .cta-buttons { flex-direction: row; }
+    }
+    .cta-primary {
+      background-color: #D4A537;
+      color: white;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+    .cta-primary:hover { background-color: #c1932d; }
+    .cta-secondary {
+      background-color: transparent;
+      color: white;
+      padding: 14px 32px;
+      border: 2px solid rgba(234, 224, 213, 0.5);
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    .cta-secondary:hover {
+      background-color: rgba(212, 165, 55, 0.15);
+      border-color: rgba(234, 224, 213, 0.9);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-ctas { flex-direction: column; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .tab-button { padding: 12px 16px; font-size: 0.875rem; }
+      .comparison-grid { grid-template-columns: 1fr; gap: 30px; }
+      .profile-grid { grid-template-columns: 1fr; }
+      .alignment-grid { grid-template-columns: 1fr; }
+      .timeline-row { flex-direction: column; align-items: flex-start; }
+      .timeline-label { width: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="rainbow-bar"></div>
+  <header>
+    <div class="header-content">
+      <a href="/" class="logo">
+        <img src="/assets/images/SDlogo.png" alt="Strategic District" height="48">
+        <span>Strategic District</span>
+      </a>
+      <nav class="main-nav">
+        <a href="/what-we-offer/">What We Offer</a>
+        <a href="/how-it-works/">How It Works</a>
+        <a href="/sample-plan/" class="active">Strategic Plans</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div id="auth-buttons"></div>
+        <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="mobile-nav">
+      <a href="/what-we-offer/">What We Offer</a>
+      <a href="/how-it-works/">How It Works</a>
+      <a href="/sample-plan/">Strategic Plans</a>
+      <a href="/contact/">Contact</a>
+      <a href="/login/">Sign In</a>
+      <a href="/signup/" class="header-signup-btn">Get Started</a>
+    </div>
+  </header>
+
+  <div class="section-divider"></div>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>District Strategic Plans</h1>
+      <p>See what Strategic District produces. Explore key elements of a district strategic plan built with our research-based framework, real data, and actionable initiatives.</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Featured District -->
+  <section class="featured-district">
+    <div class="featured-container reveal">
+      <div class="featured-label">Featured District</div>
+      <div class="featured-name">Greenfield Unified School District</div>
+      <div class="stats-grid stagger">
+        <div class="stat-item reveal" style="--i: 0;">
+          <div class="stat-number green">65,600</div>
+          <div class="stat-label">Students Served</div>
+        </div>
+        <div class="stat-item reveal" style="--i: 1;">
+          <div class="stat-number teal">120</div>
+          <div class="stat-label">Schools</div>
+        </div>
+        <div class="stat-item reveal" style="--i: 2;">
+          <div class="stat-number gold">90%</div>
+          <div class="stat-label">Grad Rate</div>
+        </div>
+        <div class="stat-item reveal" style="--i: 3;">
+          <div class="stat-number coral">8.2%</div>
+          <div class="stat-label">Chronic Absence Rate</div>
+        </div>
+        <div class="stat-item reveal" style="--i: 4;">
+          <div class="stat-number purple">58%</div>
+          <div class="stat-label">Free/Reduced Lunch</div>
+        </div>
+        <div class="stat-item reveal" style="--i: 5;">
+          <div class="stat-number green">4</div>
+          <div class="stat-label">Strategic Domains</div>
+        </div>
+      </div>
+      <div class="hero-ctas" style="margin-top: 32px; justify-content: center;">
+        <a href="./showcase.html" class="btn-teal">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l4 4 4-4"/></svg>
+          Sample Plan Dashboard
+        </a>
+        <a href="/sample-plan/Greenfield_Unified_Strategic_Plan_2026-2029.pdf" class="btn-gold" target="_blank">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- What's Inside Section -->
+  <section class="whats-inside">
+    <div class="section-header reveal">
+      <h2>What's Inside the Plan</h2>
+      <p>Key elements of a strategic plan built on research-based frameworks, real data, and actionable initiatives designed to drive district success.</p>
+    </div>
+
+    <div class="cards-grid stagger">
+      <div class="plan-card reveal" style="--i: 0;">
+        <div class="card-accent"></div>
+        <div class="card-content">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #6ECF6E;"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 9h6M9 15h6"/></svg>
+          </div>
+          <h3 class="card-title">Executive Summary</h3>
+          <p class="card-description">A concise overview of the district's strategic direction, key priorities, and expected outcomes.</p>
+          <div class="card-snippet">Aligned to district vision with 90-day action framework</div>
+        </div>
+      </div>
+
+      <div class="plan-card reveal" style="--i: 1;">
+        <div class="card-accent teal"></div>
+        <div class="card-content">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #00B4CC;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          </div>
+          <h3 class="card-title">Vision and Mission</h3>
+          <p class="card-description">Clear statements defining the district's purpose and aspirational future state.</p>
+          <div class="card-snippet">Informed by stakeholder input and district values</div>
+        </div>
+      </div>
+
+      <div class="plan-card reveal" style="--i: 2;">
+        <div class="card-accent green"></div>
+        <div class="card-content">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #6ECF6E;"><polyline points="3 3 7 3 7 7 3 7 3 3"/><polyline points="13 3 17 3 17 7 13 7 13 3"/><polyline points="13 13 17 13 17 17 13 17 13 13"/><polyline points="3 13 7 13 7 17 3 17 3 13"/></svg>
+          </div>
+          <h3 class="card-title">District Profile</h3>
+          <p class="card-description">Demographics, enrollment trends, and current performance landscape.</p>
+          <div class="card-snippet">65,600 students across 120 schools</div>
+        </div>
+      </div>
+
+      <div class="plan-card reveal" style="--i: 3;">
+        <div class="card-accent coral"></div>
+        <div class="card-content">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #E07A5F;"><path d="M3 3v18h18"/><polyline points="18 9 12 3 6 9"/><polyline points="18 15 12 9 6 15"/></svg>
+          </div>
+          <h3 class="card-title">Assessment and Data</h3>
+          <p class="card-description">In-depth analysis of district performance, gaps, and opportunities for growth.</p>
+          <div class="card-snippet">3-year historical trends with benchmark comparisons</div>
+        </div>
+      </div>
+
+      <div class="plan-card reveal" style="--i: 4;">
+        <div class="card-accent purple"></div>
+        <div class="card-content">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #6B4C9A;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 class="card-title">Graduate Profile</h3>
+          <p class="card-description">Competencies and characteristics that define success for all graduates.</p>
+          <div class="card-snippet">Developed with employers and higher education partners</div>
+        </div>
+      </div>
+
+      <div class="plan-card reveal" style="--i: 5;">
+        <div class="card-accent"></div>
+        <div class="card-content">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #D4A537;"><path d="M12 2L15.09 8.26H22L17.55 12.5L19.64 18.74L12 14.49L4.36 18.74L6.45 12.5L2 8.26H8.91L12 2Z"/></svg>
+          </div>
+          <h3 class="card-title">Strategic Foundations</h3>
+          <p class="card-description">Core values, equity commitments, and foundational principles guiding the plan.</p>
+          <div class="card-snippet">Equity lens applied to all strategic decisions</div>
+        </div>
+      </div>
+
+      <div class="plan-card reveal" style="--i: 6;">
+        <div class="card-accent teal"></div>
+        <div class="card-content">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #00B4CC;"><path d="M13 2H3v10h10V2z"/><path d="M21 2h-6v6h6V2z"/><path d="M21 10h-6v6h6v-6z"/><path d="M13 16H3v6h10v-6z"/></svg>
+          </div>
+          <h3 class="card-title">Goals and Measures</h3>
+          <p class="card-description">SMART goals with clear success metrics and accountability frameworks.</p>
+          <div class="card-snippet">Aligned to 4 strategic domains with annual targets</div>
+        </div>
+      </div>
+
+      <div class="plan-card reveal" style="--i: 7;">
+        <div class="card-accent green"></div>
+        <div class="card-content">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #6ECF6E;"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+          </div>
+          <h3 class="card-title">Initiatives</h3>
+          <p class="card-description">Specific, evidence-based strategies to achieve strategic goals and outcomes.</p>
+          <div class="card-snippet">Resource-aligned with implementation timelines</div>
+        </div>
+      </div>
+
+      <div class="plan-card reveal" style="--i: 8;">
+        <div class="card-accent coral"></div>
+        <div class="card-content">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #E07A5F;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 7v5l4 2.4"/></svg>
+          </div>
+          <h3 class="card-title">Implementation Roadmap</h3>
+          <p class="card-description">Detailed timeline, responsibilities, and accountability structures for execution.</p>
+          <div class="card-snippet">Phase-based approach with milestone tracking</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Interactive Preview Section -->
+  <section class="interactive-preview">
+    <div class="preview-wrapper">
+      <div class="section-header reveal">
+        <h2>Interactive Plan Preview</h2>
+        <p>Explore key elements of the Greenfield Unified strategic plan to see how we bring vision to life.</p>
+      </div>
+
+      <div class="preview-tabs">
+        <button class="tab-button active" id="tab-exec">Executive Summary</button>
+        <button class="tab-button" id="tab-goals">Goals and Measures</button>
+        <button class="tab-button" id="tab-alignment">Central Office Alignment</button>
+        <button class="tab-button" id="tab-initiatives">Initiatives</button>
+        <button class="tab-button" id="tab-timeline">Timeline</button>
+      </div>
+
+      <div id="executive-summary" class="tab-content active">
+        <h3>District Profile: Enrollment Trends</h3>
+        <p>Greenfield Unified School District's strategic plan charts a clear course for elevating student outcomes across all 120 schools. Built on three years of data analysis, stakeholder engagement, and industry best practices, this plan positions the district for sustained success.</p>
+        <div class="chart-container">
+          <canvas id="enrollmentChart"></canvas>
+        </div>
+        <p><strong>Key Focus Areas:</strong></p>
+        <ul class="preview-list">
+          <li>Equitable Access and Excellence in Learning</li>
+          <li>High-Performance Teaching and Leadership</li>
+          <li>Data-Driven Decision Making</li>
+          <li>Family and Community Partnerships</li>
+        </ul>
+        <p>The plan commits the district to an ambitious but achievable 90% graduation rate within four years, backed by evidence-based initiatives and dedicated resource allocation.</p>
+      </div>
+
+      <div id="goals" class="tab-content">
+        <h3>Goals and Measures: Baseline vs Target</h3>
+        <p>Four strategic domains anchor our work, each with specific, measurable goals:</p>
+        <div class="chart-container">
+          <canvas id="goalsChart"></canvas>
+        </div>
+        <ul class="preview-list">
+          <li><strong>Academic Excellence:</strong> 90% graduation rate by 2028; 85% proficiency in core subjects</li>
+          <li><strong>Equity and Access:</strong> Close achievement gaps by 25%; expand AP/advanced course enrollment</li>
+          <li><strong>Teacher Excellence:</strong> 95% effective/highly effective teacher ratings; reduce vacancy rate to 3%</li>
+          <li><strong>Community Engagement:</strong> 80% family participation in district initiatives</li>
+        </ul>
+        <p>Progress tracked quarterly through data dashboards with principal accountability and resource support.</p>
+      </div>
+
+      <div id="central-office" class="tab-content">
+        <h3>Central Office Alignment</h3>
+        <p>Every department in the central office is aligned to at least one strategic goal. This ensures the entire organization is pulling in the same direction and schools get the support they need.</p>
+        <div class="alignment-grid">
+          <div class="alignment-card">
+            <h4>Curriculum and Instruction</h4>
+            <p>Aligned to Academic Excellence goals. Leads standards-based curriculum review and professional development.</p>
+          </div>
+          <div class="alignment-card">
+            <h4>Human Resources</h4>
+            <p>Aligned to Teacher Excellence goals. Leads teacher pipeline, retention strategies, and residency programs.</p>
+          </div>
+          <div class="alignment-card">
+            <h4>Student Services</h4>
+            <p>Aligned to Equity and Access goals. Coordinates wraparound supports, counseling, and family engagement hubs.</p>
+          </div>
+          <div class="alignment-card">
+            <h4>Technology</h4>
+            <p>Aligned to Data-Driven Decision Making. Deploys dashboards, data platforms, and digital learning tools.</p>
+          </div>
+          <div class="alignment-card">
+            <h4>Finance and Operations</h4>
+            <p>Aligned to all domains. Ensures resources are allocated strategically to support plan priorities.</p>
+          </div>
+          <div class="alignment-card">
+            <h4>Communications</h4>
+            <p>Aligned to Community Engagement goals. Manages public reporting, stakeholder updates, and feedback loops.</p>
+          </div>
+        </div>
+        <p>Each department submits quarterly progress reports showing how their work directly supports strategic plan goals.</p>
+      </div>
+
+      <div id="initiatives" class="tab-content">
+        <h3>Implementation Initiatives: 2026-2028</h3>
+        <p>We'll achieve our goals through targeted, evidence-based initiatives:</p>
+        <div class="chart-container">
+          <canvas id="initiativesChart"></canvas>
+        </div>
+        <ul class="preview-list">
+          <li><strong>Early Warning System:</strong> Identify at-risk students by 8th grade for targeted intervention</li>
+          <li><strong>Teacher Residency Program:</strong> 200 new highly effective teachers over 3 years</li>
+          <li><strong>Career Pathways:</strong> Industry-aligned programs in healthcare, technology, and skilled trades</li>
+          <li><strong>Family Engagement Hubs:</strong> Year-round support centers in every school cluster</li>
+          <li><strong>Data and Accountability Platform:</strong> Real-time dashboards for decision makers at all levels</li>
+        </ul>
+      </div>
+
+      <div id="timeline" class="tab-content">
+        <h3>Implementation Timeline</h3>
+        <p>A phased approach ensures initiatives launch with support and scale with evidence of success.</p>
+        <div style="margin: 30px 0;">
+          <div class="timeline-row">
+            <div class="timeline-label">Early Warning</div>
+            <div class="timeline-bar-track">
+              <div class="timeline-bar-fill" style="width: 100%; background: #6ECF6E;">Q1 2026 - Q4 2028</div>
+            </div>
+          </div>
+          <div class="timeline-row">
+            <div class="timeline-label">Teacher Residency</div>
+            <div class="timeline-bar-track">
+              <div class="timeline-bar-fill" style="width: 83%; background: #00B4CC;">Q1 2026 - Q2 2028</div>
+            </div>
+          </div>
+          <div class="timeline-row">
+            <div class="timeline-label">Career Pathways</div>
+            <div class="timeline-bar-track">
+              <div class="timeline-bar-fill" style="width: 67%; margin-left: 16%; background: #D4A537;">Q3 2026 - Q4 2028</div>
+            </div>
+          </div>
+          <div class="timeline-row">
+            <div class="timeline-label">Family Hubs</div>
+            <div class="timeline-bar-track">
+              <div class="timeline-bar-fill" style="width: 75%; background: #E07A5F;">Q1 2026 - Q3 2028</div>
+            </div>
+          </div>
+          <div class="timeline-row">
+            <div class="timeline-label">Data Platform</div>
+            <div class="timeline-bar-track">
+              <div class="timeline-bar-fill" style="width: 50%; background: #6B4C9A;">Q1 2026 - Q2 2027</div>
+            </div>
+          </div>
+        </div>
+        <ul class="preview-list">
+          <li><strong>Phase 1 (2026):</strong> Launch all five core initiatives with pilot schools and departments</li>
+          <li><strong>Phase 2 (2027):</strong> Scale successful pilots district-wide; adjust based on data</li>
+          <li><strong>Phase 3 (2028):</strong> Full implementation with sustainability planning and continuous improvement cycles</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Why Plans Stand Out -->
+  <section class="comparison">
+    <div class="comparison-wrapper">
+      <div class="section-header reveal">
+        <h2>Why Strategic District Plans Stand Out</h2>
+        <p>We combine decades of district leadership experience with cutting-edge research and proven frameworks.</p>
+      </div>
+
+      <div class="comparison-grid stagger">
+        <div class="comparison-item reveal" style="--i: 0;">
+          <div class="comparison-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #6ECF6E;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M10 17l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+          </div>
+          <h3 class="comparison-title">Research-Based Frameworks</h3>
+          <p class="comparison-description">Built on leading education research and proven frameworks from national organizations. Every recommendation is grounded in evidence, not trends.</p>
+        </div>
+
+        <div class="comparison-item reveal" style="--i: 1;">
+          <div class="comparison-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #00B4CC;"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 5-5"/><circle cx="7" cy="8" r="1.5"/></svg>
+          </div>
+          <h3 class="comparison-title">Data-Driven Goal Setting</h3>
+          <p class="comparison-description">3-year trend analysis, peer benchmarking, and predictive analytics ensure goals are ambitious yet achievable.</p>
+        </div>
+
+        <div class="comparison-item reveal" style="--i: 2;">
+          <div class="comparison-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #D4A537;"><path d="M9 6h6m-6 4h6m-6 4h6"/><path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+          </div>
+          <h3 class="comparison-title">Actionable Roadmaps</h3>
+          <p class="comparison-description">From vision to execution. Detailed timelines, resource allocation, and accountability structures built in.</p>
+        </div>
+
+        <div class="comparison-item reveal" style="--i: 3;">
+          <div class="comparison-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #E07A5F;"><path d="M12 2l3.09 6.26H22l-5.45 3.96 2.09 6.26L12 14.5l-6.64 3.98 2.09-6.26L2 8.26h6.91L12 2z"/></svg>
+          </div>
+          <h3 class="comparison-title">Professional Quality</h3>
+          <p class="comparison-description">Presentation-ready documents that communicate confidence and drive stakeholder alignment and buy-in.</p>
+        </div>
+
+        <div class="comparison-item reveal" style="--i: 4;">
+          <div class="comparison-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #6B4C9A;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <h3 class="comparison-title">Always Come Back to Edit</h3>
+          <p class="comparison-description">Your plan is never locked. Come back any time to update goals, adjust timelines, add initiatives, or refresh the entire plan as your district evolves.</p>
+        </div>
+
+        <div class="comparison-item reveal" style="--i: 5;">
+          <div class="comparison-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" fill="none" stroke-width="1.5" style="color: #6ECF6E;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 12 3 12 0v-5"/></svg>
+          </div>
+          <h3 class="comparison-title">Strategic School</h3>
+          <p class="comparison-description">Extend district strategy to every building. Strategic School creates school improvement plans that automatically align to your district's strategic plan.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-container">
+      <h2>Ready to Build Your Strategic Plan?</h2>
+      <p>Build a strategic plan for your district. Start free, upgrade any time.</p>
+      <div class="cta-buttons">
+        <a href="/signup/" class="cta-primary">Get Started Free</a>
+        <a href="/sample-plan/" class="cta-secondary">View Sample Plans</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+    <div class="footer-content" style="padding-top: 24px;">
+      <div class="footer-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+        <div class="footer-column">
+          <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+            <img src="/assets/images/SDlogo.png" alt="Strategic District" style="height: 112px; width: auto;">
+            <div style="font-weight: 700; color: #000000; font-size: 2rem; text-transform: uppercase; letter-spacing: 1px;">STRATEGIC DISTRICT</div>
+          </div>
+          
+        </div>
+        <div class="footer-column" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Explore</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/what-we-offer/" style="color: var(--color-primary-brown);">What We Offer</a></li>
+              <li><a href="/how-it-works/" style="color: var(--color-primary-brown);">How It Works</a></li>
+              <li><a href="/sample-plan/" style="color: var(--color-primary-brown);">Strategic Plans</a></li>
+              <li><a href="/builder/" style="color: var(--color-primary-brown);">Start Building</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Customer Service</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/contact/" style="color: var(--color-primary-brown);">Contact</a></li>
+              <li><a href="/login/" style="color: var(--color-primary-brown);">Sign In</a></li>
+              <li><a href="/signup/" style="color: var(--color-primary-brown);">Sign Up</a></li>
+              <li><a href="#privacy" style="color: var(--color-primary-brown);">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div style="height: 1px; background: rgba(94, 80, 63, 0.2); margin: 12px 0;"></div>
+      <div class="footer-bottom">
+        <div class="footer-copyright" style="color: var(--color-primary-brown);">
+          Professional strategic planning for PK-12 public education, charters, and private schools. &nbsp;|&nbsp; Powered by <a href="https://starkanalytica.com" style="color: var(--color-primary-navy); text-decoration: none; font-weight: 500;">Stark Analytica LLC</a> &nbsp;|&nbsp; &copy; 2026 Strategic District. All rights reserved.
+        </div>
+      </div>
+    </div>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+  </footer>
+
+  <script src="/js/shared/header.js"></script>
+  <script>
+    // Chart colors matching design system
+    var chartColors = {
+      green: '#6ECF6E',
+      teal: '#00B4CC',
+      gold: '#D4A537',
+      coral: '#E07A5F',
+      purple: '#6B4C9A'
+    };
+
+    // Tab switching
+    var tabButtons = document.getElementsByClassName('tab-button');
+    var tabContents = document.getElementsByClassName('tab-content');
+    var tabMap = {
+      'tab-exec': 'executive-summary',
+
+      'tab-goals': 'goals',
+      'tab-alignment': 'central-office',
+      'tab-initiatives': 'initiatives',
+      'tab-timeline': 'timeline'
+    };
+
+    for (var i = 0; i < tabButtons.length; i++) {
+      tabButtons[i].addEventListener('click', function() {
+        for (var j = 0; j < tabContents.length; j++) {
+          tabContents[j].classList.remove('active');
+        }
+        for (var k = 0; k < tabButtons.length; k++) {
+          tabButtons[k].classList.remove('active');
+        }
+        this.classList.add('active');
+        var targetId = tabMap[this.id];
+        document.getElementById(targetId).classList.add('active');
+      });
+    }
+
+    // Initialize charts when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      initEnrollmentChart();
+      initGoalsChart();
+      initInitiativesChart();
+    });
+
+    // Enrollment Trend Chart
+    function initEnrollmentChart() {
+      var ctx = document.getElementById('enrollmentChart');
+      if (!ctx) return;
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['2021', '2022', '2023', '2024', '2025', '2026'],
+          datasets: [{
+            label: 'Total Enrollment',
+            data: [62400, 63200, 64100, 64800, 65200, 65600],
+            borderColor: chartColors.teal,
+            backgroundColor: 'rgba(0, 180, 204, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 5,
+            pointBackgroundColor: chartColors.teal,
+            pointBorderColor: 'white',
+            pointBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: { font: { size: 14, family: "'Inter', sans-serif" } }
+            }
+          },
+          scales: {
+            y: { beginAtZero: false, min: 60000, max: 67000 }
+          }
+        }
+      });
+    }
+
+    // Goals Chart
+    function initGoalsChart() {
+      var ctx = document.getElementById('goalsChart');
+      if (!ctx) return;
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Graduation Rate', 'Core Proficiency', 'Teacher Effectiveness', 'Family Engagement'],
+          datasets: [
+            {
+              label: 'Baseline',
+              data: [78, 68, 82, 55],
+              backgroundColor: 'rgba(198, 172, 143, 0.5)',
+              borderColor: '#C6AC8F',
+              borderWidth: 1
+            },
+            {
+              label: 'Target 2028',
+              data: [90, 85, 95, 80],
+              backgroundColor: chartColors.teal,
+              borderColor: chartColors.teal,
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: { font: { size: 14, family: "'Inter', sans-serif" } }
+            }
+          },
+          scales: {
+            x: { beginAtZero: true, max: 100 }
+          }
+        }
+      });
+    }
+
+    // Initiatives Chart
+    function initInitiativesChart() {
+      var ctx = document.getElementById('initiativesChart');
+      if (!ctx) return;
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Early Warning System', 'Teacher Residency', 'Career Pathways', 'Family Engagement', 'Data Platform'],
+          datasets: [
+            {
+              label: '2026',
+              data: [12, 10, 8, 14, 12],
+              backgroundColor: chartColors.green,
+              borderColor: chartColors.green,
+              borderWidth: 1
+            },
+            {
+              label: '2027',
+              data: [12, 12, 12, 12, 12],
+              backgroundColor: chartColors.gold,
+              borderColor: chartColors.gold,
+              borderWidth: 1
+            },
+            {
+              label: '2028',
+              data: [8, 14, 12, 10, 8],
+              backgroundColor: chartColors.coral,
+              borderColor: chartColors.coral,
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: { font: { size: 14, family: "'Inter', sans-serif" } }
+            }
+          },
+          scales: {
+            x: { stacked: true, beginAtZero: true, max: 40 }
+          }
+        }
+      });
+    }
+
+    // Scroll shadow
+    var header = document.querySelector('header');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 0) {
+        header.classList.add('scroll-shadow');
+      } else {
+        header.classList.remove('scroll-shadow');
+      }
+    });
+
+    // Scroll-reveal animations
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(function(el) {
+      revealObserver.observe(el);
+    });
+  </script>
+</body>
+</html>

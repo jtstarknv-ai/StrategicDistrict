@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - StrategicDistrict</title>
+  <meta name="description" content="Sign in to your StrategicDistrict account to access your strategic planning tools.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/base.css">
+  <link rel="stylesheet" href="/styles/header.css">
+  <link rel="stylesheet" href="/styles/footer.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/forms.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Auth Library -->
+  <script src="/js/shared/auth.js"></script>
+
+  <style>
+    body {
+      padding-top: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header { margin-top: 6px; }
+    .header-content { padding-top: 8px; padding-bottom: 8px; }
+    .logo img { height: 48px; width: auto; }
+    .logo span { font-size: 1.25rem; font-weight: 700; }
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    footer { background-color: #DDD3C6 !important; padding-top: 0 !important; }
+
+    main {
+      flex: 1;
+      padding: var(--spacing-5xl) var(--spacing-lg);
+      background: linear-gradient(135deg, var(--color-primary-cream) 0%, rgba(198, 172, 143, 0.05) 100%);
+    }
+
+    .auth-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      padding: var(--spacing-3xl) var(--spacing-2xl);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .auth-header h1 {
+      font-family: var(--font-serif);
+      font-size: var(--font-size-h3);
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .auth-header p {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-body-sm);
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    label {
+      display: block;
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-body-sm);
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: var(--spacing-md) var(--spacing-md);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--font-size-body-md);
+      color: var(--color-text-primary);
+      background-color: white;
+      transition: all var(--transition-base);
+      box-sizing: border-box;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: var(--color-pop-gold);
+      box-shadow: 0 0 0 3px rgba(212, 165, 55, 0.1);
+      background-color: white;
+    }
+
+    input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .error-message {
+      color: #dc2626;
+      font-size: var(--font-size-body-sm);
+      margin-top: var(--spacing-xs);
+      display: block;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-actions a {
+      color: var(--color-pop-gold);
+      text-decoration: none;
+      font-size: var(--font-size-body-sm);
+      transition: color var(--transition-base);
+    }
+
+    .form-actions a:hover {
+      color: #c49c2d;
+      text-decoration: underline;
+    }
+
+    .btn-signin {
+      width: 100%;
+      padding: var(--spacing-md) var(--spacing-lg);
+      background-color: var(--color-pop-gold);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--font-size-body-md);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      margin-top: var(--spacing-lg);
+    }
+
+    .btn-signin:hover {
+      background-color: #c49c2d;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-signin:active {
+      transform: translateY(0);
+    }
+
+    .btn-signin:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: var(--spacing-2xl);
+      padding-top: var(--spacing-2xl);
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    .auth-footer p {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-body-sm);
+    }
+
+    .auth-footer a {
+      color: var(--color-pop-gold);
+      text-decoration: none;
+      font-weight: var(--font-weight-semibold);
+      transition: color var(--transition-base);
+    }
+
+    .auth-footer a:hover {
+      color: #c49c2d;
+      text-decoration: underline;
+    }
+
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    @media (max-width: 767px) {
+      main {
+        padding: var(--spacing-3xl) var(--spacing-md);
+      }
+
+      .auth-container {
+        padding: var(--spacing-2xl) var(--spacing-lg);
+      }
+
+      .auth-header h1 {
+        font-size: var(--font-size-h4);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Rainbow Gradient Bar -->
+  <div class="rainbow-bar"></div>
+  
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <a href="/" class="logo">
+        <img src="/assets/images/SDlogo.png" alt="Strategic District" height="48">
+        <span>Strategic District</span>
+      </a>
+      <nav class="main-nav">
+        <a href="/what-we-offer/">What We Offer</a>
+        <a href="/how-it-works/">How It Works</a>
+        <a href="/sample-plan/">Strategic Plans</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div id="auth-buttons"></div>
+        <button class="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="mobile-nav">
+      <a href="/what-we-offer/">What We Offer</a>
+      <a href="/how-it-works/">How It Works</a>
+      <a href="/sample-plan/">Strategic Plans</a>
+      <a href="/contact/">Contact</a>
+      <a href="/login/">Sign In</a>
+      <a href="/signup/" class="header-signup-btn">Get Started</a>
+    </div>
+  </header>
+
+  <div class="section-divider"></div>
+
+  <main>
+    <div class="auth-container">
+      <div class="auth-header">
+        <h1>Sign In</h1>
+        <p>Access your district's strategic planning tools.</p>
+      </div>
+
+      <div id="error-message" class="error-message" style="display: none;"></div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="your@email.com">
+          <span class="error-message" id="email-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="Your password">
+          <span class="error-message" id="password-error"></span>
+        </div>
+
+        <div class="form-actions">
+          <a href="/forgot-password/">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-signin" id="submit-btn">Sign In</button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Don't have an account? <a href="/signup/">Create one here</a></p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+    <div class="footer-content" style="padding-top: 24px;">
+      <div class="footer-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+        <div class="footer-column">
+          <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+            <img src="/assets/images/SDlogo.png" alt="Strategic District" style="height: 112px; width: auto;">
+            <div style="font-weight: 700; color: #000000; font-size: 2rem; text-transform: uppercase; letter-spacing: 1px;">STRATEGIC DISTRICT</div>
+          </div>
+          
+        </div>
+        <div class="footer-column" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Explore</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/what-we-offer/" style="color: var(--color-primary-brown);">What We Offer</a></li>
+              <li><a href="/how-it-works/" style="color: var(--color-primary-brown);">How It Works</a></li>
+              <li><a href="/sample-plan/" style="color: var(--color-primary-brown);">Strategic Plans</a></li>
+              <li><a href="/builder/" style="color: var(--color-primary-brown);">Start Building</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color: var(--color-primary-navy); font-size: 0.875rem; margin-bottom: 12px;">Customer Service</h3>
+            <ul class="footer-links" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto auto; gap: 4px 16px;">
+              <li><a href="/contact/" style="color: var(--color-primary-brown);">Contact</a></li>
+              <li><a href="/login/" style="color: var(--color-primary-brown);">Sign In</a></li>
+              <li><a href="/signup/" style="color: var(--color-primary-brown);">Sign Up</a></li>
+              <li><a href="#privacy" style="color: var(--color-primary-brown);">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div style="height: 1px; background: rgba(94, 80, 63, 0.2); margin: 12px 0;"></div>
+      <div class="footer-bottom">
+        <div class="footer-copyright" style="color: var(--color-primary-brown);">
+          Professional strategic planning for PK-12 public education, charters, and private schools. &nbsp;|&nbsp; Powered by <a href="https://starkanalytica.com" style="color: var(--color-primary-navy); text-decoration: none; font-weight: 500;">Stark Analytica LLC</a> &nbsp;|&nbsp; &copy; 2026 Strategic District. All rights reserved.
+        </div>
+      </div>
+    </div>
+    <div style="height: 4px; background: linear-gradient(to right, #6ECF6E, #00B4CC, #D4A537, #E07A5F, #6B4C9A);"></div>
+  </footer>
+
+  <script src="/js/shared/header.js"></script>
+  <script>
+    (function() {
+      "use strict";
+
+      var form = document.getElementById("login-form");
+      var submitBtn = document.getElementById("submit-btn");
+      var errorMessage = document.getElementById("error-message");
+
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+      }
+
+      function clearErrors() {
+        document.getElementById("email-error").textContent = "";
+        document.getElementById("password-error").textContent = "";
+        errorMessage.style.display = "none";
+      }
+
+      function validateForm() {
+        var email = document.getElementById("email").value.trim();
+        var password = document.getElementById("password").value;
+        var isValid = true;
+
+        clearErrors();
+
+        if (!email) {
+          document.getElementById("email-error").textContent = "Email is required";
+          isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          document.getElementById("email-error").textContent = "Please enter a valid email address";
+          isValid = false;
+        }
+
+        if (!password) {
+          document.getElementById("password-error").textContent = "Password is required";
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      form.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        if (!validateForm()) {
+          return;
+        }
+
+        var email = document.getElementById("email").value.trim();
+        var password = document.getElementById("password").value;
+
+        submitBtn.disabled = true;
+        submitBtn.classList.add("loading");
+        submitBtn.textContent = "Signing in...";
+
+        window.sdAuth.signIn(email, password).then(function(result) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove("loading");
+          submitBtn.textContent = "Sign In";
+
+          if (result.success) {
+            window.location.href = "/builder/";
+          } else {
+            showError("Error: " + result.error);
+          }
+        });
+      });
+    })();
+  </script>
+  <script>
+    var header = document.querySelector('header');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 0) {
+        header.classList.add('scroll-shadow');
+      } else {
+        header.classList.remove('scroll-shadow');
+      }
+    });
+  </script>
+</body>
+</html>

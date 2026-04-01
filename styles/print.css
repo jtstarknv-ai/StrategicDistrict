@@ -1,0 +1,472 @@
+/* Print stylesheet for Strategic District reports */
+
+@media print {
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: white;
+    color: #0A0908;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  /* Hide interactive elements */
+  .action-bar,
+  .report-nav,
+  nav,
+  button,
+  .btn,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Reset container */
+  .report-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  /* Page margins */
+  @page {
+    margin: 2cm;
+    orphans: 4;
+    widows: 4;
+  }
+
+  /* Header styling for print */
+  .report-header {
+    background: white;
+    border-bottom: 3px solid #001219;
+    color: #001219;
+    padding: 0 0 20px 0;
+    margin: 0 0 30px 0;
+    page-break-after: avoid;
+  }
+
+  .report-header h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    color: #001219;
+  }
+
+  .report-header p {
+    margin: 5px 0;
+    font-size: 14pt;
+  }
+
+  .report-header p:first-of-type {
+    color: #005F73;
+    font-weight: 600;
+  }
+
+  .report-header p:last-of-type {
+    color: #787878;
+    font-size: 12pt;
+    font-style: italic;
+  }
+
+  /* Main sections */
+  section {
+    page-break-inside: avoid;
+    margin: 0 0 30px 0;
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid #dcdcdc;
+  }
+
+  section:first-of-type {
+    page-break-before: always;
+  }
+
+  section > div {
+    max-width: 100%;
+  }
+
+  /* Headings */
+  h2 {
+    color: #001219;
+    font-size: 18pt;
+    font-weight: bold;
+    margin: 0 0 15px 0;
+    padding: 0 0 10px 0;
+    border-bottom: 2px solid #005F73;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    color: #005F73;
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 15px 0 10px 0;
+    page-break-after: avoid;
+  }
+
+  h4 {
+    color: #005F73;
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 12px 0 8px 0;
+    page-break-after: avoid;
+  }
+
+  h5 {
+    color: #005F73;
+    font-size: 11pt;
+    font-weight: bold;
+    margin: 10px 0 6px 0;
+  }
+
+  /* Paragraphs and text */
+  p {
+    margin: 0 0 10px 0;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  /* Vision/Mission boxes */
+  .vision-mission-box {
+    background: white;
+    border-left: 3px solid #005F73;
+    padding: 15px;
+    margin: 15px 0;
+    page-break-inside: avoid;
+  }
+
+  .vision-mission-box p {
+    color: #0A0908;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  /* Value cards */
+  .value-card {
+    background: white;
+    border: 1px solid #3c3c3c;
+    padding: 12px;
+    margin: 10px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .value-card h4 {
+    color: #005F73;
+    margin-bottom: 6px;
+    font-size: 11pt;
+  }
+
+  .value-card p {
+    margin: 0;
+    font-size: 10pt;
+  }
+
+  /* Competency items */
+  .competency-item {
+    background: white;
+    border-left: 2px solid #005F73;
+    padding: 12px;
+    margin: 12px 0;
+    page-break-inside: avoid;
+  }
+
+  .competency-item h4 {
+    color: #005F73;
+    margin-bottom: 4px;
+    font-size: 11pt;
+  }
+
+  .competency-item .desc {
+    color: #3c3c3c;
+    font-size: 10pt;
+    margin: 0 0 8px 0;
+    font-style: italic;
+  }
+
+  .competency-item ul {
+    margin: 0;
+    padding-left: 18px;
+    list-style-type: circle;
+  }
+
+  .competency-item li {
+    margin: 3px 0;
+    color: #3c3c3c;
+    font-size: 10pt;
+  }
+
+  /* Foundation boxes */
+  .foundation-box {
+    background: white;
+    border: 1px solid #3c3c3c;
+    padding: 12px;
+    margin: 12px 0;
+    page-break-inside: avoid;
+  }
+
+  .foundation-box h4 {
+    color: #005F73;
+    margin-bottom: 4px;
+    font-size: 11pt;
+  }
+
+  .foundation-category {
+    color: #005F73;
+    font-size: 9pt;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+  }
+
+  .foundation-box ul {
+    margin: 0;
+    padding-left: 18px;
+    list-style-type: disc;
+  }
+
+  .foundation-box li {
+    margin: 4px 0;
+    color: #3c3c3c;
+    font-size: 10pt;
+    line-height: 1.4;
+  }
+
+  /* Goal boxes */
+  .goal-box {
+    background: white;
+    border-left: 2px solid #005F73;
+    padding: 12px;
+    margin: 15px 0;
+    page-break-inside: avoid;
+  }
+
+  .goal-box h4 {
+    color: #005F73;
+    margin-bottom: 6px;
+    font-size: 11pt;
+  }
+
+  .goal-description {
+    color: #3c3c3c;
+    font-size: 10pt;
+    margin: 0 0 10px 0;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    page-break-inside: avoid;
+  }
+
+  table thead {
+    background: #dcdcdc;
+    color: #0A0908;
+  }
+
+  table th {
+    padding: 8px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 10pt;
+    border: 1px solid #3c3c3c;
+  }
+
+  table td {
+    padding: 8px;
+    border: 1px solid #dcdcdc;
+    color: #3c3c3c;
+    font-size: 9pt;
+  }
+
+  table tbody tr:nth-child(even) {
+    background: #f5f5f5;
+  }
+
+  /* Initiative cards */
+  .initiative-card {
+    background: white;
+    border: 1px solid #3c3c3c;
+    padding: 12px;
+    margin: 10px 0;
+    page-break-inside: avoid;
+  }
+
+  .initiative-timeline {
+    background: white;
+    color: #005F73;
+    padding: 4px 8px;
+    border: 1px solid #005F73;
+    border-radius: 0;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .initiative-content h4 {
+    color: #005F73;
+    margin: 0 0 4px 0;
+    font-size: 11pt;
+  }
+
+  .initiative-supports {
+    color: #3c3c3c;
+    font-size: 9pt;
+    margin: 0 0 6px 0;
+  }
+
+  .initiative-desc {
+    color: #3c3c3c;
+    font-size: 10pt;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+  }
+
+  .initiative-meta {
+    display: block;
+    font-size: 9pt;
+  }
+
+  .initiative-meta div {
+    margin: 4px 0;
+  }
+
+  .initiative-meta strong {
+    color: #005F73;
+    font-weight: bold;
+  }
+
+  .initiative-meta span {
+    color: #3c3c3c;
+  }
+
+  /* Timeline phases */
+  .timeline-phase {
+    background: white;
+    border-top: 2px solid #005F73;
+    padding: 12px;
+    margin: 15px 0;
+    page-break-inside: avoid;
+  }
+
+  .timeline-phase h4 {
+    color: #005F73;
+    margin-bottom: 10px;
+    font-size: 11pt;
+  }
+
+  .timeline-phase ul {
+    margin: 0;
+    padding-left: 18px;
+    list-style-type: disc;
+  }
+
+  .timeline-phase li {
+    color: #3c3c3c;
+    font-size: 10pt;
+    margin: 4px 0;
+  }
+
+  /* Key data box */
+  .key-data-box {
+    background: white;
+    border-left: 3px solid #005F73;
+    padding: 12px;
+    margin: 15px 0;
+    page-break-inside: avoid;
+  }
+
+  .key-data-box p {
+    margin: 0 0 6px 0;
+    color: #0A0908;
+    font-size: 10pt;
+    line-height: 1.4;
+  }
+
+  .key-data-box p:first-child {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  /* Lists */
+  ul,
+  ol {
+    margin: 8px 0;
+    padding-left: 20px;
+  }
+
+  li {
+    margin: 4px 0;
+    color: #3c3c3c;
+    font-size: 10pt;
+  }
+
+  /* Footer */
+  footer {
+    page-break-before: always;
+    background: white;
+    color: #0A0908;
+    padding: 20px 0;
+    border-top: 2px solid #005F73;
+    margin-top: 30px;
+  }
+
+  footer p {
+    margin: 5px 0;
+    font-size: 10pt;
+    text-align: center;
+  }
+
+  footer p:last-child {
+    font-size: 9pt;
+    color: #787878;
+  }
+
+  /* Prevent widow/orphan text */
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Links - print as text */
+  a {
+    color: #005F73;
+    text-decoration: none;
+  }
+
+  a::after {
+    content: " (" attr(href) ")";
+    display: none;
+  }
+
+  /* Remove backgrounds for print */
+  .btn,
+  button {
+    display: none !important;
+  }
+
+  /* Ensure proper spacing before sections */
+  h2 + p {
+    page-break-before: avoid;
+  }
+
+  /* Table optimization */
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+}

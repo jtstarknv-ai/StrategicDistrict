@@ -1,0 +1,205 @@
+{
+  "id": "plan_demo_2026",
+  "createdAt": "2026-03-01T08:00:00.000Z",
+  "updatedAt": "2026-03-14T15:30:00.000Z",
+  "currentStep": 8,
+  "completionPercentage": 100,
+  "district": {
+    "name": "Lakewood Unified School District",
+    "state": "California",
+    "enrollment": 42500,
+    "numSchools": 28,
+    "size": "large",
+    "gradeLevels": ["prek", "k-5", "6-8", "9-12"],
+    "planDuration": 5,
+    "superintendentName": "Dr. Maria Garcia",
+    "motto": "Every Student, Every Day, All the Way"
+  },
+  "assessment": {
+    "strengths": "Strong teacher quality, improving graduation rates, active community partnerships, robust career technical education programs",
+    "challenges": "Persistent achievement gaps for students of color and low-income students, chronic absenteeism in middle schools, limited advanced program access for underrepresented students",
+    "dataHighlights": "Graduation rate: 87% (target: 95%). Four-year algebra proficiency: 62% (target: 80%). Chronic absenteeism: 12% (target: 5%). English learner reclassification: 45%.",
+    "equityFocus": "Hispanic/Latino students, African American students, students from low-income backgrounds, students with disabilities, English learners"
+  },
+  "vision": {
+    "statement": "Every student in Lakewood Unified achieves academic excellence, develops critical thinking and collaboration skills, and graduates prepared for college, career, and community leadership.",
+    "templateUsed": 1
+  },
+  "mission": {
+    "statement": "We provide rigorous, culturally responsive instruction, equitable access to advanced programs, and comprehensive support to ensure every student reaches their highest potential and is prepared for success beyond high school.",
+    "templateUsed": 1
+  },
+  "coreValues": [
+    {
+      "id": 2,
+      "name": "Equity",
+      "definition": "All students deserve fair access to opportunities and resources.",
+      "fullDescription": "Equity is at the heart of our work. We believe that zip code, income, race, or disability should never determine a student's access to rigorous, high-quality education."
+    },
+    {
+      "id": 1,
+      "name": "Excellence",
+      "definition": "We strive for the highest quality in everything we do.",
+      "fullDescription": "Excellence means pursuing the highest standards in our teaching, learning, and operations."
+    },
+    {
+      "id": 5,
+      "name": "Collaboration",
+      "definition": "We work together as a united team to achieve shared goals.",
+      "fullDescription": "Collaboration strengthens our work. We value diverse perspectives and leverage collective expertise."
+    },
+    {
+      "id": 12,
+      "name": "Student-Centered",
+      "definition": "We make decisions based on what is best for students.",
+      "fullDescription": "Student-centered means students are at the heart of everything we do."
+    },
+    {
+      "id": 13,
+      "name": "Growth Mindset",
+      "definition": "We believe all students and staff can grow and improve.",
+      "fullDescription": "Growth mindset means we see challenges as opportunities to learn."
+    }
+  ],
+  "graduateProfile": {
+    "selectedCompetencies": [
+      {
+        "id": 1,
+        "name": "Critical Thinking",
+        "description": "Analyzes complex problems and develops evidence-based solutions.",
+        "attributes": ["Asks clarifying questions", "Applies knowledge to new situations", "Evaluates evidence", "Tests multiple solutions"]
+      },
+      {
+        "id": 2,
+        "name": "Communication and Literacy",
+        "description": "Communicates clearly across multiple formats.",
+        "attributes": ["Reads complex texts", "Writes persuasively", "Listens actively", "Uses technology effectively"]
+      },
+      {
+        "id": 5,
+        "name": "Self-Awareness",
+        "description": "Understands emotions, strengths, and values.",
+        "attributes": ["Manages emotions", "Identifies strengths", "Seeks feedback", "Self-regulates"]
+      },
+      {
+        "id": 9,
+        "name": "Teamwork and Collaboration",
+        "description": "Works effectively with others.",
+        "attributes": ["Contributes ideas", "Listens to peers", "Fulfills responsibilities", "Resolves conflict"]
+      },
+      {
+        "id": 10,
+        "name": "Cultural Competence",
+        "description": "Understands and respects diverse perspectives.",
+        "attributes": ["Appreciates cultures", "Challenges stereotypes", "Understands global issues", "Adapts communication"]
+      },
+      {
+        "id": 13,
+        "name": "Creativity and Innovation",
+        "description": "Generates original ideas and solutions.",
+        "attributes": ["Generates novel ideas", "Combines ideas creatively", "Takes creative risks", "Refines work"]
+      },
+      {
+        "id": 15,
+        "name": "College and Career Readiness",
+        "description": "Prepared for post-secondary success.",
+        "attributes": ["Explores pathways", "Develops skills", "Sets goals", "Demonstrates readiness"]
+      },
+      {
+        "id": 16,
+        "name": "Lifelong Learning",
+        "description": "Maintains curiosity and love of learning.",
+        "attributes": ["Shows curiosity", "Seeks learning", "Reflects on growth", "Adapts to change"]
+      }
+    ]
+  },
+  "foundations": [
+    {
+      "domainId": 1,
+      "name": "Teaching Excellence",
+      "description": "Coherent, rigorous, standards-aligned curriculum and evidence-based instruction."
+    },
+    {
+      "domainId": 5,
+      "name": "Student Support Systems",
+      "description": "Comprehensive systems to support students academically, behaviorally, and socially."
+    },
+    {
+      "domainId": 9,
+      "name": "Professional Learning",
+      "description": "Ongoing professional learning and collaboration focused on improvement."
+    },
+    {
+      "domainId": 11,
+      "name": "Data and Improvement",
+      "description": "Data systems and processes to drive decision-making and improvement."
+    }
+  ],
+  "goals": [
+    {
+      "title": "Increase Reading Proficiency",
+      "description": "Improve reading achievement and proficiency in all grade levels through evidence-based instruction.",
+      "foundationIndex": 0,
+      "measures": [
+        {
+          "name": "Percentage of students meeting reading standards",
+          "baseline": "58%",
+          "target": "75%",
+          "source": "State standardized assessments"
+        },
+        {
+          "name": "Reading growth from fall to spring",
+          "baseline": "0.8 grade levels",
+          "target": "1.2 grade levels",
+          "source": "Benchmark assessments"
+        },
+        {
+          "name": "Early literacy proficiency (K-2)",
+          "baseline": "65%",
+          "target": "85%",
+          "source": "DIBELS or similar screening"
+        }
+      ]
+    },
+    {
+      "title": "Close Achievement Gaps",
+      "description": "Reduce disparities in achievement across racial and ethnic groups through targeted support and equitable practices.",
+      "foundationIndex": 0,
+      "measures": [
+        {
+          "name": "Achievement gap between groups",
+          "baseline": "18 percentage points",
+          "target": "10 percentage points",
+          "source": "State assessment data"
+        },
+        {
+          "name": "Representation in advanced programs",
+          "baseline": "45% students of color",
+          "target": "60% students of color",
+          "source": "Program enrollment data"
+        },
+        {
+          "name": "Special education identification gap",
+          "baseline": "25% disparity",
+          "target": "15% disparity",
+          "source": "District enrollment records"
+        }
+      ]
+    }
+  ],
+  "initiatives": [
+    {
+      "title": "Implement balanced literacy framework K-5",
+      "description": "Adopt and implement a comprehensive balanced literacy approach with guided reading, independent reading, and writing.",
+      "goalIndex": 0,
+      "timeline": "Year 1",
+      "responsible": "Chief Academic Officer",
+      "successIndicator": "100% of elementary teachers implement framework with fidelity"
+    }
+  ],
+  "metadata": {
+    "createdBy": "System",
+    "lastEditedBy": "Demo User",
+    "version": 2
+  }
+}

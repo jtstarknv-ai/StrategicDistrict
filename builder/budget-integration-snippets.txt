@@ -1,0 +1,240 @@
+================================================================================
+BUDGET INTEGRATION HTML SNIPPETS
+Strategic District Builder - Steps 8, 10, 11, 14
+================================================================================
+
+This file contains the exact HTML snippets to be inserted into builder/index.html
+at specified locations. Each snippet includes insertion point details.
+
+================================================================================
+STEP 8: STRATEGIC GOAL SETTING - Budget Context Panel
+================================================================================
+
+LOCATION: Inside Step 8 content div, immediately after the section-purpose div
+
+FIND THIS:
+  <div class="section-purpose">Good goals are specific, measurable, and tied to your domains. They show what success looks like and how you'll know you're winning.</div>
+
+  <div class="guided-steps">
+
+INSERT THIS BEFORE <div class="guided-steps">:
+  <div id="goalBudgetContext" style="margin-bottom:1.5rem"></div>
+
+THEN ADD THIS JAVASCRIPT CALL (after the HTML is in place):
+  Call renderGoalBudgetContext() when Step 8 is rendered.
+  Add to builder.js in the Step 8 render function or after the step becomes active.
+
+================================================================================
+STEP 10: CENTRAL OFFICE ALIGNMENT - Department Budget View
+================================================================================
+
+LOCATION: Inside Step 10 content div, just before the department selection section
+
+FIND THIS:
+  <div class="guided-step collapsed" id="gs-10-3">
+      <div class="guided-step-header" onclick="toggleGuidedStep(this)">
+          <div class="guided-step-number">3</div>
+          <h3>Map Department Alignment</h3>
+          ...
+      </div>
+      <div class="guided-step-body">
+          <p class="substep-desc">Select departments, map them to goals, and define each department's role. Use the AI helper to detect alignment gaps.</p>
+
+INSERT THIS RIGHT AFTER THE SUBSTEP-DESC PARAGRAPH:
+  <div id="departmentBudgetView" style="margin-bottom:1.5rem"></div>
+
+THEN ADD THIS JAVASCRIPT CALL:
+  Call renderDepartmentBudgetView() when Step 10 is rendered or when departments are selected.
+  Add to the department selection logic in builder.js.
+
+================================================================================
+STEP 11: ACTION INITIATIVES - Budget Allocation Tracker
+================================================================================
+
+LOCATION: Inside Step 11 content div, in the "Select & Build Initiatives" guided step
+
+FIND THIS:
+  <div class="budget-summary-card" id="budgetSummaryCard" style="display:none;margin-top:1.5rem;...">
+
+INSERT THIS RIGHT BEFORE THE BUDGET SUMMARY CARD:
+  <div id="budgetAllocationTracker" style="margin-bottom:1.5rem"></div>
+
+Alternative location (if budgetSummaryCard doesn't exist):
+FIND THIS:
+  <h2 style="font-family:'Source Serif Pro',serif;font-size:1.25rem;color:#22333B;margin-top:1.5rem;margin-bottom:0.75rem;">Budget Tracking per Action Step</h2>
+
+INSERT THIS RIGHT BEFORE THAT HEADING:
+  <div id="budgetAllocationTracker" style="margin-bottom:1.5rem"></div>
+
+THEN ADD THIS JAVASCRIPT CALL:
+  Call renderBudgetAllocationTracker() whenever an initiative is added, removed, or has its budget updated.
+  Add to the initiative update function in builder.js, possibly after saveFormState().
+
+================================================================================
+STEP 14: REVIEW & FINALIZE - Comprehensive Feasibility Check
+================================================================================
+
+LOCATION: Inside Step 14 content div, as a separate section before the finalize button
+
+FIND THIS:
+  <div id="budgetDashboardContainer"></div>
+  </div>
+  <!-- Existing Review Content -->
+
+INSERT THIS AFTER THE CLOSING </div> FOR budgetDashboardContainer AND BEFORE THE COMMENT:
+  <div style="margin-top:2rem;">
+    <div id="feasibilityCheckContainer" style="margin-bottom:2rem"></div>
+  </div>
+
+OR, if that exact structure doesn't exist, find:
+  <!-- Finalize section -->
+  <div id="finalizeSection" style="display:none;...">
+
+INSERT THIS RIGHT BEFORE THE "Finalize section" COMMENT:
+  <div id="feasibilityCheckContainer" style="margin-bottom:2rem"></div>
+
+THEN ADD THIS JAVASCRIPT CALL:
+  Call renderFeasibilityCheck() when Step 14 is rendered or displayed.
+  Add to builder.js in the Step 14 initialization function, or hook it to the "Calculate Feasibility Score" button click.
+  Recommended: Auto-render when the step is displayed, or on button click for user-initiated calculation.
+
+================================================================================
+JAVASCRIPT INTEGRATION POINTS
+================================================================================
+
+These functions must be called at the appropriate times:
+
+1. STEP 8 INITIALIZATION:
+   In stepGoto() or in the Step 8 activation logic, add:
+   if (step === 8) {
+     renderGoalBudgetContext();
+   }
+
+2. STEP 10 INITIALIZATION:
+   When departments are loaded or selected, add:
+   renderDepartmentBudgetView();
+
+3. STEP 11 INITIALIZATION & UPDATES:
+   After any initiative is added, removed, or budget is modified:
+   renderBudgetAllocationTracker();
+
+4. STEP 14 INITIALIZATION:
+   When Step 14 is activated, add:
+   renderFeasibilityCheck();
+
+   Optional: Tie to the "Calculate Feasibility Score" button:
+   <button class="btn btn-ai" onclick="renderFeasibilityCheck()" style="...">
+     Calculate Feasibility Score
+   </button>
+
+================================================================================
+REQUIRED SCRIPT INCLUDES
+================================================================================
+
+Before using these functions, ensure the following are loaded in index.html:
+
+In the <head> or before closing </body>:
+  <script src="js/budget-setup.js"></script>
+  <script src="js/budget-integration.js"></script>
+
+The budget-integration.js script MUST be loaded AFTER budget-setup.js
+because it calls functions like getBudgetEnvelope() and FUNDING_SOURCES.
+
+================================================================================
+DATA STRUCTURE EXPECTATIONS
+================================================================================
+
+The following planState properties must exist:
+
+From Step 2 (budget-setup.js):
+  planState.budgetSetup = {
+    totalBudget: number,
+    fundingSources: { [sourceKey]: { amount, notes } },
+    multiYearProjection: { [year]: { [sourceKey]: amount } },
+    priorities: [{ key, rank, targetPct }]
+  }
+
+From Step 8:
+  planState.goals = [{ text, domain, ... }]
+
+From Step 10:
+  planState.departments = [{ name, description, ... }]
+
+From Step 11 (MUST BE EXTENDED):
+  planState.initiatives = [{
+    title: string,
+    description: string,
+    lead: string,
+    budgetAmount: number,        <-- NEW: Must add this field
+    fundingSource: string         <-- NEW: Must add this field (source key from FUNDING_SOURCES)
+  }]
+
+================================================================================
+INTEGRATION CHECKLIST
+================================================================================
+
+[ ] 1. Add budget-integration.js script tag to index.html (after budget-setup.js)
+
+[ ] 2. Add <div id="goalBudgetContext" ...> to Step 8
+
+[ ] 3. Call renderGoalBudgetContext() when Step 8 is displayed
+
+[ ] 4. Add <div id="departmentBudgetView" ...> to Step 10
+
+[ ] 5. Call renderDepartmentBudgetView() when Step 10 is displayed or departments are selected
+
+[ ] 6. Add <div id="budgetAllocationTracker" ...> to Step 11
+
+[ ] 7. Call renderBudgetAllocationTracker() after initiatives are added/updated
+
+[ ] 8. Extend initiative object structure to include budgetAmount and fundingSource
+
+[ ] 9. Update addInitiative() in builder.js to include budget fields in the DOM
+
+[ ] 10. Add <div id="feasibilityCheckContainer" ...> to Step 14
+
+[ ] 11. Call renderFeasibilityCheck() when Step 14 is displayed
+
+[ ] 12. Test each function with sample data to verify rendering
+
+================================================================================
+EXTENDING INITIATIVE STRUCTURE
+================================================================================
+
+In builder.js, the addInitiative() function currently creates:
+
+  <div class="initiative-item" id="init-[timestamp]">
+    <span ...>[Initiative Title]</span>
+    <input type="hidden" class="initiative-title" value="...">
+    <button ...>Remove</button>
+  </div>
+
+UPDATE IT TO INCLUDE BUDGET FIELDS:
+
+  <div class="initiative-item" id="init-[timestamp]" data-budget-amount="0" data-funding-source="">
+    <span ...>[Initiative Title]</span>
+    <input type="hidden" class="initiative-title" value="...">
+    <input type="hidden" class="initiative-budget-amount" value="0">
+    <input type="hidden" class="initiative-funding-source" value="">
+    <button ...>Remove</button>
+  </div>
+
+OR, CREATE A SEPARATE BUDGET/FUNDING MODAL OR INLINE FORM WHERE USERS CAN:
+  - Specify estimated cost (budgetAmount)
+  - Select funding source (fundingSource key)
+
+Then update saveFormState() to capture these values:
+
+  planState.initiatives = Array.from(initItems).map(function(item) {
+    return {
+      title: item.querySelector('.initiative-title') ? item.querySelector('.initiative-title').value : '',
+      description: item.querySelector('.initiative-description') ? item.querySelector('.initiative-description').value : '',
+      lead: item.querySelector('.initiative-lead') ? item.querySelector('.initiative-lead').value : '',
+      budgetAmount: parseFloat(item.querySelector('.initiative-budget-amount')?.value) || 0,
+      fundingSource: item.querySelector('.initiative-funding-source')?.value || ''
+    };
+  });
+
+================================================================================
+END OF BUDGET INTEGRATION SNIPPETS
+================================================================================

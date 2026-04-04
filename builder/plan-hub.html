@@ -671,7 +671,7 @@
     // Initialize Supabase
     const SUPABASE_URL = "https://mrdyxownxnyzjubvpwrk.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1yZHl4b3dueG55emp1YnZwd3JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2MzYwODksImV4cCI6MjA4OTIxMjA4OX0.4TQomjn_4hu-5TrcyGi90wyv1HxxGKmEP1mu682hJHM";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentUser = null;
     let allPlans = [];
@@ -687,7 +687,7 @@
     // Check authentication
     async function checkAuth() {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user } } = await sb.auth.getUser();
 
         if (!user) {
           window.location.href = '/login/';
@@ -706,7 +706,7 @@
     // Load user's plans
     async function loadPlans() {
       try {
-        const { data, error } = await supabase
+        const { data, error } = await sb
           .from('saved_plans')
           .select('*')
           .eq('user_id', currentUser.id)
@@ -874,7 +874,7 @@
       createBtn.textContent = 'Creating...';
 
       try {
-        const { data, error } = await supabase
+        const { data, error } = await sb
           .from('saved_plans')
           .insert([
             {
@@ -910,7 +910,7 @@
       if (!newName || newName.trim() === currentName) return;
 
       try {
-        const { error } = await supabase
+        const { error } = await sb
           .from('saved_plans')
           .update({ plan_name: newName.trim() })
           .eq('id', planId)
@@ -930,7 +930,7 @@
       if (!confirm('Are you sure? This action cannot be undone.')) return;
 
       try {
-        const { error } = await supabase
+        const { error } = await sb
           .from('saved_plans')
           .delete()
           .eq('id', planId)
@@ -948,7 +948,7 @@
     // Sign out
     async function handleSignOut() {
       try {
-        await supabase.auth.signOut();
+        await sb.auth.signOut();
         window.location.href = '/login/';
       } catch (error) {
         console.error('Sign out error:', error);
